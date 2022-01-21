@@ -1,0 +1,39 @@
+.userId,
+.userPw {
+  -webkit-appearance: none; 
+  display: flex;
+  flex-direction: column;
+  width: 70vw;
+  height: 2rem;
+  border: 1px solid silver;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.login-btn {
+  /* -webkit-appearance: none; */
+  width: 70vw;
+  height: 2rem;
+  border: none;
+  border-radius: 5px;
+  background-color: limegreen;
+  margin: 10px 0;
+  color: white;
+}
+
+.finding-pw {
+  margin: 3px 0;
+  float: left;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.finding-pw > a {
+  color: black;
+  opacity: 0.4;
+}
+
+.finding-pw > a:hover {
+  color: black;
+  opacity: 0.8;
+}
