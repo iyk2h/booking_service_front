@@ -2,9 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Calendar } from './components/calendar';
+import { Login } from "./components/login";
 import Facility from './components/facility';
+import Check from "./components/check";
 
 
 ReactDOM.render(
@@ -12,10 +14,12 @@ ReactDOM.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/check" element={<Check />} />
         {/* 내가 짯는데 내가 이해가 안됨 */}
-        <Route path="" element={<Facility />}>
+        <Route path="/booking" element={<Facility />}>
           <Route path=":fno" element={<Calendar />} />
-          <Route index element={<div>No result</div>} />
+          <Route index element={<Navigate replace to="/"/>} />
         </Route>
         <Route path="*" element={<div><p>404 Not Found</p></div>}/>
       </Routes>
