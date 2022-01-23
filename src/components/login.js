@@ -24,13 +24,14 @@ class Login extends React.Component {
   }
  
   requestLogin() {  
-    const url = "REQUEST URL";
+    const url = "/students/login";
     const headers = { "Content-Type" : "application/json" };
+    const crossOriginIsolated = {withCredentials: true}
     const data = {
-      id : this.state.id,
+      sid : Number(this.state.id),
       pw : this.state.pw
     }
-    axios.post(url, data, { headers })
+    axios.post(url, data, { headers }, crossOriginIsolated)
     .then(response => console.log(response))
     .catch(err => console.log(err))
   }
@@ -49,7 +50,7 @@ class Login extends React.Component {
     if(!chkId.test(this.state.id)){
       alert("옳바른 아이디를 입력해 주세요.");  
     } 
-    //this.requestLogin();
+    this.requestLogin();
     
     this.setState({disabled : false});
   }

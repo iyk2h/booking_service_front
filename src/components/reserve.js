@@ -6,11 +6,11 @@ function Reserve(props) {
   let navigate = useNavigate();
 
   const handleBooking = () => {
-    const url = `http://127.0.0.1:8000/booking/${props.userSelect.fno}`;
+    const url = `/booking/${props.userSelect.fno}`;
     const data = {
       "date" : props.userSelect.date,
       "maxHour" : props.time.length,
-      "startTime" : props.time[0]
+      "selectedTime" : props.time[0]
     };
     const header = {"Content-type" : "application/json"};
     axios.post(url, data, header)

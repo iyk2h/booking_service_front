@@ -17,7 +17,7 @@ function Calendar() {
 
   // Mount시 오늘 날짜로 예약 일정 받아오기
   useEffect(() => {
-    const url = `http://localhost:8000/booking/${current_url.fno}/date`;
+    const url = `/booking/${current_url.fno}/date`;
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
     const data = {
