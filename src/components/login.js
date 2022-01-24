@@ -10,7 +10,6 @@ function Login() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  // console.log(location.state)
 
   function handleInputChange(e) {
     const name = e.target.name;
@@ -29,24 +28,27 @@ function Login() {
       sid: id,
       pw: pw,
     };
+
     axios.post(url, data, headers)
     .then((response) => {
-      const code = response.headers.status;
+      const code = response.status;
       if (code === 200) {
-        location.state["loggedIn"] = true;
         navigate(`/booking/${location.state.userSelect.fno}`, {
           state: location.state,
           replace: true,
         });
-      } else if (code === 401) {
+      } 
+    })
+    .catch(err => {
+      const code = err.response.status;
+      if(code === 401) {
         alert("id를 확인해 주세요.");
         setId("");
       } else if (code === 404) {
         alert("비밀번호를 확인해 주세요.");
         setPw("");
       }
-    })
-    .catch((err) => console.log(err));
+    });
   }
 
   async function handleSubmit(e) {
