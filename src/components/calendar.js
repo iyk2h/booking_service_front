@@ -27,7 +27,7 @@ function Calendar() {
       setReservedTime(location.state.time);
       return;
     }
-    const url = `booking/${current_url.fno}/date`;
+    const url = `${current_url.fno}/date`;
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
     const data = {
@@ -37,17 +37,12 @@ function Calendar() {
   }, []);
 
   const requestTime = (url, data) => { 
-    // TEST
-    const f_data = filterTimeInJson(fakeData());
-    setReservedTime(f_data);
-    //TEST
-    
-    // const header = {"Content-type":"application/json"}
-    // axios.post(url, data, header)
-    // .then(response => response.data)
-    // .then(json => filterTimeInJson(json))
-    // .then(filtered_time => setReservedTime(filtered_time))
-    // .catch(err => console.log("* JSON 받아오기 에러 "+err))
+    const header = {"Content-type":"application/json"}
+    axios.post(url, data, header)
+    .then(response => response.data)
+    .then(json => filterTimeInJson(json))
+    .then(filtered_time => setReservedTime(filtered_time))
+    .catch(err => console.log("* JSON 받아오기 에러 "+err))
   }
 
   const filterTimeInJson = json => {
@@ -79,9 +74,14 @@ function Calendar() {
     const dateClass = e.target.className;
     if (dateClass.includes("_able")) {
       const clicked_date = Number(e.target.textContent);
-      const url = `BASE_URL/fno/${current_url}/${clicked_date}`;
+      const url = `${current_url.fno}/date`;
+      const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
+      const f_day = todayNum < 10 ? `0${clicked}` : clicked; 
+      const data = {
+        "date" : `${viewYear}-${f_month}-${f_day}`
+      }
       setClicked(clicked_date);
-      requestTime(url); 
+      requestTime(url, data); 
     }
   };
 

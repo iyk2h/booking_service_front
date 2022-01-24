@@ -7,24 +7,28 @@ function Reserve(props) {
   let location = useLocation();
 
   const handleBooking = () => {
-    const url = `booking/${props.userSelect.fno}`;
+    const url = `${props.userSelect.fno}`;
     const data = {
       "date" : props.userSelect.date,
       "maxHour" : props.time.length,
       "selectedTime" : props.time[0]
     };
     const header = {"Content-type" : "application/json"};
+
     axios.post(url, data, header)
     .then(response => {
-      const code = response.headers.status;
+      console.log(response)
+      const code = response.status;
       if(code === 201) { // 예약 성공
-        navigate("/check", { replace : true, state : response.json() });
-      } else if(code === 401) {
+        navigate("/check", { replace : true, state : response.data });
+      }
+    })
+    .catch(error => {
+      if(error.response.status === 401) {
         navigate("/login", { state : props });
         return;
       }
     })
-    .catch(err => console.log(err))
   }
   
   // const checkValidation = () => {

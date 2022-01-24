@@ -1,15 +1,24 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Check(props) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 로그인상태가 아니라면 로그인으로 redirect 시켜야 함.
-  if(location.state && !location.state.loggedIn) {
-    navigate("/login", { replace : true });
-    return;
-  }
+  console.log("yyyy")
+  useEffect(() => {
+    console.log("xxx")
+    axios.get("/check")
+    .catch(err => {
+      if(err.response.status === 401) {
+        navigate("/login", { replace : true });
+        return;
+      }
+    })
+  }, []
+
+  console.log("vvv")
 
   const startTime = location.state.startTime.split(" ")[1];
   const endTime = location.state.endTime.split(" ")[1];
