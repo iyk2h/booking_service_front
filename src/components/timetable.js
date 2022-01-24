@@ -98,7 +98,7 @@ function TimeTable(props) {
   return (
     <div className="test" onClick={handleTimeClick}>
       {reservation_status}
-      <Reserve userSelect={props.userSelect} time={userTime} />
+      <Reserve userSelect={props.userSelect} time={userTime} reservedTime={props.reservedTime}/>
     </div>
   );
 }

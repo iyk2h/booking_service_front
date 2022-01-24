@@ -16,7 +16,6 @@ ReactDOM.render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
         <Route path="/check" element={<Check />} />
-        {/* 내가 짯는데 내가 이해가 안됨 */}
         <Route path="/booking" element={<Facility />}>
           <Route path=":fno" element={<Calendar />} />
           <Route index element={<Navigate replace to="/"/>} />

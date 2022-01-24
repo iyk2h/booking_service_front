@@ -1,90 +1,107 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: "",
-      pw: "",
-      disabled: false,
-    };
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+function Login() {
+  const [id, setId] = useState("");
+  const [pw, setPw] = useState("");
+  const [disabled, setDisabled] = useState(false);
 
-  handleInputChange(e) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  // console.log(location.state)
+
+  function handleInputChange(e) {
     const name = e.target.name;
     const value = e.target.value;
-
-    this.setState({
-      [name]: value,
-    });
-  }
- 
-  requestLogin() {  
-    const url = "/students/login";
-    const headers = { "Content-Type" : "application/json" };
-    const crossOriginIsolated = {withCredentials: true}
-    const data = {
-      sid : Number(this.state.id),
-      pw : this.state.pw
+    if (name === "id") {
+      setId(value);
+    } else if (name === "pw") {
+      setPw(value);
     }
-    axios.post(url, data, { headers }, crossOriginIsolated)
-    .then(response => console.log(response))
-    .catch(err => console.log(err))
   }
 
-  async handleSubmit(e) {
-    console.log('clicked');
+  function requestLogin() {
+    const url = "students/login";
+    const headers = { "Content-Type": "application/json" };
+    const data = {
+      sid: id,
+      pw: pw,
+    };
+    axios.post(url, data, headers)
+    .then((response) => {
+      const code = response.headers.status;
+      if (code === 200) {
+        location.state["loggedIn"] = true;
+        navigate(`/booking/${location.state.userSelect.fno}`, {
+          state: location.state,
+          replace: true,
+        });
+      } else if (code === 401) {
+        alert("id를 확인해 주세요.");
+        setId("");
+      } else if (code === 404) {
+        alert("비밀번호를 확인해 주세요.");
+        setPw("");
+      }
+    })
+    .catch((err) => console.log(err));
+  }
+
+  async function handleSubmit(e) {
+    console.log("clicked");
     e.preventDefault();
     // 제출 직후 일시적으로 버튼 비활성화
-    this.setState((state) => {
-      return { disabled : !state.disable }
-    });
-    await new Promise(r => setTimeout(r, 250));
+    setDisabled(true);
+    await new Promise((r) => setTimeout(r, 500));
 
     const chkId = /^[0-9]{6}$/;
-    //const chkPw = ;
-    if(!chkId.test(this.state.id)){
-      alert("옳바른 아이디를 입력해 주세요.");  
-    } 
-    this.requestLogin();
-    
-    this.setState({disabled : false});
+    if (!chkId.test(id)) {
+      alert("옳바른 형식의 아이디를 입력해 주세요.");
+      setId("");
+      return;
+    }
+    requestLogin();
+    // 버튼 다시 활성화
+    setDisabled(false);
   }
 
-  render() {
-    return (
-      <div>
-        <div className="login-container">
-          <img alt="MNU LOGO"/>
-          <form onSubmit={this.handleSubmit}>
-            <input
-              className="userId"
-              name="id"
-              type="text"
-              value={this.state.id}
-              onChange={this.handleInputChange}
-              placeholder=" 학번"
-            />
+  return (
+    <div>
+      <div className="login-container">
+        <img alt="MNU LOGO" />
+        <form onSubmit={handleSubmit}>
+          <input
+            className="userId"
+            name="id"
+            type="text"
+            value={id}
+            onChange={handleInputChange}
+            placeholder=" 학번"
+          />
 
-            <input
-              className="userPw"
-              name="pw"
-              type="password"
-              value={this.state.pw}
-              onChange={this.handleInputChange}
-              placeholder=" 비밀번호"
-            />
-            <button type="submit" className="login-btn" disabled={this.state.disabled}>로그인</button>
-          </form>
-          <p className="finding-pw">비밀번호를 잊으셨나요? <a href="#">비밀번호 찾기</a></p>
-        </div>
+          <input
+            className="userPw"
+            name="pw"
+            type="password"
+            value={pw}
+            onChange={handleInputChange}
+            placeholder=" 비밀번호"
+          />
+          <button type="submit" className="login-btn" disabled={disabled}>
+            로그인
+          </button>
+        </form>
+        <p className="finding-pw">
+          비밀번호를 잊으셨나요? <Link to="">비밀번호 찾기</Link>
+        </p>
+        <p className="finding-pw">
+          계정이 없으신가요? <Link to="">회원가입</Link>
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export { Login };

@@ -1,12 +1,13 @@
 import React from 'react';
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Reserve(props) {
   let navigate = useNavigate();
+  let location = useLocation();
 
   const handleBooking = () => {
-    const url = `/booking/${props.userSelect.fno}`;
+    const url = `booking/${props.userSelect.fno}`;
     const data = {
       "date" : props.userSelect.date,
       "maxHour" : props.time.length,
@@ -15,28 +16,20 @@ function Reserve(props) {
     const header = {"Content-type" : "application/json"};
     axios.post(url, data, header)
     .then(response => {
-      const status = response.headers.status;
-      handleStatus(status)
+      const code = response.headers.status;
+      if(code === 201) { // 예약 성공
+        navigate("/check", { replace : true, state : response.json() });
+      } else if(code === 401) {
+        navigate("/login", { state : props });
+        return;
+      }
     })
-    .catch(err => console.log("* 예약 신청 에러 " + err))
-  }
-
-  const handleStatus = (status) => {
-    switch(status) {
-      case 201: // POST, PUT -> 201
-        navigate("/");
-        break;
-      case 401: // No Session
-        navigate("/login");
-        break;
-      case 404: // Not Found
-        navigate("/ad;fkja")
-        break;
-      default:
-        console.log(status);
-    }
+    .catch(err => console.log(err))
   }
   
+  // const checkValidation = () => {
+    
+  // }
   return (
     <>
       <button onClick={handleBooking}>예약하기</button>

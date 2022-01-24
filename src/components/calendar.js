@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { TimeTable } from "./timetable";
-import { Reserve } from "./reserve";
 import DateFilter from "./datefilter";
 import DatePicker from "./datepicker";
 import axios from "axios";
 import "./calendar.css";
+
+// TEST
+import { fakeData } from "../data";
 
 function Calendar() {  
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
@@ -14,10 +16,18 @@ function Calendar() {
   const [reservedTime, setReservedTime] = useState([]);
 
   const current_url = useParams();
-
+  const location = useLocation();
+  
   // Mount시 오늘 날짜로 예약 일정 받아오기
   useEffect(() => {
-    const url = `/booking/${current_url.fno}/date`;
+    if(location.state) {
+      setViewYear(Number(location.state.userSelect.date.split(":"[0])));
+      setViewMonth(Number(location.state.userSelect.date.split(":"[1])));
+      setClicked(Number(location.state.userSelect.date.split(":"[2])));
+      setReservedTime(location.state.time);
+      return;
+    }
+    const url = `booking/${current_url.fno}/date`;
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
     const data = {
@@ -27,13 +37,17 @@ function Calendar() {
   }, []);
 
   const requestTime = (url, data) => { 
-    const header = {"Content-type":"application/json"}
-    const crossOriginIsolated = {withCredentials: true}
-    axios.post(url, data, header, crossOriginIsolated)
-    .then(response => response.data)
-    .then(json => filterTimeInJson(json))
-    .then(filtered_time => setReservedTime(filtered_time))
-    .catch(err => console.log("* JSON 받아오기 에러 "+err))
+    // TEST
+    const f_data = filterTimeInJson(fakeData());
+    setReservedTime(f_data);
+    //TEST
+    
+    // const header = {"Content-type":"application/json"}
+    // axios.post(url, data, header)
+    // .then(response => response.data)
+    // .then(json => filterTimeInJson(json))
+    // .then(filtered_time => setReservedTime(filtered_time))
+    // .catch(err => console.log("* JSON 받아오기 에러 "+err))
   }
 
   const filterTimeInJson = json => {
