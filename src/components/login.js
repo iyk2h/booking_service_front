@@ -32,7 +32,10 @@ function Login() {
     axios.post(url, data, headers)
     .then((response) => {
       const code = response.status;
-      if (code === 200) {
+      if (code === 201) {
+        if(!location.state) {
+          navigate("/", { replace : true });
+        }
         navigate(`/booking/${location.state.userSelect.fno}`, {
           state: location.state,
           replace: true,
@@ -40,7 +43,8 @@ function Login() {
       } 
     })
     .catch(err => {
-      const code = err.response.status;
+      const code = err;
+      return
       if(code === 401) {
         alert("id를 확인해 주세요.");
         setId("");
@@ -52,7 +56,6 @@ function Login() {
   }
 
   async function handleSubmit(e) {
-    console.log("clicked");
     e.preventDefault();
     // 제출 직후 일시적으로 버튼 비활성화
     setDisabled(true);
