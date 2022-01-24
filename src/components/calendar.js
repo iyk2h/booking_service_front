@@ -42,10 +42,13 @@ function Calendar() {
     .then(response => response.data)
     .then(json => filterTimeInJson(json))
     .then(filtered_time => setReservedTime(filtered_time))
-    .catch(err => console.log("* JSON 받아오기 에러 "+err))
+    .catch(err => console.log(err))
   }
 
   const filterTimeInJson = json => {
+    if(json.length === 0 || !json) {
+      return [];
+    }
     const able_time = [];
     json.forEach(x => able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]))
     return able_time;
