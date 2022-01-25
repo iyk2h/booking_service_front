@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { TimeTable } from "./timetable";
 import DateFilter from "./datefilter";
@@ -9,10 +9,23 @@ import "./calendar.css";
 // TEST
 import { fakeData } from "../data";
 
+function reducer(state, action) {
+  switch (action.type) {
+    case "clicked_date":
+      return { clicked : state } 
+    default:
+      return state
+  }
+}
+
 function Calendar() {  
-  const [viewYear, setViewYear] = useState(new Date().getFullYear());
-  const [viewMonth, setViewMonth] = useState(new Date().getMonth());
-  const [clicked, setClicked] = useState(new Date().getDate());
+  function actionClick(value) {
+    dispatch({ type : String(value) })
+  }
+  const [state, dispatch] = useReducer(reducer, { clicked : new Date().getDate() });
+  const [viewYear, setViewYear] = useState(() => new Date().getFullYear());
+  const [viewMonth, setViewMonth] = useState(() => new Date().getMonth());
+  //const [clicked, setClicked] = useState(() => new Date().getDate());
   const [reservedTime, setReservedTime] = useState([]);
 
   const current_url = useParams();
@@ -23,7 +36,8 @@ function Calendar() {
     if(location.state) {
       setViewYear(Number(location.state.userSelect.date.split(":"[0])));
       setViewMonth(Number(location.state.userSelect.date.split(":"[1])));
-      setClicked(Number(location.state.userSelect.date.split(":"[2])));
+      actionClick(Number(location.state.userSelect.date.split(":"[2])));
+      //setClicked(Number(location.state.userSelect.date.split(":"[2])));
       setReservedTime(location.state.time);
       return;
     }
@@ -37,12 +51,22 @@ function Calendar() {
   }, []);
 
   const requestTime = (url, data) => { 
-    const header = {"Content-type":"application/json"}
-    axios.post(url, data, header)
-    .then(response => response.data)
-    .then(json => filterTimeInJson(json))
-    .then(filtered_time => setReservedTime(filtered_time))
-    .catch(err => console.log(err))
+    // const header = {"Content-type":"application/json"}
+    // axios.post(url, data, header)
+    // .then(response => response.data)
+    // .then(json => filterTimeInJson(json))
+    // .then(filtered_time => setReservedTime(filtered_time))
+    // .catch(err => console.log(err))
+    const able_time = [];
+    setTimeout(() => {
+      const json = fakeData();
+      json.forEach(x => {
+        if(x.startTime.split(" ")[0].split("-")[2] === String(state.clicked)) {
+          able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]);
+        }
+      })
+      setReservedTime(able_time);
+    }, 0); 
   }
 
   const filterTimeInJson = json => {
@@ -70,7 +94,8 @@ function Calendar() {
     }
     setViewYear(currViewYear);
     setViewMonth(currViewMonth);
-    setClicked(null);
+    actionClick(null)
+    //setClicked(null);
   };
 
   const handlePicker = (e) => {
@@ -79,16 +104,18 @@ function Calendar() {
       const clicked_date = Number(e.target.textContent);
       const url = `${current_url.fno}/date`;
       const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-      const f_day = todayNum < 10 ? `0${clicked}` : clicked; 
+      const f_day = todayNum < 10 ? `0${state.clicked}` : state.clicked; 
       const data = {
         "date" : `${viewYear}-${f_month}-${f_day}`
       }
-      setClicked(clicked_date);
-      requestTime(url, data); 
+      actionClick(clicked_date);
+      console.log(1)
+      // render할때는 state가 바뀌어 있는데, 아래 requestTime을 호출할 당시에는 setClick이 비동기로 처리되기 때문에 아직 안바뀐 상태임.
+      //setClicked(clicked_date).then(result => console.log("test : " + result)); // 그럼 이녀석을 동기로 처리하던지
+      requestTime(url, data);  // 이녀석을 밖으로 빼서 바뀐 clicked로 호출하던지 해야함.
     }
   };
-
-  // 달력 UI
+ 
   const prevLast = new Date(viewYear, viewMonth, 0);
   const thisLast = new Date(viewYear, viewMonth + 1, 0); 
 
@@ -134,7 +161,7 @@ function Calendar() {
       ? null
       : "disable";
 
-    const isClicked = (selectable === "_able" &&  date === clicked) ? "isClick" : null;
+    const isClicked = (selectable === "_able" &&  date === state.clicked) ? "isClick" : null;
     const todayClass =
       today.getFullYear() === viewYear &&
       today.getMonth() === viewMonth &&
@@ -153,9 +180,11 @@ function Calendar() {
   });
 
   const f_viewMonth = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-  const f_clicked = clicked < 10 ? `0${clicked}` : clicked 
+  const f_clicked = state.clicked < 10 ? `0${state.clicked}` : state.clicked 
   return (
     <div className="calendar">
+      <h1>{state.clicked}</h1>
+      <h2>{reservedTime}</h2>
       <DateFilter
         viewYear={viewYear}
         viewMonth={viewMonth}

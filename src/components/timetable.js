@@ -15,8 +15,8 @@ function TimeTable(props) {
   for (let i = 8; i < 20; i++) {
     const booking_time = i < 10 ? `0${i}:00` : `${i}:00`;
     //const validation = (props.userSelect.date.split("-")[1] <= new Date().getMonth && i < (new Date()).getHours()) ? "expire" : null
-    const className = props.reservedTime.length !== 0 && props.reservedTime.indexOf(booking_time) !== -1 ? "reserved" : "can_reserve";
     const clicked = userTime.length !== 0 && userTime.indexOf(booking_time) !== -1 ? "clicked" : null;
+    const className = props.reservedTime.length !== 0 && props.reservedTime.indexOf(booking_time) !== -1 ? "reserved" : "can_reserve";
     // let ableClick = null;
     // if (userTime.length && userTime.length < maxHour) {
     //   let tmp = Number(userTime[userTime.length - 1].split(":")[0]);
