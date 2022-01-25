@@ -40,8 +40,8 @@ function Calendar() {
     // const header = {"Content-type":"application/json"}
     // axios.post(url, data, header)
     // .then(response => response.data)
-    // .then(json => filterTimeInJson(json))
-    // .then(filtered_time => setReservedTime(filtered_time))
+    // .then(json => filterTimeInJson(json, clicked_date))
+    // .then(filteredTime => setReservedTime(filteredTime))
     // .catch(err => console.log(err))
     const able_time = [];
     setTimeout(() => {
