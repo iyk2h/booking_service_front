@@ -33,10 +33,10 @@ function Calendar() {
     const data = {
       "date" : `${viewYear}-${f_month}-${f_day}`
     }
-    requestTime(url, data);
+    requestTime(url, data, todayNum);
   }, []);
 
-  const requestTime = (url, data) => { 
+  const requestTime = (url, data, clicked_date) => { 
     // const header = {"Content-type":"application/json"}
     // axios.post(url, data, header)
     // .then(response => response.data)
@@ -47,20 +47,27 @@ function Calendar() {
     setTimeout(() => {
       const json = fakeData();
       json.forEach(x => {
-        if(x.startTime.split(" ")[0].split("-")[2] === String(clicked)) {
+        if(x.startTime.split(" ")[0].split("-")[2] == clicked_date) {
+          console.log(x)
           able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]);
         }
       })
+      console.log(able_time)
       setReservedTime(able_time);
     }, 0); 
   }
 
-  const filterTimeInJson = json => {
+  const filterTimeInJson = (json, clicked_date) => {
     if(json.length === 0 || !json) {
       return [];
     }
     const able_time = [];
-    json.forEach(x => able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]))
+    json.forEach(x => {
+      if(x.startTime.split(" ")[0].split("-")[2] == clicked_date) {
+        console.log(x)
+        able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]);
+      }
+    })
     return able_time;
   }
 
@@ -93,9 +100,10 @@ function Calendar() {
       const data = {
         "date" : `${viewYear}-${f_month}-${f_day}`
       }
+
       // render할때는 state가 바뀌어 있는데, 아래 requestTime을 호출할 당시에는 setClick이 비동기로 처리되기 때문에 아직 안바뀐 상태임.
       setClicked(prevState => clicked_date); // 그럼 이녀석을 동기로 처리하던지
-      requestTime(url, data);  // 이녀석을 밖으로 빼서 바뀐 clicked로 호출하던지 해야함.
+      requestTime(url, data, clicked_date);  // 이녀석을 밖으로 빼서 바뀐 clicked로 호출하던지 해야함.
     }
   };
  
