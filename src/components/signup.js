@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link  } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../utils";
 
 export default function Signup() {
   const [id, setId] = useState("");
@@ -7,9 +9,14 @@ export default function Signup() {
   const [phone, setPhone] = useState("");
   const [duplicate, setDuplicate] = useState(true);
   
-  const handleCheck = e => {
+  const duplicateCheck = e => {
     e.preventDefault();
-    
+    const url = `${BASE_URL}/students/check`;
+    const data = { "id" : id, "pw": pw };
+    const headers = { "Content-Type" : "application/json" };
+    axios.post(url, data, headers)
+    .then(response => response.status === 200 && setDuplicate(false))
+    .catch(err => err.response.status === 400 && console.log(err))  
   }
 
   const handleSubmit = e => {
@@ -63,7 +70,8 @@ export default function Signup() {
           name="id"
           placeholder="id"
         />
-        <button onClick={handleCheck}>중복 체크</button>
+        {duplicate ? "중복체크를 해주세요." : "사용 가능한 아이디 입니다."}
+        <button onClick={duplicateCheck}>중복 체크</button>
         <input
           type="password"
           name="pw"
@@ -80,3 +88,4 @@ export default function Signup() {
     </div>
   );
 }
+

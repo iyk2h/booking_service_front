@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Loading from "./loading";
+import { BASE_URL } from "../utils";
 
 export default function Check(props) {
   const navigate = useNavigate();
@@ -10,14 +11,11 @@ export default function Check(props) {
   const [loading, setLoding] = useState(true);
 
   useEffect(() => {
-    axios.get("/check").catch(err => {
-      if (err.response.status === 401) {
-        navigate("/login", { replace: true });
-        return;
-      }
-    });
+    axios
+    .get("/check")
+    .catch(err => err.response.status === 401 && navigate("/login", { replace: true }));
     setLoding(false);
-  }, []);
+  });
 
   // const startTime = location.state.startTime.split(" ")[1];
   // const endTime = location.state.endTime.split(" ")[1];
@@ -40,21 +38,16 @@ export default function Check(props) {
   // }
 
   const handleLink = (e) => {
-    if (e.target.className === "home_btn") {
-      navigate("/");
-    } else if (e.target.className === "myPage_btn") {
-      navigate("/myPage");
+    const target = e.target.className;
+    if(target === "home_btn") {
+      navigate(BASE_URL);
+    } else if(target === "myPage_btn") {
+      navigate(BASE_URL + "/mypage");
     }
   };
-
-  let loading_component = null;
-  if(loading) {
-    loading_component = <Loading />
-  }
-
   return (
     <div>
-      {loading_component}
+      {loading ? <Loading /> : null}
       <div>( 체크 이미지 V )</div>
       <article>
         <div>예약이 완료되었습니다.</div>

@@ -12,8 +12,10 @@ function Reserve(props) {
     const header = { "Content-type": "application/json" };
     const data = {
       date: props.userSelect.date,
-      selectedTime : props.time.length
+      maxHour : props.time.length,
+      selectedTime : props.time[0]
     };
+    console.log(data);
     axios
     .post(url, data, header)
     .then(response => response.status === 200 && navigate("/check", { state: response.data }))
