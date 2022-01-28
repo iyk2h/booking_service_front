@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
-import Loading from "./loading";
 import "./login.css";
 
 // Component
@@ -9,34 +8,35 @@ function Login() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [id, setId] = useState("");
-  const [pw, setPw] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [input, setInput] = useState({
+    id : '',
+    pw : ''
+  })
+  const {id, pw} = input;
+  const idInput = useRef(); // id 입력 DOM 가져오기 위함
 
+  useEffect(() => { // 첫 로드시 id입력창 focus
+    idInput.current.focus();
+  })
   // Handler
   const handleInputChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    switch (name) {
-      case "id":
-        setId(value);
-        break;
-      case "pw" :
-        setPw(value);
-        break;
-      default:
-        return;
-    }
+    const {name, value} = e.target;
+    setInput({
+      ...input,
+      [name] : value
+    })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setDisabled(prev => prev = true);
-    await new Promise((t) => setTimeout(t, 0));
+    await new Promise(t => setTimeout(t, 0));
 
     const chkId = /^[0-9]{6}$/;
     if (!chkId.test(id)) {
       alert("옳바른 형식의 아이디를 입력해 주세요.");
+      idInput.current.focus();
       setDisabled(false);
       return
     }
@@ -70,11 +70,13 @@ function Login() {
       switch (err.response.status) {
         case 401:
           alert("id를 확인해 주세요.");
-          setId("");
           break;
         case 404:
           alert("비밀번호를 확인해 주세요.");
-          setPw("");  
+          setInput({
+            ...input,
+            [pw] : ""
+          })
           break;
         default:
           return;
@@ -92,6 +94,7 @@ function Login() {
             value={id}
             onChange={handleInputChange}
             placeholder=" 학번"
+            ref={idInput}
           />
 
           <input
