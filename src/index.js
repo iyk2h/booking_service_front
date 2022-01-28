@@ -5,9 +5,10 @@ import App from './App';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Calendar } from './components/calendar';
 import { Login } from "./components/login";
+import Signup from './components/signup';
 import Facility from './components/facility';
 import Check from "./components/check";
-
+import Mypage from "./components/mypage";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -15,6 +16,8 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/mypage" element={<Mypage />} />
         <Route path="/check" element={<Check />} />
         <Route path="/booking" element={<Facility />}>
           <Route path=":fno" element={<Calendar />} />

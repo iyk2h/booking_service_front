@@ -1,10 +1,13 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Loading from "./loading";
 
 export default function Check(props) {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [loading, setLoding] = useState(true);
 
   useEffect(() => {
     axios.get("/check").catch(err => {
@@ -13,6 +16,7 @@ export default function Check(props) {
         return;
       }
     });
+    setLoding(false);
   }, []);
 
   // const startTime = location.state.startTime.split(" ")[1];
@@ -43,8 +47,14 @@ export default function Check(props) {
     }
   };
 
+  let loading_component = null;
+  if(loading) {
+    loading_component = <Loading />
+  }
+
   return (
     <div>
+      {loading_component}
       <div>( 체크 이미지 V )</div>
       <article>
         <div>예약이 완료되었습니다.</div>
