@@ -31,8 +31,8 @@ export default function Signup() {
     }
     const chkPhone = /\d{3}-\d{4}-\d{4}/;
     if(!chkPhone.test(phone)) {
-      alert("옳바른 형식의 비밀번호를 입력해 주세요.");
-      setPw("");
+      alert("옳바른 형식의 전화번호를 입력해 주세요.");
+      setPhone("010");
       return;
     }
   }

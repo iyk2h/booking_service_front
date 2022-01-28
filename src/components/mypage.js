@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { History } from './history';
-import { Editprofile } from './editprofile';
+
 
 export default function Mypage() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ export default function Mypage() {
       </div>
       <div key="edit_profile" className="edit_profile">
         개인정보 변경
-        {edit ? <Editprofile/> : null}
+
       </div>
       <div key="change_pw" className="change_pw">비밀번호 변경</div>
       <div key="withdraw" className="withdraw">회원 탈퇴</div>

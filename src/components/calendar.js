@@ -19,10 +19,9 @@ function Calendar() {
   // Mount시 오늘 날짜로 예약 일정 받아오기
   useEffect(() => {
     if(location.state) {
-      setViewYear(Number(location.state.userSelect.date.split(":"[0])));
-      setViewMonth(Number(location.state.userSelect.date.split(":"[1])));
-      setClicked(Number(location.state.userSelect.date.split(":"[2])));
-      setReservedTime(location.state.time);
+      setViewYear(Number(location.state.userSelect.date.split("-")[0]));
+      setViewMonth(Number(location.state.userSelect.date.split("-")[1])-1);
+      setClicked(Number(location.state.userSelect.date.split("-")[2]));
       return;
     }
     const url = `${BASE_URL}/booking/${current_url.fno}/date`;
@@ -50,7 +49,6 @@ function Calendar() {
     const able_time = [];
     json.forEach(x => {
       if(x.startTime.split(" ")[0].split("-")[2] === String(clicked_date)) {
-        console.log(x)
         able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]);
       }
     })
@@ -98,7 +96,8 @@ function Calendar() {
   const PLDay = prevLast.getDay();
   const TLDate = thisLast.getDate();
   const TLDay = thisLast.getDay();
-  
+  console.log("------")
+  console.log(TLDate)
   const prevDates = [];
   const thisDates = [...Array(TLDate + 1).keys()].slice(1);
   const nextDates = [];
@@ -140,7 +139,7 @@ function Calendar() {
     const todayClass =
       today.getFullYear() === viewYear &&
       today.getMonth() === viewMonth &&
-      todayNum === date
+      i === thisDates.indexOf(todayNum)+prevDates.length
         ? "today"
         : null;
 

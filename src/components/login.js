@@ -13,7 +13,6 @@ function Login() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [disabled, setDisabled] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   // Handler
   const handleInputChange = (e) => {
@@ -33,21 +32,16 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    // 제출 직후 일시적으로 버튼 비활성화
-    setDisabled(true);
-    await new Promise((r) => setTimeout(r, 500));
-    console.log(1)
+    setDisabled(prev => prev = true);
+    await new Promise((t) => setTimeout(t, 0));
 
     const chkId = /^[0-9]{6}$/;
     if (!chkId.test(id)) {
       alert("옳바른 형식의 아이디를 입력해 주세요.");
-      setId("");
-      return;
+      setDisabled(false);
+      return
     }
-
     requestLogin();
-    // 버튼 다시 활성화
     setDisabled(false);
   }
 
@@ -62,7 +56,6 @@ function Login() {
 
     axios.post(url, data, headers)
     .then(response => {
-      setLoading(false)
       if (response.status === 201) {
         if(!location.state) {
           navigate("/", { replace : true });
@@ -75,9 +68,6 @@ function Login() {
       } 
     })
     .catch(err => {
-      setLoading(false);
-      console.log(err.response)
-
       switch (err.response.status) {
         case 401:
           alert("id를 확인해 주세요.");
@@ -92,12 +82,9 @@ function Login() {
       }
     });
   }
-
   return (
     <div>
       <div className="login-container">
-        {loading ? <Loading /> : null}
-        <img alt="MNU LOGO" />
         <form onSubmit={handleSubmit}>
           <input
             className="userId"
@@ -117,7 +104,7 @@ function Login() {
             placeholder=" 비밀번호"
           />
           <button type="submit" className="login-btn" disabled={disabled}>
-            로그인
+            Login
           </button>
         </form>
         <p className="finding-pw">
