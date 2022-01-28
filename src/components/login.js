@@ -51,7 +51,7 @@ function Login() {
     const url = `${BASE_URL}/students/login`;
     const headers = { "Content-Type": "application/json" };
     const data = {
-      "sid": id,
+      "id": id,
       "pw": pw,
     };
 
