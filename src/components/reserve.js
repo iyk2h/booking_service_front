@@ -12,8 +12,7 @@ function Reserve(props) {
     const header = { "Content-type": "application/json" };
     const data = {
       date: props.userSelect.date,
-      maxHour: props.time.length,
-      selectedTime: props.time[0],
+      selectedTime : props.time.length
     };
     axios
     .post(url, data, header)
