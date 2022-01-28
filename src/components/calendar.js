@@ -122,7 +122,7 @@ function Calendar() {
 
   let selectableIndex = 0;
   if (today.getFullYear() === viewYear && today.getMonth() === viewMonth) {
-    selectableIndex = thisDates.indexOf(todayNum) + prevDates.length;
+    selectableIndex = thisDates.indexOf(todayNum) + prevDates.length; // 애매
   } else if (viewYear < today.getFullYear()) { // ???
     selectableIndex = 100;
   }

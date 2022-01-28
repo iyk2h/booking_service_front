@@ -48,7 +48,7 @@ function Login() {
 
   // Request
   const requestLogin = () => {
-    const url = BASE_URL+"students/login";
+    const url = `${BASE_URL}/students/login`;
     const headers = { "Content-Type": "application/json" };
     const data = {
       "sid": id,
@@ -62,13 +62,15 @@ function Login() {
           navigate("/", { replace : true });
           return;
         }
-        navigate(`${BASE_URL}booking/${location.state.userSelect.fno}`, {
+        navigate(`${BASE_URL}/booking/${location.state.userSelect.fno}`, {
           state: location.state,
           replace: true,
         });
       } 
     })
     .catch(err => {
+      console.log(err)
+
       switch (err.response.status) {
         case 401:
           alert("id를 확인해 주세요.");
