@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils";
+import Loading from "./loading";
 import "./login.css";
 
 // Component
@@ -12,6 +13,7 @@ function Login() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Handler
   const handleInputChange = (e) => {
@@ -31,9 +33,11 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     // 제출 직후 일시적으로 버튼 비활성화
     setDisabled(true);
     await new Promise((r) => setTimeout(r, 500));
+    console.log(1)
 
     const chkId = /^[0-9]{6}$/;
     if (!chkId.test(id)) {
@@ -41,6 +45,7 @@ function Login() {
       setId("");
       return;
     }
+
     requestLogin();
     // 버튼 다시 활성화
     setDisabled(false);
@@ -57,19 +62,21 @@ function Login() {
 
     axios.post(url, data, headers)
     .then(response => {
+      setLoading(false)
       if (response.status === 201) {
         if(!location.state) {
           navigate("/", { replace : true });
           return;
         }
-        navigate(`${BASE_URL}/booking/${location.state.userSelect.fno}`, {
+        navigate(`/booking/${location.state.userSelect.fno}`, {
           state: location.state,
           replace: true,
         });
       } 
     })
     .catch(err => {
-      console.log(err)
+      setLoading(false);
+      console.log(err.response)
 
       switch (err.response.status) {
         case 401:
@@ -89,6 +96,7 @@ function Login() {
   return (
     <div>
       <div className="login-container">
+        {loading ? <Loading /> : null}
         <img alt="MNU LOGO" />
         <form onSubmit={handleSubmit}>
           <input
