@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL } from "../utils";
 import Loading from "./loading";
 import "./login.css";
 
@@ -47,7 +46,7 @@ function Login() {
 
   // Request
   const requestLogin = () => {
-    const url = `${BASE_URL}/students/login`;
+    const url = `/students/login`;
     const headers = { "Content-Type": "application/json" };
     const data = {
       "id": id,

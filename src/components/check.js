@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Loading from "./loading";
-import { BASE_URL } from "../utils";
 
 export default function Check(props) {
   const navigate = useNavigate();
@@ -12,7 +11,9 @@ export default function Check(props) {
 
   useEffect(() => {
     axios
-    .get("/check")
+    .get("/check",{
+      headers:{"Content-type":"application/json"}
+    })
     .catch(err => err.response.status === 401 && navigate("/login", { replace: true }));
     setLoding(false);
   });
@@ -40,9 +41,9 @@ export default function Check(props) {
   const handleLink = (e) => {
     const target = e.target.className;
     if(target === "home_btn") {
-      navigate(BASE_URL);
+      navigate("/");
     } else if(target === "myPage_btn") {
-      navigate(BASE_URL + "/mypage");
+      navigate("/mypage");
     }
   };
   return (

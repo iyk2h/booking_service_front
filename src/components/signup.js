@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link  } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL } from "../utils";
 
 export default function Signup() {
   const [id, setId] = useState("");
@@ -11,7 +10,7 @@ export default function Signup() {
   
   const duplicateCheck = e => {
     e.preventDefault();
-    const url = `${BASE_URL}/students/check`;
+    const url = `/students/check`;
     const data = { "id" : id, "pw": pw };
     const headers = { "Content-Type" : "application/json" };
     axios.post(url, data, headers)

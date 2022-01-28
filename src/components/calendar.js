@@ -4,7 +4,6 @@ import { TimeTable } from "./timetable";
 import DateFilter from "./datefilter";
 import DatePicker from "./datepicker";
 import axios from "axios";
-import { BASE_URL } from "../utils";
 import "./calendar.css";
 
 function Calendar() {  
@@ -25,7 +24,7 @@ function Calendar() {
       setClicked(prev_select[2]);
       return;
     }
-    const url = `${BASE_URL}/booking/${current_url.fno}/date`;
+    const url = `/booking/${current_url.fno}/date`;
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
     const data = {
@@ -79,7 +78,7 @@ function Calendar() {
     const dateClass = e.target.className;
     if (dateClass.includes("_able")) {
       const clicked_date = Number(e.target.textContent);
-      const url = `${BASE_URL}/booking/${current_url.fno}/date`;
+      const url = `/booking/${current_url.fno}/date`;
       const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
       const f_day = todayNum < 10 ? `0${clicked}` : clicked; 
       const data = {
