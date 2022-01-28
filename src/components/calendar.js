@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { TimeTable } from "./timetable";
 import DateFilter from "./datefilter";
 import DatePicker from "./datepicker";
 import axios from "axios";
-import { BASE_URL } from "../utils";
 import "./calendar.css";
 
 function Calendar() {  
@@ -25,31 +24,37 @@ function Calendar() {
       setReservedTime(location.state.time);
       return;
     }
-    const url = `${BASE_URL}/booking/${current_url.fno}/date`; 
+    const url = `${current_url.fno}/date`;
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
     const data = {
       "date" : `${viewYear}-${f_month}-${f_day}`
     }
-    requestTime(url, data);
+    requestTime(url, data, todayNum);
   }, []);
 
-  const requestTime = (url, data) => { 
-    const header = {"Content-Type":"application/json"}
+  const requestTime = (url, data, clicked_date) => { 
+    const header = {"Content-type":"application/json"}
     axios.post(url, data, header)
     .then(response => response.data)
-    .then(json => console.log(json))
+    .then(json => filterTimeInJson(json, clicked_date))
+    .then(filteredTime => setReservedTime(filteredTime))
     .catch(err => console.log(err))
   }
 
-  // const filterTimeInJson = json => {
-  //   if(json.length === 0 || !json) {
-  //     return [];
-  //   }
-  //   const able_time = [];
-  //   json.forEach(x => able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]))
-  //   return able_time;
-  // }
+  const filterTimeInJson = (json, clicked_date) => {
+    if(json.length === 0 || !json) {
+      return [];
+    }
+    const able_time = [];
+    json.forEach(x => {
+      if(x.startTime.split(" ")[0].split("-")[2] === String(clicked_date)) {
+        console.log(x)
+        able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]);
+      }
+    })
+    return able_time;
+  }
 
   const handleFilter = (e) => {
     const btnClass = e.target.className;
@@ -76,12 +81,12 @@ function Calendar() {
       const clicked_date = Number(e.target.textContent);
       const url = `${current_url.fno}/date`;
       const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-      const f_day = todayNum < 10 ? `0${clicked_date}` : clicked_date; 
+      const f_day = todayNum < 10 ? `0${clicked}` : clicked; 
       const data = {
         "date" : `${viewYear}-${f_month}-${f_day}`
       }
-      setClicked(clicked_date)
-      requestTime(url, data); 
+      setClicked(clicked_date); 
+      requestTime(url, data, clicked_date);
     }
   };
  
@@ -116,7 +121,7 @@ function Calendar() {
 
   let selectableIndex = 0;
   if (today.getFullYear() === viewYear && today.getMonth() === viewMonth) {
-    selectableIndex = dates.indexOf(todayNum);
+    selectableIndex = thisDates.indexOf(todayNum) + prevDates.length;
   } else if (viewYear < today.getFullYear()) { // ???
     selectableIndex = 100;
   }
@@ -176,6 +181,3 @@ function Calendar() {
 }
 
 export { Calendar };
-// Array.(TLDate+1).keys() -> 배열의 idx를 key로 하는 'Array Iterator'객체 반환
-  // 'Array Iterrator'란? ->
-  // 전개구문('...') -> 배열같은 반복 가능한 구문을 전개하여 1개의 인수가 아닌 여러개의 인수로 확장시킴.
