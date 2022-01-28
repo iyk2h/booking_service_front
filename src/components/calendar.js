@@ -19,9 +19,10 @@ function Calendar() {
   // Mount시 오늘 날짜로 예약 일정 받아오기
   useEffect(() => {
     if(location.state) {
-      setViewYear(Number(location.state.userSelect.date.split("-")[0]));
-      setViewMonth(Number(location.state.userSelect.date.split("-")[1])-1);
-      setClicked(Number(location.state.userSelect.date.split("-")[2]));
+      const prev_select = location.state.userSelect.date.split("-").map(x => Number(x))
+      setViewYear(prev_select[0]);
+      setViewMonth(prev_select[1]-1);
+      setClicked(prev_select[2]);
       return;
     }
     const url = `${BASE_URL}/booking/${current_url.fno}/date`;
@@ -96,8 +97,7 @@ function Calendar() {
   const PLDay = prevLast.getDay();
   const TLDate = thisLast.getDate();
   const TLDay = thisLast.getDay();
-  console.log("------")
-  console.log(TLDate)
+ 
   const prevDates = [];
   const thisDates = [...Array(TLDate + 1).keys()].slice(1);
   const nextDates = [];
