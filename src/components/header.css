@@ -1,0 +1,31 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  min-height :40px ;max-height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+}
+
+.header_menu {
+  position: absolute;
+  top: 2.5rem;
+  right: 0.5rem;
+  min-width: 30px; max-width: 100px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+.header_menu > span {
+  padding: 5px 5px;
+}
+
+.icon {
+  font-size: 25px;
+  margin: 0 1.6rem;
+}

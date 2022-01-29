@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import "./header.css"
 
 export default function Header() {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
 
-  useEffect(() => {
-    logIn();
-  }, [])
+  useEffect(() => logIn(), []);
 
   const logIn = () => {
     const url = "/students/check";
@@ -42,16 +41,18 @@ export default function Header() {
     navigate("/mypage")
   }
   return (
-    <div>
-      <div
+    <>
+      <header
         className="menuIcon"
         onClick={handleIcon}
       >
-        <i className="fas fa-user-circle"></i>
+        <img alt='MNU LOGO' className='icon'/>
+        <i className="icon fas fa-user-circle"></i>
+      </header>
+      <div className="header_menu">  
+        {toggle && <span onClick={handleLog}>{isLogin ? "로그아웃" : "로그인"}</span>}
+        {toggle && <span onClick={handleList}>마이페이지</span>}
       </div>
-      {toggle && <span onClick={handleLog}>{isLogin ? "로그아웃" : "로그인"}</span>}
-      <br></br>
-      {toggle && <span onClick={handleList}>내 예약 목록</span>}
-    </div>
+    </>
   );
 }
