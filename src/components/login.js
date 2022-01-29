@@ -9,16 +9,20 @@ function Login() {
   const navigate = useNavigate();
 
   const [disabled, setDisabled] = useState(false);
+  const [isLogin, setIsLogin] = useState(false); isLogin && navigate(-1); // TEST
   const [input, setInput] = useState({
     id : '',
     pw : ''
   })
   const {id, pw} = input;
-  const idInput = useRef(); // id 입력 DOM 가져오기 위함
+  const idInput = useRef(null); // id 입력 DOM 가져오기 위함
+
 
   useEffect(() => { // 첫 로드시 id입력창 focus
+    logIn(); // TEST
     idInput.current.focus();
-  })
+  }, [])
+
   // Handler
   const handleInputChange = (e) => {
     const {name, value} = e.target;
@@ -26,6 +30,19 @@ function Login() {
       ...input,
       [name] : value
     })
+  }
+
+  const logIn = () => { // TEST
+    const url = "/students/check";
+    const headers = { "Content-Type" : "application/json" }
+    const data = {
+      "id": 0,
+      "pw": "string"
+    }
+    axios
+    .post(url, data, headers)
+    .then(response => response.status === 201 && setIsLogin(true))
+    .catch(err => err.response.status === 401 && console.log("err"))
   }
 
   const handleSubmit = async (e) => {

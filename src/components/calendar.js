@@ -18,7 +18,8 @@ function Calendar() {
   // Mount시 오늘 날짜로 예약 일정 받아오기
   useEffect(() => {
     if(location.state) {
-      const prev_select = location.state.userSelect.date.split("-").map(x => Number(x))
+      const prev_select = location.state.userSelect.date.split("-").map(x => Number(x));
+
       setViewYear(prev_select[0]);
       setViewMonth(prev_select[1]-1);
       setClicked(prev_select[2]);
@@ -72,6 +73,7 @@ function Calendar() {
     setViewYear(currViewYear);
     setViewMonth(currViewMonth);
     setClicked(null);
+    setReservedTime([])
   };
 
   const handlePicker = (e) => {
@@ -80,7 +82,7 @@ function Calendar() {
       const clicked_date = Number(e.target.textContent);
       const url = `/booking/${current_url.fno}/date`;
       const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-      const f_day = todayNum < 10 ? `0${clicked}` : clicked; 
+      const f_day = todayNum < 10 ? `0${clicked_date}` : clicked_date; 
       const data = {
         "date" : `${viewYear}-${f_month}-${f_day}`
       }
@@ -174,7 +176,6 @@ function Calendar() {
           }
         } 
       />
-      {/* <Reserve /> */}
     </div>
   );
 }

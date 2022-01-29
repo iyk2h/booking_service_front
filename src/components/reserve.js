@@ -7,14 +7,12 @@ function Reserve(props) {
 
   const handleBooking = () => {
     const url = `/booking/${props.userSelect.fno}`;
-    console.log(url)
     const header = { "Content-type": "application/json" };
     const data = {
       date: props.userSelect.date,
       maxHour : props.time.length,
       selectedTime : props.time[0]
     };
-    console.log(data);
     axios
     .post(url, data, header)
     .then(response => response.status === 201 && navigate("/check", { state: response.data }))

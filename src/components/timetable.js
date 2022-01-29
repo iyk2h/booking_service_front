@@ -17,11 +17,7 @@ function TimeTable(props) {
     //const validation = (props.userSelect.date.split("-")[1] <= new Date().getMonth && i < (new Date()).getHours()) ? "expire" : null
     const clicked = userTime.length !== 0 && userTime.indexOf(booking_time) !== -1 ? "clicked" : null;
     const className = props.reservedTime.length !== 0 && props.reservedTime.indexOf(booking_time) !== -1 ? "reserved" : "can_reserve";
-    // let ableClick = null;
-    // if (userTime.length && userTime.length < maxHour) {
-    //   let tmp = Number(userTime[userTime.length - 1].split(":")[0]);
-    //   ableClick = tmp < i && i <= tmp + maxHour - userTime.length ? "ableClick" : null;
-    // }
+   
     let ableClick = null;
     if (userTime.length === 1) {
       let tmp = Number(userTime[0].split(":")[0]);
@@ -38,29 +34,6 @@ function TimeTable(props) {
     );
   }
 
-  // const handleTimeClick = e => {
-  //   const timeClass = e.target.className;
-  //   if(timeClass.includes('can_reserve') && !timeClass.includes('expire')) {
-  //     let tmp = e.target.textContent.split(":")[0];
-  //     if(userTime.indexOf(inputTmp(tmp)) !== -1) {
-  //       const cancle = userTime.filter(time => time !== inputTmp(tmp));
-  //       setUserTime(cancle);
-  //       return;
-  //     }
-  //     if(userTime.length) {
-  //       const diff = userTime[userTime.length - 1].split(":")[0] - tmp;
-  //       if(Math.abs(diff) > 1) {
-  //         alert("연속된 시간을 선택해 주세요");
-  //         return;
-  //       }
-  //     }
-  //     if(userTime.length === maxHour) {
-  //       alert(`최대 ${maxHour}시간 이용 가능합니다!`);
-  //       return;
-  //     }
-  //     setUserTime(userTime.concat([inputTmp(tmp)]));
-  //   }
-  // }
   const handleTimeClick = (e) => {
     const timeClass = e.target.className;
     if (timeClass.includes("can_reserve") && !timeClass.includes("expire")) {
@@ -104,3 +77,33 @@ function TimeTable(props) {
 }
 
 export { TimeTable };
+
+// let ableClick = null;
+// if (userTime.length && userTime.length < maxHour) {
+//   let tmp = Number(userTime[userTime.length - 1].split(":")[0]);
+//   ableClick = tmp < i && i <= tmp + maxHour - userTime.length ? "ableClick" : null;
+// }
+
+// const handleTimeClick = e => {
+//   const timeClass = e.target.className;
+//   if(timeClass.includes('can_reserve') && !timeClass.includes('expire')) {
+//     let tmp = e.target.textContent.split(":")[0];
+//     if(userTime.indexOf(inputTmp(tmp)) !== -1) {
+//       const cancle = userTime.filter(time => time !== inputTmp(tmp));
+//       setUserTime(cancle);
+//       return;
+//     }
+//     if(userTime.length) {
+//       const diff = userTime[userTime.length - 1].split(":")[0] - tmp;
+//       if(Math.abs(diff) > 1) {
+//         alert("연속된 시간을 선택해 주세요");
+//         return;
+//       }
+//     }
+//     if(userTime.length === maxHour) {
+//       alert(`최대 ${maxHour}시간 이용 가능합니다!`);
+//       return;
+//     }
+//     setUserTime(userTime.concat([inputTmp(tmp)]));
+//   }
+// }
