@@ -12,17 +12,19 @@ header {
 
 .header_menu {
   position: absolute;
-  top: 2.5rem;
+  top: 2.3rem;
   right: 0.5rem;
-  min-width: 30px; max-width: 100px;
+  min-width: 110px; max-width: 100px;
   display: flex;
   flex-direction: column;
-  border: 1px solid;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 5px;
+  z-index: 2;
+  background-color: white;
 }
 
 .header_menu > span {
-  padding: 5px 5px;
+  padding: 12px 20px;
 }
 
 .icon {

@@ -25,7 +25,7 @@ export default function Mypage() {
           style={{ display: "block", margin: "1rem 0" }}
           className={({ isActive }) => isActive ? "isActive" : null}
         >
-          프로필 편집
+          연락처 변경
         </NavLink>
         <NavLink 
           to="password"
