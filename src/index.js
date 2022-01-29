@@ -11,6 +11,8 @@ import Check from "./components/check";
 import Mypage from "./components/mypage/mypage";
 import History from "./components/mypage/history";
 import Profile from "./components/mypage/profile";
+import Password from "./components/mypage/password";
+
 
 ReactDOM.render(
   <React.StrictMode>
@@ -27,6 +29,7 @@ ReactDOM.render(
         <Route path="/mypage" element={<Mypage />} >
           <Route path="history" element={<History />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="password" element={<Password />} />
         </Route>
         <Route path="*" element={<div><p>404 Not Found</p></div>}/>
       </Routes>

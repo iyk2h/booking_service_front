@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import "./header.css"
 
@@ -46,7 +46,7 @@ export default function Header() {
         className="menuIcon"
         onClick={handleIcon}
       >
-        <img alt='MNU LOGO' className='icon'/>
+        <Link to="/"><img alt='MNU LOGO' className='icon'/></Link>
         <i className="icon fas fa-user-circle"></i>
       </header>
       <div className="header_menu">  

@@ -25,7 +25,14 @@ export default function Mypage() {
           style={{ display: "block", margin: "1rem 0" }}
           className={({ isActive }) => isActive ? "isActive" : null}
         >
-          개인 정보
+          프로필 편집
+        </NavLink>
+        <NavLink 
+          to="password"
+          style={{ display: "block", margin: "1rem 0" }}
+          className={({ isActive }) => isActive ? "isActive" : null}
+        >
+          비밀번호 변경
         </NavLink>
       </nav>
       <div className="outlet">
