@@ -9,7 +9,7 @@ function Login() {
   const navigate = useNavigate();
 
   const [disabled, setDisabled] = useState(false);
-  const [isLogin, setIsLogin] = useState(false); isLogin && navigate(-1); // TEST
+  const [isLogin, setIsLogin] = useState(false); isLogin && navigate("/"); // TEST
   const [input, setInput] = useState({
     id : '',
     pw : ''
