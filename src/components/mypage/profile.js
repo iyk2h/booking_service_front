@@ -28,18 +28,18 @@ export default function Profile() {
     })
   }
 
-  const checkValidation = (phone) => {
-    var regex = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+  const checkValidation = () => {
+    const regex = /^010-?([0-9]{4})-?([0-9]{4})$/;
     if(!regex.test(phone)) {
-      alert('옳바른 형식의 이름을 입력해주세요');
-      return;
-    }
-    if(!name) {
       alert('옳바른 형식의 전화번호를 입력해주세요');
       return;
     }
-    if(!pw) {
-      alert('옳바른 형식의 비밀번호를 입력해주세요');
+    if(name.length < 2) {
+      alert('옳바른 형식의 이름을 입력해주세요');
+      return;
+    }
+    if(pw.length < 2) {
+      //alert('옳바른 형식의 비밀번호를 입력해주세요');
       return;
     }
     return true
@@ -53,8 +53,11 @@ export default function Profile() {
       "pw": pw
     }    
     axios.put(url, data)
-    .then(response => response.status === 201 && alert("비밀번호가 변경되었습니다."))
-    .catch(err => err.response.status === 400 && alert("비밀번호가 틀렸습니다."))
+    .then(response => {
+      response.status === 201 && alert("비밀번호가 변경되었습니다.");
+      onReset();
+    })
+    .catch(err => err.response.status === 404 && alert("비밀번호가 틀렸습니다."))
   }
 
   const handleSubmit = e => {
@@ -94,7 +97,7 @@ export default function Profile() {
           <label htmlFor="pw">비밀번호</label>
           <input
             type="password"
-            name="password"
+            name="pw"
             id="password_input"
             placeholder="   Password"
             onChange={handleChange}

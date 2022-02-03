@@ -9,5 +9,21 @@ export default function auth() {
   }
   axios
   .post(url, data, headers)
-  .catch(err => err.response.status === 401 && (window.location.href = "/login"));
+  .catch(err => err.response.status === 401 && routeToLogin());
 }
+
+function logout() {
+  axios.get("/students/logout")
+  .then(response => {
+    if(response.status === 200) {
+      alert("로그아웃 되었습니다.");
+      routeToLogin();
+    }
+  })
+}
+
+function routeToLogin() {
+  return window.location.href = "/login";
+}
+
+export { logout };

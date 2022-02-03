@@ -19,7 +19,7 @@ function Login() {
 
 
   useEffect(() => { // 첫 로드시 id입력창 focus
-    logIn(); // TEST
+    //logIn(); // TEST
     idInput.current.focus();
   }, [])
 
@@ -32,18 +32,18 @@ function Login() {
     })
   }
 
-  const logIn = () => { // TEST
-    const url = "/students/check";
-    const headers = { "Content-Type" : "application/json" }
-    const data = {
-      "id": 0,
-      "pw": "string"
-    }
-    axios
-    .post(url, data, headers)
-    .then(response => response.status === 201 && setIsLogin(true))
-    .catch(err => err.response.status === 401 && console.log("err"))
-  }
+  // const logIn = () => { // TEST
+  //   const url = "/students/check";
+  //   const headers = { "Content-Type" : "application/json" }
+  //   const data = {
+  //     "id": 0,
+  //     "pw": "string"
+  //   }
+  //   axios
+  //   .post(url, data, headers)
+  //   .then(response => response.status === 201 && setIsLogin(true))
+  //   .catch(err => err.response.status === 401 && console.log("로그인 되어있지 않은 상태"))
+  // }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,7 +92,7 @@ function Login() {
           alert("비밀번호를 확인해 주세요.");
           setInput({
             ...input,
-            [pw] : ""
+            pw : ""
           })
           break;
         default:
