@@ -3,8 +3,6 @@
   height: calc(100vh - 50px);
   margin-top: 40px;
   display: flex;
-  /* border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); */
 }
 
 .outlet {
@@ -17,6 +15,7 @@ nav {
   flex-direction: column;
   text-align: center;
   border-right: 1px solid whitesmoke;
+  max-width: 160px;
 }
 
 .no_booking {
@@ -31,3 +30,4 @@ nav {
   border-left: 2px solid;
   font-weight: bold;
 }
+

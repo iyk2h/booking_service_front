@@ -4,13 +4,9 @@ import Header from "./header";
 export default function Facility() {
   return (
     <div>
-      <header>
-        <Header/>
-      </header>
-      <Outlet />
-      <footer>
-        footer입니다.
-      </footer>
+      <header><Header/></header>
+      <main><Outlet /></main>
+      <footer>footer입니다.</footer>
     </div>
   );
 }

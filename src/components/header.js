@@ -42,13 +42,13 @@ export default function Header() {
   }
   return (
     <>
-      <header
+      <menu
         className="menuIcon"
         onClick={handleIcon}
       >
         <Link to="/"><img alt='MNU LOGO' className='icon'/></Link>
         <i className="icon fas fa-user-circle"></i>
-      </header>
+      </menu>
       <div className="header_menu">  
         {toggle && <span onClick={handleLog}>{isLogin ? "로그아웃" : "로그인"}</span>}
         {toggle && <span onClick={handleList}>마이페이지</span>}

@@ -11,7 +11,7 @@ export default function Mypage() {
 
   return (
     <div className='mypage_container'>
-      <Header />
+      <Header/>
       <nav>
         <NavLink 
           to="history"
