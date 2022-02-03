@@ -15,7 +15,7 @@ nav {
   flex-direction: column;
   text-align: center;
   border-right: 1px solid whitesmoke;
-  max-width: 160px;
+  max-width: 130px; min-width: 130px;
 }
 
 .no_booking {

@@ -1,13 +1,16 @@
 .phone_container {
-    padding: 1em 4em;
+  padding: 1em 4em;
 }
 
-#phone {
-    width: 50vw;
-    height: 2rem;
-    border: 1px solid silver;
-    border-radius: 5px;
+#name_input,
+#phone_input,
+#password_input {
+  width: 50vw;
+  height: 2rem;
+  border: 1px solid silver;
+  border-radius: 5px;
 }
 
-
-
+.find {
+  display: block;
+}

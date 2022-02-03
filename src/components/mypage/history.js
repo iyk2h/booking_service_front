@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import auth from "../../auth";
 import "./history.css"
 
@@ -47,11 +48,14 @@ export default function History(props) {
   }
 
   return (
-    <div>
-      <ul>
+    <div className='history_list'>
+      <ul className='history_list'>
         {
           !list 
-          ? <li className='no_booking'>예약 내역이 없습니다.</li>
+          ? <li className='no_booking'>
+              <p>예약 내역이 없습니다.</p>
+              <Link to="/" className="go_home">예약하러 가기</Link>
+            </li>
           : list.map(item => {
             return (
               <li>

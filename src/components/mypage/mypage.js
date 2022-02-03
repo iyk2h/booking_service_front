@@ -25,7 +25,7 @@ export default function Mypage() {
           style={{ display: "block", margin: "1rem 0" }}
           className={({ isActive }) => isActive ? "isActive" : null}
         >
-          연락처 변경
+          개인정보 변경
         </NavLink>
         <NavLink 
           to="password"
