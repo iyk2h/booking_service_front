@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Loading from '../loading';
 import auth from "../../auth";
-import Cancel from './cancel';
-import Edit from "./edit";
+import BookingCard from './bookingCard';
+import NoBookingCard from './noBookingCard';
+
 import "./history.css"
 
 export default function History(props) {
@@ -39,36 +40,22 @@ export default function History(props) {
     }
   }
 
-  const handleEdit = (target_bno) => {
-
-  }
-  
   return (
     <div className='history_list'>
       {loading && <Loading />}
       <ul className='history_list'>
         {
           list && list.length === 0
-          ? <li className='no_booking'>
-              <p>예약 내역이 없습니다.</p>
-              <Link to="/" className="go_home">예약하러 가기</Link>
-            </li>
-          : list && list.map(item => {
-            return (
-              <li key={item.bno} className='booking_card'>
-                <div>{item.bno}</div>
-                <div>
-                  <div className='place_name'>{setPlace(item.fno)}</div>
-                  <div>{item.startTime.split(" ")[0]}</div>
-                  <div>{item.startTime.split(" ")[1]} ~ {item.endTime.split(" ")[1]}</div>
-                </div>
-                <div>
-                  <Cancel list={list} setList={setList} bno={item.bno}/>
-                  <Edit list={list} setList={setList} bno={item.bno}/>
-                </div>
-              </li>
-            )
-          })
+          ? <NoBookingCard />
+          : list && list.map(item => 
+            <BookingCard 
+              key={item.bno} 
+              item={item} 
+              list={list} 
+              setList={setList}
+              setPlace={setPlace}
+            />
+          )
         }
       </ul>
     </div>
