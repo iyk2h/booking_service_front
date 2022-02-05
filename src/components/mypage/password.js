@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { logout } from '../../auth';
+import Confirm from "./confirm";
 import "./password.css";
+import InputSample from '../../inputSample';
 
 export default function Password() {
   const [inputs, setInputs] = useState({
@@ -16,8 +18,8 @@ export default function Password() {
   const handleChange = (e) => {
     const {name, value} = e.target;
     setInputs({
-      ...inputs, // 복사 후 
-      [name] : value // 값 변경
+      ...inputs, 
+      [name] : value 
     })
   }
 
@@ -47,7 +49,6 @@ export default function Password() {
   }
 
   const changePassword = () => {
-    onReset();
     const url = "/students/password";
     const data = {
       "newPw": _new,
@@ -61,7 +62,6 @@ export default function Password() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onReset();
     if(checkValidation()) {
       changePassword();
     }
@@ -78,6 +78,7 @@ export default function Password() {
               name="old"
               placeholder="   Old Password"
               onChange={handleChange}
+              value={old}
               required
             />
         </div>
@@ -88,6 +89,7 @@ export default function Password() {
               id="_new" 
               name="_new" 
               placeholder="   New Password" 
+              value={_new}
               onChange={handleChange} 
               required
             />
@@ -99,15 +101,14 @@ export default function Password() {
               id="confirm" 
               name="confirm" 
               placeholder="   Confirm" 
+              value={confirm}
               onChange={handleChange} 
               required
             />
         </div>
-        <div className="btn">
-            <button className="confirm_btn" type="submit">변경하기</button>
-        </div>
+        <Confirm />
         <Link to="/" className='find'>비밀번호를 잊으셨나요?</Link>
-    </form>
+      </form>
     </div>
   );
 }

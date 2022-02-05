@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Confirm from "./confirm";
 import "./profile.css";
 
 export default function Profile() {
@@ -104,9 +105,7 @@ export default function Profile() {
             required  
           />
         </div>
-        <div className="btn_container">
-          <button className="confirm_btn">변경하기</button>
-        </div>
+        <Confirm />
         <Link to="/" className='find'>비밀번호를 잊으셨나요?</Link>
       </form>
     </div>

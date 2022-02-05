@@ -15,8 +15,8 @@ function Login() {
     pw : ''
   })
   const {id, pw} = input;
-  const idInput = useRef(null); // id 입력 DOM 가져오기 위함
 
+  const idInput = useRef(null); // id 입력 DOM 가져오기 위함
 
   useEffect(() => { // 첫 로드시 id입력창 focus
     //logIn(); // TEST

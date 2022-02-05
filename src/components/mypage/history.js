@@ -9,12 +9,11 @@ export default function History(props) {
 
   useEffect(() => {
     auth();
-
     axios
     .get("/booking/students")
     .then(response => response.status === 200 && setList(response.data))
     .catch(err => console.log("자신의 예약리스트 받아올때 에러"))
-  },[]);
+  }, []);
   
   const setPlace = fno => {
     let place = null;
