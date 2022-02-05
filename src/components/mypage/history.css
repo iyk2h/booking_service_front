@@ -4,16 +4,6 @@
   overflow: auto;
 }
 
-.booking_card {
-  width: 80%;
-  height: 8rem;
-  margin: 30px auto;
-  padding: 10px;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-  border-radius: 10px;
-}
-
-
 /* 예약 없는 경우 */
 .no_booking {
   display: flex;

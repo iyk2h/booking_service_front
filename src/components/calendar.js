@@ -30,6 +30,7 @@ function Calendar() {
     const data = {
       date : `${viewYear}-${f_month}-${f_day}`
     }
+    console.log(typeof current_url.fno )
     console.log(url)
     console.log(data)
     requestTime(url, data, todayNum);

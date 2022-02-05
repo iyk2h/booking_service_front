@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Reserve } from "./reserve";
+import Reserve from "./reserve";
 import "./timetable.css";
 
 function TimeTable(props) {

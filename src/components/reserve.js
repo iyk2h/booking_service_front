@@ -1,9 +1,12 @@
-import React from "react";
-import axios from "axios";
+import React,{ useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Complete from "./modal/complete";
 
-function Reserve(props) {
+export default function Reserve(props) {
   let navigate = useNavigate();
+
+  const [modal, setModal] = useState(null);
 
   const handleBooking = () => {
     const url = `/booking/${props.userSelect.fno}`;
@@ -12,16 +15,21 @@ function Reserve(props) {
       maxHour : props.time.length,
       selectedTime : props.time[0]
     };
+
+    //TEST
     axios
     .post(url, data)
-    .then(response => response.status === 201 && navigate("/check", { state: response.data }))
+    .then(response => {
+      if(response.status === 201) {
+        setModal(<Complete data={response.data} fno={props.userSelect.fno}/>)
+      }
+    })
     .catch(error => error.response.status === 401 && navigate("/login", { state: props }));
   };
   return (
     <>
-      <button onClick={handleBooking}>예약하기</button>
+      <button onClick={handleBooking} className="reserve_btn">예약하기</button>
+      {modal}
     </>
   );
 }
-
-export { Reserve };

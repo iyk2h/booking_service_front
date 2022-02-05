@@ -46,7 +46,7 @@ export default function Header() {
         className="menuIcon"
         onClick={handleIcon}
       >
-        <Link to="/"><img alt='MNU LOGO' className='icon'/></Link>
+        <Link to="/"><img src="../../asset/images/MNU_LOGO.png" alt='MNU' className='icon'/></Link>
         <i className="icon fas fa-user-circle"></i>
       </menu>
       <div className="header_menu">  

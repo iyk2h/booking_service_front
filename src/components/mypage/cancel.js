@@ -19,7 +19,7 @@ export default function Cancel(props) {
   }
   return (
     <>
-      <button onClick={handleCancel}>예약 취소</button>
+      <button onClick={handleCancel} className="cancel_btn">취소</button>
     </>
   );
 }

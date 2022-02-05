@@ -51,12 +51,16 @@
   opacity: 0.2;
 }
 
+._able {
+  cursor: pointer;
+}
+
 .other {
   opacity: 0.2;
 }
 
 .today {
-  border: 1px solid black;
+  border: 1px solid gray;
 }
 
 .reserved {

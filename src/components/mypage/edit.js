@@ -8,7 +8,7 @@ export default function Edit() {
   }
   return (
     <>
-      <button onClick={handleEdit}>예약 변경</button>
+      <button onClick={handleEdit} className="edit_btn">변경</button>
     </>
   );
 }
