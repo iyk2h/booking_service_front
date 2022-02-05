@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import Confirm from "./confirm";
+import Find from "./find";
 import "./profile.css";
 
 export default function Profile() {
@@ -29,18 +29,15 @@ export default function Profile() {
     })
   }
 
-  const checkValidation = () => {
-    const regex = /^010-?([0-9]{4})-?([0-9]{4})$/;
-    if(!regex.test(phone)) {
-      alert('옳바른 형식의 전화번호를 입력해주세요');
-      return;
-    }
-    if(name.length < 2) {
+  const checkProfileValidation = () => {
+    const nameRegex = /^[가-힣]{2,4}$/;
+    const phoneRegex = /^010-?([0-9]{4})-?([0-9]{4})$/;
+    if(!nameRegex.test(name)) {
       alert('옳바른 형식의 이름을 입력해주세요');
       return;
     }
-    if(pw.length < 2) {
-      //alert('옳바른 형식의 비밀번호를 입력해주세요');
+    if(!phoneRegex.test(phone)) {
+      alert('옳바른 형식의 전화번호를 입력해주세요');
       return;
     }
     return true
@@ -54,16 +51,14 @@ export default function Profile() {
       "pw": pw
     }    
     axios.put(url, data)
-    .then(response => {
-      response.status === 201 && alert("비밀번호가 변경되었습니다.");
-      onReset();
-    })
+    .then(response => response.status === 201 && alert("프로필이 변경되었습니다."))
+    .then(result => onReset())
     .catch(err => err.response.status === 404 && alert("비밀번호가 틀렸습니다."))
   }
 
   const handleSubmit = e => {
     e.preventDefault();
-    if(checkValidation()) {
+    if(checkProfileValidation()) {
       changeProfile();
     }
   }
@@ -78,6 +73,7 @@ export default function Profile() {
             name="name"
             id="name_input"
             placeholder="   Name"
+            value={name}
             onChange={handleChange}
             required  
           />
@@ -101,12 +97,13 @@ export default function Profile() {
             name="pw"
             id="password_input"
             placeholder="   Password"
+            value={pw}
             onChange={handleChange}
             required  
           />
         </div>
         <Confirm />
-        <Link to="/" className='find'>비밀번호를 잊으셨나요?</Link>
+        <Find /> 
       </form>
     </div>
   );

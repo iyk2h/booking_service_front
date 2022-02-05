@@ -1,0 +1,11 @@
+.find {
+  margin: 10px 0;
+  font-size: small;
+}
+a {
+  opacity: 0.7;
+}
+
+a:hover {
+  opacity: 1.0;
+}

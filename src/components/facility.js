@@ -3,7 +3,7 @@ import Header from "./header";
 
 export default function Facility() {
   return (
-    <div>
+    <div className="content_wrap">
       <header><Header/></header>
       <main><Outlet /></main>
       <footer>footer입니다.</footer>

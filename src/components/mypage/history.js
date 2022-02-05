@@ -1,66 +1,71 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Loading from '../loading';
 import auth from "../../auth";
+import Cancel from './cancel';
+import Edit from "./edit";
 import "./history.css"
 
 export default function History(props) {
+  const [loading, setLoading] = useState(true)
   const [list,setList] = useState(null)
 
   useEffect(() => {
     auth();
     axios
-    .get("/booking/students")
-    .then(response => response.status === 200 && setList(response.data))
+    .get("/students/booking")
+    .then(response => {
+      if(response.status === 200) {
+        setLoading(false);
+        setList(response.data);
+      }
+    })
     .catch(err => console.log("자신의 예약리스트 받아올때 에러"))
   }, []);
   
   const setPlace = fno => {
-    let place = null;
     switch (fno) {
       case 1:
-        place = '족구장'
-        break;      
+        return '족구장'
       case 2:
-        place = '풋살장'
-        break;      
+        return '풋살장'
       case 3:
-        place = '테니스장'
-        break;      
+        return '테니스장'
       case 4:
-        place = '대운동장'
-        break;      
+        return '대운동장'
       default:
-        return place;
+        return;
     }
   }
 
-  const editBooking = () => {
-    
-  }
+  const handleEdit = (target_bno) => {
 
-  const cancelBooking = (fno) => {
-    axios
-    .delete(`/booking/${fno}`)
-    .then(response => response.status === 204 && alert("예약이 취소되었습니다."))
-    .catch(err => console.log("예약 취소할때 난 에러" + err))
   }
-
+  
   return (
     <div className='history_list'>
+      {loading && <Loading />}
       <ul className='history_list'>
         {
-          !list 
+          list && list.length === 0
           ? <li className='no_booking'>
               <p>예약 내역이 없습니다.</p>
               <Link to="/" className="go_home">예약하러 가기</Link>
             </li>
-          : list.map(item => {
+          : list && list.map(item => {
             return (
-              <li>
-                <p>{setPlace(item.fno)}</p>
-                <button onClick={editBooking}>예약 변경</button>
-                <button onClick={cancelBooking}>예약 취소</button>
+              <li key={item.bno} className='booking_card'>
+                <div>{item.bno}</div>
+                <div>
+                  <div className='place_name'>{setPlace(item.fno)}</div>
+                  <div>{item.startTime.split(" ")[0]}</div>
+                  <div>{item.startTime.split(" ")[1]} ~ {item.endTime.split(" ")[1]}</div>
+                </div>
+                <div>
+                  <Cancel list={list} setList={setList} bno={item.bno}/>
+                  <Edit list={list} setList={setList} bno={item.bno}/>
+                </div>
               </li>
             )
           })

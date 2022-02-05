@@ -19,7 +19,6 @@ function Calendar() {
   useEffect(() => {
     if(location.state) {
       const prev_select = location.state.userSelect.date.split("-").map(x => Number(x));
-
       setViewYear(prev_select[0]);
       setViewMonth(prev_select[1]-1);
       setClicked(prev_select[2]);
@@ -29,18 +28,19 @@ function Calendar() {
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
     const data = {
-      "date" : `${viewYear}-${f_month}-${f_day}`
+      date : `${viewYear}-${f_month}-${f_day}`
     }
+    console.log(url)
+    console.log(data)
     requestTime(url, data, todayNum);
   }, []);
 
   const requestTime = (url, data, clicked_date) => { 
-    const header = {"Content-type":"application/json"}
-    axios.post(url, data, header)
+    axios.post(url, data)
     .then(response => response.data)
     .then(json => filterTimeInJson(json, clicked_date))
     .then(filteredTime => setReservedTime(filteredTime))
-    .catch(err => console.log(err))
+    .catch(err => console.log("여기서에러 " + err))
   }
 
   const filterTimeInJson = (json, clicked_date) => {

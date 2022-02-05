@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { logout } from '../../auth';
 import Confirm from "./confirm";
+import Find from "./find";
 import "./password.css";
-import InputSample from '../../inputSample';
 
 export default function Password() {
   const [inputs, setInputs] = useState({
@@ -31,7 +29,7 @@ export default function Password() {
     })
   }
 
-  const checkValidation = () => {
+  const checkPasswordValidation = () => {
     // const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
     // if(!regex.test(_new)) {
     //   console.log("최소 8 자, 하나 이상의 문자와 하나의 숫자를 입력해 주세요.");
@@ -62,7 +60,7 @@ export default function Password() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(checkValidation()) {
+    if(checkPasswordValidation()) {
       changePassword();
     }
   }
@@ -107,7 +105,7 @@ export default function Password() {
             />
         </div>
         <Confirm />
-        <Link to="/" className='find'>비밀번호를 잊으셨나요?</Link>
+        <Find />
       </form>
     </div>
   );

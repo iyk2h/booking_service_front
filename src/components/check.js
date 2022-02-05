@@ -11,9 +11,7 @@ export default function Check(props) {
 
   useEffect(() => {
     axios
-    .get("/check",{
-      headers:{"Content-type":"application/json"}
-    })
+    .get("/check")
     .catch(err => err.response.status === 401 && navigate("/login", { replace: true }));
     setLoding(false);
   });

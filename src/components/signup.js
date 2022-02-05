@@ -12,8 +12,7 @@ export default function Signup() {
     e.preventDefault();
     const url = `/students/check`;
     const data = { "id" : id, "pw": pw };
-    const headers = { "Content-Type" : "application/json" };
-    axios.post(url, data, headers)
+    axios.post(url, data)
     .then(response => response.status === 200 && setDuplicate(false))
     .catch(err => err.response.status === 400 && console.log(err))  
   }
