@@ -9,6 +9,6 @@ export default function useLoginStatus() {
     .get("/check")
     .then((response) => response.status === 200 && setIsLogin(true))
     .catch((err) => err.response.status === 401 && console.log("Login Err" + err));
-  });
+  }, []);
   return isLogin;
 }

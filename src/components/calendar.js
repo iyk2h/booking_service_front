@@ -135,8 +135,7 @@ function Calendar() {
       : i > lastDateIndex
       ? null
       : "disable";
-
-    const isClicked = (selectable === "_able" &&  date === clicked) ? "isClick" : null;
+    const isClicked = (selectable === "_able" && String(date) === clicked) ? "isClick" : null;
     const todayClass =
       today.getFullYear() === viewYear &&
       today.getMonth() === viewMonth &&
