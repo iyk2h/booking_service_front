@@ -45,13 +45,14 @@ function Calendar() {
   }
 
   const filterTimeInJson = (json, clicked_date) => {
-    if(json.length === 0 || !json) {
+    if(!json || json.length === 0) {
       return [];
     }
     const able_time = [];
     json.forEach(x => {
-      if(x.startTime.split(" ")[0].split("-")[2] === String(clicked_date)) {
-        able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]);
+      const clicked_date_2d = clicked_date < 10 ? `0${clicked_date}` : clicked_date;
+      if(x.startTime.split(" ")[0].split("-")[2] === String(clicked_date_2d)) {
+        able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]); 
       }
     })
     return able_time;
@@ -83,7 +84,7 @@ function Calendar() {
       const clicked_date = Number(e.target.textContent);
       const url = `/booking/${current_url.fno}/date`;
       const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-      const f_day = todayNum < 10 ? `0${clicked_date}` : clicked_date; 
+      const f_day = clicked_date < 10 ? `0${clicked_date}` : clicked_date;
       const data = {
         "date" : `${viewYear}-${f_month}-${f_day}`
       }
