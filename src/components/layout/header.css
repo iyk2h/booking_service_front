@@ -29,8 +29,10 @@ menu {
   background-color: white;
 }
 
-.header_menu > span {
+.header_menu > span, a {
   padding: 12px 20px;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .header_menu > span:hover {

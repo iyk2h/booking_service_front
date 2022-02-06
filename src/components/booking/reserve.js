@@ -1,7 +1,7 @@
 import React,{ useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Complete from "./modal/complete";
+import Complete from "../modal/complete";
 
 export default function Reserve(props) {
   let navigate = useNavigate();

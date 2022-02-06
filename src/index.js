@@ -3,11 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Calendar } from './components/calendar';
-import { Login } from "./components/login";
-import Signup from './components/signup';
-import Facility from './components/facility';
-import Check from "./components/check";
+import { Calendar } from './components/booking/calendar';
+import { Login } from "./components/account/login";
+import Signup from './components/account/signup';
+import Facility from './components/layout/facility';
 import Mypage from "./components/mypage/mypage";
 import History from "./components/mypage/history";
 import Profile from "./components/mypage/profile";
@@ -21,7 +20,6 @@ ReactDOM.render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/check" element={<Check />} />
         <Route path="/booking" element={<Facility />}>
           <Route path=":fno" element={<Calendar />} />
           <Route index element={<Navigate replace to="/"/>} />

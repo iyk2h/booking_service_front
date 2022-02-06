@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import useLoginStatus from "../auth";
+import useLoginStatus from "../account/auth";
 import axios from "axios";
 import "./header.css";
 

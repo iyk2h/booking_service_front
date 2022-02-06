@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Confirm from "./confirm";
 import Find from "./find";
-import useLoginStatus from '../../auth';
+import useLoginStatus from '../account/auth';
 import "./password.css";
 import { useNavigate } from 'react-router-dom';
 

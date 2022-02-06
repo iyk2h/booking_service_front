@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Loading from '../loading';
+import Loading from '../modal/loading';
 import BookingCard from './bookingCard';
 import NoBookingCard from './noBookingCard';
 import "./history.css"

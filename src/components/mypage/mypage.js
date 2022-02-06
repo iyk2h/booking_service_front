@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import Header from "../header";
-import Loading from "../loading";
+import Header from "../layout/header";
+import Loading from "../modal/loading";
 import "./mypage.css"
 
 export default function Mypage() {
