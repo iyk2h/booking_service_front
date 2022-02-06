@@ -24,15 +24,13 @@ function Calendar() {
       setClicked(prev_select[2]);
       return;
     }
-    const url = `/booking/${current_url.fno}/date`;
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
+
+    const url = `/booking/${current_url.fno}/date`;
     const data = {
       date : `${viewYear}-${f_month}-${f_day}`
     }
-    console.log(typeof current_url.fno )
-    console.log(url)
-    console.log(data)
     requestTime(url, data, todayNum);
   }, []);
 
@@ -80,10 +78,10 @@ function Calendar() {
   const handlePicker = (e) => {
     const dateClass = e.target.className;
     if (dateClass.includes("_able")) {
-      const clicked_date = Number(e.target.textContent);
+      const clicked_date = e.target.textContent;
       const url = `/booking/${current_url.fno}/date`;
       const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-      const f_day = todayNum < 10 ? `0${clicked_date}` : clicked_date; 
+      const f_day = clicked_date < 10 ? `0${clicked_date}` : clicked_date; 
       const data = {
         "date" : `${viewYear}-${f_month}-${f_day}`
       }

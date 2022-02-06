@@ -1,9 +1,20 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import Header from "../header"
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import Header from "../header";
+import Loading from "../loading";
 import "./mypage.css"
 
 export default function Mypage() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    axios
+    .get("/check")
+    .then((response) => response.status === 200 && setLoading(false))
+    .catch((err) => err.response.status === 401 && navigate("/login"));
+  });
+
   return (
     <div className='mypage_container'>
       <Header/>
@@ -31,6 +42,7 @@ export default function Mypage() {
         </NavLink>
       </nav>
       <div className="outlet">
+        {loading && <Loading />}
         <Outlet/>  
       </div>
     </div>

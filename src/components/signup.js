@@ -55,29 +55,29 @@ export default function Signup() {
 
   return(
     <div>
-      <form onSubmit={handleSubmit} onChange={handleInputChange}>
+      <form onSubmit={handleSubmit}>
         <ul>
           <li>
             <label id="name_feild"></label>
-            <input type="text" name="name" id="name_feild" value={name} placeholder="   Name" required/>
+            <input type="text" name="name" id="name_feild" value={name} onChange={handleInputChange} placeholder=" Name" required/>
           </li>
           <li>
             <label id="id_feild"></label>
-            <input type="text" name="id" id="id_feild" value={id} placeholder="   ID" required/>
+            <input type="text" name="id" id="id_feild" value={id} onChange={handleInputChange} placeholder=" ID" required/>
             <button onClick={duplicateCheck}>중복 체크</button>
             {isDuplicate ? "중복체크를 해주세요." : "사용 가능한 아이디 입니다."}
           </li>
           <li>
             <label id="phone_feild"></label>
-            <input type="phone" name="phone" id="phone_feild" value={phone} placeholder="   Phone" required/>
+            <input type="phone" name="phone" id="phone_feild" value={phone} onChange={handleInputChange} placeholder=" Phone" required/>
           </li>
           <li>
             <label id="password_feild"></label>
-            <input type="password" name="password" id="password_feild" value={pw} placeholder="   Password" required/>
+            <input type="password" name="password" id="password_feild" value={pw} onChange={handleInputChange} placeholder=" Password" required/>
           </li>
           <li>
             <label id="confirm_feild"></label>
-            <input type="password" name="confrim" id="confirm_feild" value={confirm} placeholder="   Confirm" required/>
+            <input type="password" name="confrim" id="confirm_feild" value={confirm} onChange={handleInputChange} placeholder=" Confirm" required/>
           </li>
         </ul>
         <li>
