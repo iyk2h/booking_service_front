@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Confirm from "./confirm";
 import Find from "./find";
+import useLoginStatus from '../../auth';
 import "./password.css";
+import { useNavigate } from 'react-router-dom';
 
 export default function Password() {
+  const navigate = useNavigate();
+  const isLogin = useLoginStatus();
+  if(isLogin === false) {
+    navigate('/login');
+  }
+
   const [inputs, setInputs] = useState({
     old : '',
     _new : '',

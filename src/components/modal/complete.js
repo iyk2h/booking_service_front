@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "./complete.css";
 
@@ -29,7 +29,7 @@ export default function Complete(props) {
       <div className="modal_container"></div>
       <div className="modal_content">
         <h3 className="check_header">예약 완료!</h3>
-        <div className="check_image"><i class="far fa-calendar-check"></i></div>
+        <div className="check_image"><i className="far fa-calendar-check"></i></div>
         <div className="check_body">
           <p><span>시설</span>{setPlace(props.fno)}</p>
           <p><span>일정</span>{props.data.date}</p>

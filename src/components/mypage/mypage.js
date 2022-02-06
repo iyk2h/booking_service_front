@@ -1,14 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import Header from "../header"
-import auth from "../../auth"
 import "./mypage.css"
 
 export default function Mypage() {
-  useEffect(() => {
-    auth();
-  }, [])
-
   return (
     <div className='mypage_container'>
       <Header/>

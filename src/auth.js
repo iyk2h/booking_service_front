@@ -1,28 +1,16 @@
-import axios from 'axios'
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function auth() {
-  const url = "/students/check";
-  const data = {
-    "id": 0,
-    "pw": "string"
-  }
-  axios
-  .post(url, data)
-  .catch(err => err.response.status === 401 && routeToLogin());
+export default function useLoginStatus() {
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    axios
+    .get("/check")
+    .then((response) => response.status === 200 && setIsLogin(true))
+    .catch((err) => err.response.status === 401 && navigate("/login"));
+  }, []);
+  return isLogin;
 }
-
-function logout() {
-  axios.get("/students/logout")
-  .then(response => {
-    if(response.status === 200) {
-      alert("로그아웃 되었습니다.");
-      routeToLogin();
-    }
-  })
-}
-
-function routeToLogin() {
-  return window.location.href = "/login";
-}
-
-export { logout };
