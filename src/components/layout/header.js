@@ -13,14 +13,15 @@ export default function Header() {
 
   const handleLog = () => {
     if(!isLogin) {
-      navigate("/login");
+      navigate("/login", {replace : true});
+      return;
     }
     axios
     .get("/students/logout")
     .then(response => {
       if(response.status === 204) {
         alert("로그아웃 되었습니다.");
-        navigate("/");
+        navigate("/", {replace : true});
       }
     })
     .catch((err) => console.log("Logout Err" + err));
@@ -31,7 +32,7 @@ export default function Header() {
       <menu className="menuIcon" onClick={handleToggle}>
         <Link to="/">
           <img
-            src="../../asset/images/MNU_LOGO.png"
+            // src="../../asset/images/MNU_LOGO.png"
             alt="MNU"
             className="icon"
           />

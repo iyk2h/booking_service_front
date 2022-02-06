@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Confirm from "./confirm";
 import Find from "./find";
@@ -10,7 +10,7 @@ export default function Password() {
   const navigate = useNavigate();
   const isLogin = useLoginStatus();
   if(isLogin === false) {
-    navigate('/login');
+    navigate('/login', {replace : true});
   }
 
   const [inputs, setInputs] = useState({

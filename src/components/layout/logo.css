@@ -1,0 +1,17 @@
+.MAIN_LOGO {
+  z-index: 4;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+}
+
+.mnu_img {
+  z-index: 5;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-45%) translateY(-45%);
+}

@@ -11,7 +11,6 @@ export default function Cancel(props) {
       if(response.status === 204) {
         alert("예약이 취소되었습니다.");
         const new_list = props.list.filter(item => item.bno !== props.bno)
-        console.log(new_list);
         props.setList(new_list);
       }
     })
