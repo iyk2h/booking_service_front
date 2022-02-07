@@ -32,12 +32,13 @@ export default function Header() {
       <menu className="menuIcon" onClick={handleToggle}>
         <Link to="/">
           <img
-            // src="../../asset/images/MNU_LOGO.png"
+            src="/asset/images/MNU_LOGO.jpeg"
+            style={{color : "mediumseagreen"}}
             alt="MNU"
             className="icon"
           />
         </Link>
-        <i className="icon fas fa-user-circle"></i>
+        <i className="user_icon fas fa-user-circle"></i>
       </menu>
       <div className="header_menu">
         {toggle && (

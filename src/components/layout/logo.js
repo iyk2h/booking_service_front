@@ -6,7 +6,7 @@ export default function Logo() {
 
   setTimeout(() => {
     setVisible(false);
-  }, 1000);
+  }, 1200);
   return (
     <div>
       <div>
