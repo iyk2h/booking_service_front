@@ -7,7 +7,7 @@ import "./history.css"
 
 export default function History(props) {
   const [loading, setLoading] = useState(true)
-  const [list,setList] = useState(null)
+  const [list,setList] = useState([])
 
   useEffect(() => {
     axios
@@ -26,9 +26,9 @@ export default function History(props) {
       {loading && <Loading />}
       <ul className='history_list'>
         {
-          list && list.length === 0
+          list.length === 0
           ? <NoBookingCard />
-          : list && list.map(item => 
+          : list.map(item => 
             <BookingCard 
               key={item.bno} 
               item={item} 
@@ -41,3 +41,7 @@ export default function History(props) {
     </div>
   );
 }
+
+// 첫 로드시 서버로부터 유저의 예약 목록을 받아옴.
+// 받아오기 전까지 "로딩중 문구 표시"
+// 통신에 성공했다면 로딩 상태와 예약 목록 상태를 변경해 화면 업데이트.
