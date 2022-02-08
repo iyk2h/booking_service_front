@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Password() {
   const navigate = useNavigate();
   const isLogin = useLoginStatus();
+  // 뭔가 이상함 여기
   if(isLogin === false) {
     navigate('/login', {replace : true});
   }

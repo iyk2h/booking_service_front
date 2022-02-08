@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from './components/layout/logo';
+import Logo from './components/modal/logo';
 import "./App.css"
 
 function App() {
