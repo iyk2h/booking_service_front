@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Calendar } from './components/booking/calendar';
-import { Login } from "./components/account/login";
+import Login from "./components/account/login";
 import Signup from './components/account/signup';
 import Facility from './components/layout/facility';
 import Mypage from "./components/mypage/mypage";

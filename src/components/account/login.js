@@ -4,87 +4,88 @@ import axios from "axios";
 import "./login.css";
 
 // Component
-function Login() {
+export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [disabled, setDisabled] = useState(false);
   const [input, setInput] = useState({
-    id : '',
-    pw : ''
-  })
-  const {id, pw} = input;
+    id: "",
+    pw: "",
+  });
+
+  const { id, pw } = input;
 
   const idInput = useRef(null);
 
-  useEffect(() => { 
+  useEffect(() => {
     idInput.current.focus();
-  }, [])
+  }, []);
 
-  // Handler
   const handleInputChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setInput({
       ...input,
-      [name] : value
-    })
+      [name]: value,
+    });
+  };
+
+  const routeToLogin = status => {
+    if (status === 201) {
+      if (location.state) {
+        navigate(`/booking/${location.state.userSelect.fno}`, {
+          state: location.state,
+          replace: true,
+        });
+      }
+      navigate("/", { replace: true });
+      return;
+    }
   }
+
+  const handleError = status => {
+    switch (status) {
+      case 401:
+        alert("id를 확인해 주세요.");
+        idInput.current.focus();
+        break;
+      case 404:
+        alert("비밀번호를 확인해 주세요.");
+        setInput({
+          ...input,
+          pw: "",
+        });
+        break;
+      default:
+        return;
+    }
+  }
+
+  const requestLogin = () => {
+    const url = `/students/login`;
+    const data = input;
+    axios
+      .post(url, data)
+      .then(response => routeToLogin(response.status))
+      .catch((err) => handleError(err.response.status));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setDisabled(prev => prev = true);
-    await new Promise(t => setTimeout(t, 0));
+    setDisabled((prev) => (prev = true));
+    await new Promise((t) => setTimeout(t, 1000));
 
     const chkId = /^[0-9]{6}$/;
     if (!chkId.test(id)) {
       alert("옳바른 형식의 아이디를 입력해 주세요.");
       idInput.current.focus();
       setDisabled(false);
-      return
+      return;
     }
     requestLogin();
     setDisabled(false);
-  }
+  };
 
-  // Request
-  const requestLogin = () => {
-    const url = `/students/login`;
-    const headers = { "Content-Type": "application/json" };
-    const data = {
-      "id": id,
-      "pw": pw,
-    };
-
-    axios.post(url, data, headers)
-    .then(response => {
-      if (response.status === 201) {
-        if(!location.state) {
-          navigate("/", { replace : true });
-          return;
-        }
-        navigate(`/booking/${location.state.userSelect.fno}`, {
-          state: location.state,
-          replace: true,
-        });
-      } 
-    })
-    .catch(err => {
-      switch (err.response.status) {
-        case 401:
-          alert("id를 확인해 주세요.");
-          break;
-        case 404:
-          alert("비밀번호를 확인해 주세요.");
-          setInput({
-            ...input,
-            pw : ""
-          })
-          break;
-        default:
-          return;
-      }
-    });
-  }
   return (
     <div>
       <div className="login-container">
@@ -97,6 +98,7 @@ function Login() {
             onChange={handleInputChange}
             placeholder=" 학번"
             ref={idInput}
+            required
           />
 
           <input
@@ -106,6 +108,7 @@ function Login() {
             value={pw}
             onChange={handleInputChange}
             placeholder=" 비밀번호"
+            required
           />
           <button type="submit" className="login-btn" disabled={disabled}>
             Login
@@ -121,5 +124,3 @@ function Login() {
     </div>
   );
 }
-
-export { Login };

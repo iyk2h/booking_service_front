@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Confirm from "./confirm";
 import Find from "./find";
-import useLoginStatus from '../account/auth';
+import useLoginStatus from '../hook/auth';
 import "./password.css";
 import { useNavigate } from 'react-router-dom';
 
