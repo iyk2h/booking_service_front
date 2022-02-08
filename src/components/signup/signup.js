@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate  } from "react-router-dom";
 import axios from "axios";
+import { idFormatCheck } from "../../utils/check";
 
 export default function Signup() {
   const navigate = useNavigate();
+
+  const [isDuplicate, setIsDuplicate] = useState(null);
   const [inputs, setInputs] = useState({
     name : '',
     id : '',
@@ -11,25 +14,22 @@ export default function Signup() {
     pw : '',
     confirm : '',    
   })
-  const [isDuplicate, setIsDuplicate] = useState(null);
   
   const {name, id, phone, pw, confirm} = inputs;
 
   const duplicateCheck = e => {
     e.preventDefault();
-    const idRegex = /^[0-9]{6}$/;
-    if (!idRegex.test(id)) {
-      alert("학번을 입력해 주세요.");
-      return;
+    if(!idFormatCheck(id)) {
+      return alert("학번을 입력해 주세요.");
     }
     const url = `/students/idcheck`;
-    const data = { id : id };
+    const data = { id };
     axios.post(url, data)
     .then(response => response.status === 201 && setIsDuplicate(false))
     .catch(err => err.response.status === 400 && setIsDuplicate(true)) 
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if(isDuplicate) {
       alert("id중복 확인을 해주세요.");
@@ -38,10 +38,6 @@ export default function Signup() {
     const idRegex = /^[0-9]{6}$/;
     if (!idRegex.test(id)) {
       alert("학번을 입력해 주세요.");
-      return;
-    }
-    if(pw === '') {
-      alert("옳바른 형식의 비밀번호를 입력해 주세요.");
       return;
     }
     const phoneRegex = /\d{3}-\d{4}-\d{4}/;
@@ -53,20 +49,17 @@ export default function Signup() {
       alert("확인 비밀번호가 일치하지 않습니다.");
       return;
     }
-    const url = "/students/signup";
-    const data = {
-      name: name,
-      phone: phone,
-      pw: pw,
-      sid: id
-    }
-    axios.post(url, data)
-    .then(response => {
+    try {
+      const url = "/students/signup";
+      const data = { name, phone, pw, id };
+      const response = await axios.post(url, data);
       if(response.status === 201) {
         alert("회원가입이 완료되었습니다.");
         navigate("/login", {replace : true});
       }
-    })
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const handleInputChange = e => {
