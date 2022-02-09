@@ -21,6 +21,11 @@ function chekcBothPwMatch(pw, confirm) {
   return pw === confirm;
 }
 
+function setTime(time) {
+  time = Number(time)
+  return time < 10 ? `0${time}:00` : `${time}:00`;
+}
+
 function setPlace(item) {
   switch (item) {
     case 1:

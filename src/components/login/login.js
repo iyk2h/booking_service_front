@@ -5,8 +5,6 @@ import Find from "../mypage/find";
 import axios from "axios";
 import "./login.css";
 
-
-// Component
 export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -46,23 +44,22 @@ export default function Login() {
       };
       const response = await axios.post(url, data);
       if(response) {
-        routeToLogin(response.status)
+        handleSuccess(response.status)
       }
     } catch (err) {
       handleError(err.response.status)
     }
   };
 
-  const routeToLogin = status => {
+  const handleSuccess = status => {
     if (status === 201) {
       if (location.state) {
-        navigate(`/booking/${location.state.userSelect.fno}`, {
+        return navigate(`/booking/${location.state.userSelect.fno}`, {
           state: location.state,
           replace: true,
         });
       }
-      navigate("/", { replace: true });
-      return;
+      return navigate("/", { replace: true });
     }
   }
 
