@@ -18,7 +18,7 @@ export default function BookingCard(props) {
       <div className="booking_card_content">
         <p>
           <span>시설</span>
-          {setPlace(props.item)}
+          {setPlace(props.item.fno)}
         </p>
         <p>
           <span>일정</span>

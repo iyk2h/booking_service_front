@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Calendar } from './components/booking/calendar';
+import Calendar from './components/booking/calendar';
 import Login from "./components/login/login";
 import Signup from './components/signup/signup';
 import Facility from './components/layout/facility';

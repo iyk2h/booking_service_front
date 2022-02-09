@@ -1,7 +1,7 @@
 const REGEX = {
   ID : /^[0-9]{6}$/,
   PW : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-  NAME : /^[가-힣]{2,4}$/,
+  NAME : /^[가-힣]{2,5}$/,
   PHONE : /^010-?([0-9]{4})-?([0-9]{4})$/,
 }
 
@@ -22,7 +22,7 @@ function chekcBothPwMatch(pw, confirm) {
 }
 
 function setPlace(item) {
-  switch (item.fno) {
+  switch (item) {
     case 1:
       return "족구장";
     case 2:
@@ -42,4 +42,4 @@ export {
   chekcBothPwMatch,
   checkNameFormat,
   setPlace
- };
+};

@@ -6,70 +6,71 @@ import DatePicker from "./datepicker";
 import axios from "axios";
 import "./calendar.css";
 
-function Calendar() {  
+export default function Calendar() {
   const current_url = useParams();
   const location = useLocation();
   const [state, setState] = useState({
-    viewYear : new Date().getFullYear(),
-    viewMonth : new Date().getMonth(),
-    clicked : new Date().getDate(),
-    reservedTime : []
-  })
+    viewYear: new Date().getFullYear(),
+    viewMonth: new Date().getMonth(),
+    clicked: new Date().getDate(),
+    reservedTime: [],
+  });
 
   const { viewYear, viewMonth, clicked, reservedTime } = state;
 
   useEffect(() => {
     console.log("useEffect");
-    if(location.state) {
-      const prev_select = location.state.userSelect.date.split("-").map(x => Number(x));
+    if (location.state) {
+      const prev_select = location.state.userSelect.date
+        .split("-")
+        .map((x) => Number(x));
       return setState({
         ...state,
-        viewYear : prev_select[0],
-        viewMonth : prev_select[1] - 1,
-        clicked : prev_select[2]    
-      })
+        viewYear: prev_select[0],
+        viewMonth: prev_select[1] - 1,
+        clicked: prev_select[2],
+      });
     }
-    const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-    const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
+    const f_month = viewMonth + 1 < 10 ? `0${viewMonth + 1}` : viewMonth + 1;
+    const f_day = todayNum < 10 ? `0${todayNum}` : todayNum;
 
     const url = `/booking/${current_url.fno}/date`;
-    const data = { date : `${viewYear}-${f_month}-${f_day}` }
+    const data = { date: `${viewYear}-${f_month}-${f_day}` };
     requestTime(url, data, todayNum);
   }, []);
 
-  const requestTime = async (url, data, clicked_date) => { 
+  const requestTime = async (url, data, clicked_date) => {
     try {
       const response = await axios.post(url, data);
       const filteredTime = filterTimeInJson(response.data);
-      console.log("여기가 의심됨.")
-      console.log(state);
       setState({
         ...state,
-        clicked : clicked_date,
-        reservedTime : filteredTime 
-      })
+        clicked: clicked_date,
+        reservedTime: filteredTime,
+      });
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const filterTimeInJson = (json, clicked_date) => {
-    if(!json || json.length === 0) {
+    if (!json || json.length === 0) {
       return [];
     }
     const filteredTime = [];
-    json.forEach(x => {
-      const clicked_date_2d = clicked_date < 10 ? `0${clicked_date}` : clicked_date;
-      if(x.startTime.split(" ")[0].split("-")[2] === String(clicked_date_2d)) {
-        filteredTime.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]); 
+    json.forEach((x) => {
+      const clicked_date_2d =
+        clicked_date < 10 ? `0${clicked_date}` : clicked_date;
+      if (x.startTime.split(" ")[0].split("-")[2] === String(clicked_date_2d)) {
+        filteredTime.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]);
       }
-    })
+    });
     return filteredTime;
-  }
+  };
 
   const handleFilter = (e) => {
     const btnClass = e.target.className;
-    if (!btnClass.includes('_btn')) {
+    if (!btnClass.includes("_btn")) {
       return;
     }
     let currViewYear;
@@ -82,11 +83,11 @@ function Calendar() {
       currViewMonth = viewMonth === 11 ? 0 : viewMonth + 1;
     }
     setState({
-      viewYear : currViewYear,
-      viewMonth : currViewMonth,
-      clicked : null,
-      reservedTime : []
-    })
+      viewYear: currViewYear,
+      viewMonth: currViewMonth,
+      clicked: null,
+      reservedTime: [],
+    });
   };
 
   const handlePicker = (e) => {
@@ -94,27 +95,27 @@ function Calendar() {
     if (dateClass.includes("_able")) {
       const clicked_date = e.target.textContent;
       const url = `/booking/${current_url.fno}/date`;
-      const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-      const f_day = clicked_date < 10 ? `0${clicked_date}` : clicked_date; 
+      const f_month = viewMonth + 1 < 10 ? `0${viewMonth + 1}` : viewMonth + 1;
+      const f_day = clicked_date < 10 ? `0${clicked_date}` : clicked_date;
       const data = {
-        "date" : `${viewYear}-${f_month}-${f_day}`
-      }
+        date: `${viewYear}-${f_month}-${f_day}`,
+      };
       setState({
         ...state,
-        clicked : clicked_date
-      })
+        clicked: clicked_date,
+      });
       requestTime(url, data, clicked_date);
     }
   };
- 
+
   const prevLast = new Date(viewYear, viewMonth, 0);
-  const thisLast = new Date(viewYear, viewMonth + 1, 0); 
+  const thisLast = new Date(viewYear, viewMonth + 1, 0);
 
   const PLDate = prevLast.getDate();
   const PLDay = prevLast.getDay();
   const TLDate = thisLast.getDate();
   const TLDay = thisLast.getDay();
- 
+
   const prevDates = [];
   const thisDates = [...Array(TLDate + 1).keys()].slice(1);
   const nextDates = [];
@@ -139,29 +140,34 @@ function Calendar() {
   let selectableIndex = 0;
   if (today.getFullYear() === viewYear && today.getMonth() === viewMonth) {
     selectableIndex = thisDates.indexOf(todayNum) + prevDates.length; // 애매
-  } else if (viewYear < today.getFullYear()) { // ???
+  } else if (viewYear < today.getFullYear()) {
+    // ???
     selectableIndex = 100;
   }
 
   dates.forEach((date, i) => {
-    const condition = i >= firstDateIndex && i < lastDateIndex + 1 ? "this" : "other";
+    const condition =
+      i >= firstDateIndex && i < lastDateIndex + 1 ? "this" : "other";
     const selectable =
       i >= selectableIndex && condition === "this"
-      ? "_able"
-      : i > lastDateIndex
-      ? null
-      : "disable";
-    const isClicked = (selectable === "_able" && date == clicked) ? "isClick" : null;
+        ? "_able"
+        : i > lastDateIndex
+        ? null
+        : "disable";
+    const isClicked =
+      selectable === "_able" && date == clicked ? "isClick" : null;
     const todayClass =
       today.getFullYear() === viewYear &&
       today.getMonth() === viewMonth &&
-      i === thisDates.indexOf(todayNum)+prevDates.length
+      i === thisDates.indexOf(todayNum) + prevDates.length
         ? "today"
         : null;
 
     dates[i] = (
       <li
-        className={["date", condition, selectable, todayClass, isClicked].join(" ")}
+        className={["date", condition, selectable, todayClass, isClicked].join(
+          " "
+        )}
         key={i}
       >
         {date}
@@ -169,8 +175,8 @@ function Calendar() {
     );
   });
 
-  const f_viewMonth = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
-  const f_clicked = clicked < 10 ? `0${clicked}` : clicked 
+  const f_viewMonth = viewMonth + 1 < 10 ? `0${viewMonth + 1}` : viewMonth + 1;
+  const f_clicked = clicked < 10 ? `0${clicked}` : clicked;
   return (
     <div className="calendar">
       <DateFilter
@@ -180,19 +186,15 @@ function Calendar() {
       />
       <DatePicker 
         dates={dates} 
-        onClick={handlePicker}
+        onClick={handlePicker} 
       />
-      <TimeTable 
+      <TimeTable
         reservedTime={reservedTime}
-        userSelect={
-          {  
-            fno : current_url.fno,
-            date: `${viewYear}-${f_viewMonth}-${f_clicked}`,      
-          }
-        } 
+        userSelect={{
+          fno: current_url.fno,
+          date: `${viewYear}-${f_viewMonth}-${f_clicked}`,
+        }}
       />
     </div>
   );
 }
-
-export { Calendar };

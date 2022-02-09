@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import axios from "axios";
-import "./login.css";
 import { checkIdFormat } from "../../utils/check";
 import Find from "../mypage/find";
+import axios from "axios";
+import "./login.css";
+
 
 // Component
 export default function Login() {
@@ -11,33 +12,20 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [disabled, setDisabled] = useState(false);
-  const [input, setInput] = useState({
-    id: "",
-    pw: "",
-  });
 
-  const { id, pw } = input;
-
-  const idInput = useRef(null);
-
+  const idRef = useRef(null);
+  const pwRef = useRef(null);
+  
   useEffect(() => {
-    idInput.current.focus();
+    idRef.current.focus();
   }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInput({
-      ...input,
-      [name]: value,
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     temporarilyDisableSubmit();
-    if(!checkIdFormat) {
+    if(!checkIdFormat(idRef.current.value)) {
       alert("옳바른 형식의 아이디를 입력해 주세요.");
-      idInput.current.focus();
+      idRef.current.focus();
       return;
     }
     requestLogin();
@@ -52,10 +40,12 @@ export default function Login() {
   const requestLogin = async () => {
     try {
       const url = `/students/login`;
-      const data = input;
+      const data = {
+        id : idRef.current.value,
+        pw : pwRef.current.value
+      };
       const response = await axios.post(url, data);
       if(response) {
-        console.log(response.status)
         routeToLogin(response.status)
       }
     } catch (err) {
@@ -80,14 +70,11 @@ export default function Login() {
     switch (status) {
       case 401:
         alert("id를 확인해 주세요.");
-        idInput.current.focus();
+        idRef.current.focus();
         break;
       case 404:
         alert("비밀번호를 확인해 주세요.");
-        setInput({
-          ...input,
-          pw: "",
-        });
+        pwRef.current.focus();
         break;
       default:
         return;
@@ -102,10 +89,8 @@ export default function Login() {
             className="userId"
             name="id"
             type="text"
-            value={id}
-            onChange={handleInputChange}
             placeholder=" 학번"
-            ref={idInput}
+            ref={idRef}
             required
           />
 
@@ -113,9 +98,8 @@ export default function Login() {
             className="userPw"
             name="pw"
             type="password"
-            value={pw}
-            onChange={handleInputChange}
             placeholder=" 비밀번호"
+            ref={pwRef}
             required
           />
           <button type="submit" className="login-btn" disabled={disabled}>

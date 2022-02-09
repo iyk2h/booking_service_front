@@ -9,8 +9,6 @@ function TimeTable(props) {
     return `${tmp}:00`;
   };
 
-  console.log("_-----------")
-  console.log(props);
   const maxHour = 3;
 
   let reservation_status = [];
