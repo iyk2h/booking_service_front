@@ -9,62 +9,62 @@ import "./calendar.css";
 function Calendar() {  
   const current_url = useParams();
   const location = useLocation();
-  // const [state, setState] = useState({
-  //   viewYear : () => new Date().getFullYear(),
-  //   viewMonth : () => new Date().getMonth(),
-  //   clicked : () => new Date().getDate(),
-  //   reservedTime : []
-  // })
-  // const { viewYear, viewMonth, clicked } = state;
-  const [viewYear, setViewYear] = useState(() => new Date().getFullYear());
-  const [viewMonth, setViewMonth] = useState(() => new Date().getMonth());
-  const [clicked, setClicked] = useState(() => new Date().getDate());
-  const [reservedTime, setReservedTime] = useState([]);
-  
+  const [state, setState] = useState({
+    viewYear : new Date().getFullYear(),
+    viewMonth : new Date().getMonth(),
+    clicked : new Date().getDate(),
+    reservedTime : []
+  })
+
+  const { viewYear, viewMonth, clicked, reservedTime } = state;
+
   useEffect(() => {
+    console.log("useEffect");
     if(location.state) {
       const prev_select = location.state.userSelect.date.split("-").map(x => Number(x));
-      setViewYear(prev_select[0]);
-      setViewMonth(prev_select[1]-1);
-      setClicked(prev_select[2]);
-      return;
-      // setState({
-      //   ...state,
-      //   viewYear : prev_select[0],
-      //   viewMonth : prev_select[1] - 1,
-      //   clicked : prev_select[2]    
-      // })
+      return setState({
+        ...state,
+        viewYear : prev_select[0],
+        viewMonth : prev_select[1] - 1,
+        clicked : prev_select[2]    
+      })
     }
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 
 
     const url = `/booking/${current_url.fno}/date`;
-    const data = {
-      date : `${viewYear}-${f_month}-${f_day}`
-    }
+    const data = { date : `${viewYear}-${f_month}-${f_day}` }
     requestTime(url, data, todayNum);
   }, []);
 
-  const requestTime = (url, data, clicked_date) => { 
-    axios.post(url, data)
-    .then(response => response.data)
-    .then(json => filterTimeInJson(json, clicked_date))
-    .then(filteredTime => setReservedTime(filteredTime))
-    .catch(err => console.log("여기서에러 " + err))
+  const requestTime = async (url, data, clicked_date) => { 
+    try {
+      const response = await axios.post(url, data);
+      const filteredTime = filterTimeInJson(response.data);
+      console.log("여기가 의심됨.")
+      console.log(state);
+      setState({
+        ...state,
+        clicked : clicked_date,
+        reservedTime : filteredTime 
+      })
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const filterTimeInJson = (json, clicked_date) => {
     if(!json || json.length === 0) {
       return [];
     }
-    const able_time = [];
+    const filteredTime = [];
     json.forEach(x => {
       const clicked_date_2d = clicked_date < 10 ? `0${clicked_date}` : clicked_date;
       if(x.startTime.split(" ")[0].split("-")[2] === String(clicked_date_2d)) {
-        able_time.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]); 
+        filteredTime.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]); 
       }
     })
-    return able_time;
+    return filteredTime;
   }
 
   const handleFilter = (e) => {
@@ -81,10 +81,12 @@ function Calendar() {
       currViewYear = viewMonth === 11 ? viewYear + 1 : viewYear;
       currViewMonth = viewMonth === 11 ? 0 : viewMonth + 1;
     }
-    setViewYear(currViewYear);
-    setViewMonth(currViewMonth);
-    setClicked(null);
-    setReservedTime([])
+    setState({
+      viewYear : currViewYear,
+      viewMonth : currViewMonth,
+      clicked : null,
+      reservedTime : []
+    })
   };
 
   const handlePicker = (e) => {
@@ -97,7 +99,10 @@ function Calendar() {
       const data = {
         "date" : `${viewYear}-${f_month}-${f_day}`
       }
-      setClicked(clicked_date); 
+      setState({
+        ...state,
+        clicked : clicked_date
+      })
       requestTime(url, data, clicked_date);
     }
   };
