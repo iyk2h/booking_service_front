@@ -1,24 +1,27 @@
-import React from 'react';
-import axios from 'axios';
+import React from "react";
+import axios from "axios";
 // import "./cancel.css";
 
-// 변경하기 버튼
 export default function Cancel(props) {
-  const handleCancel = () => {
-    axios
-    .delete(`/students/booking/${props.bno}`)
-    .then(response => {
-      if(response.status === 204) {
+  const handleCancel = async () => {
+    try {
+      const url = `/students/booking/${props.bno}`;
+      const response = await axios.delete(url);
+      if (response.status === 204) {
         alert("예약이 취소되었습니다.");
-        const new_list = props.list.filter(item => item.bno !== props.bno)
+        const new_list = props.list.filter((item) => item.bno !== props.bno);
         props.setList(new_list);
       }
-    })
-    .catch(err => console.log("예약 취소할때 난 에러" + err))
-  }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
-      <button onClick={handleCancel} className="cancel_btn">취소</button>
+      <button onClick={handleCancel} className="cancel_btn">
+        취소
+      </button>
     </>
   );
 }

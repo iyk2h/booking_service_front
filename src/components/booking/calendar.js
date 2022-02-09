@@ -7,15 +7,20 @@ import axios from "axios";
 import "./calendar.css";
 
 function Calendar() {  
+  const current_url = useParams();
+  const location = useLocation();
+  // const [state, setState] = useState({
+  //   viewYear : () => new Date().getFullYear(),
+  //   viewMonth : () => new Date().getMonth(),
+  //   clicked : () => new Date().getDate(),
+  //   reservedTime : []
+  // })
+  // const { viewYear, viewMonth, clicked } = state;
   const [viewYear, setViewYear] = useState(() => new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(() => new Date().getMonth());
   const [clicked, setClicked] = useState(() => new Date().getDate());
   const [reservedTime, setReservedTime] = useState([]);
-
-  const current_url = useParams();
-  const location = useLocation();
   
-  // Mount시 오늘 날짜로 예약 일정 받아오기
   useEffect(() => {
     if(location.state) {
       const prev_select = location.state.userSelect.date.split("-").map(x => Number(x));
@@ -23,6 +28,12 @@ function Calendar() {
       setViewMonth(prev_select[1]-1);
       setClicked(prev_select[2]);
       return;
+      // setState({
+      //   ...state,
+      //   viewYear : prev_select[0],
+      //   viewMonth : prev_select[1] - 1,
+      //   clicked : prev_select[2]    
+      // })
     }
     const f_month = viewMonth+1 < 10 ? `0${viewMonth+1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum; 

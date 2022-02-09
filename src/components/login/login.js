@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
+import { checkIdFormat } from "../../utils/check";
+import Find from "../mypage/find";
 
 // Component
 export default function Login() {
@@ -28,6 +30,37 @@ export default function Login() {
       ...input,
       [name]: value,
     });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    temporarilyDisableSubmit();
+    if(!checkIdFormat) {
+      alert("옳바른 형식의 아이디를 입력해 주세요.");
+      idInput.current.focus();
+      return;
+    }
+    requestLogin();
+  };
+
+  const temporarilyDisableSubmit = async () => {
+    setDisabled((prev) => (prev = true));
+    await new Promise((t) => setTimeout(t, 1000));
+    setDisabled(false);
+  }
+
+  const requestLogin = async () => {
+    try {
+      const url = `/students/login`;
+      const data = input;
+      const response = await axios.post(url, data);
+      if(response) {
+        console.log(response.status)
+        routeToLogin(response.status)
+      }
+    } catch (err) {
+      handleError(err.response.status)
+    }
   };
 
   const routeToLogin = status => {
@@ -61,31 +94,6 @@ export default function Login() {
     }
   }
 
-  const requestLogin = () => {
-    const url = `/students/login`;
-    const data = input;
-    axios
-      .post(url, data)
-      .then(response => routeToLogin(response.status))
-      .catch((err) => handleError(err.response.status));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setDisabled((prev) => (prev = true));
-    await new Promise((t) => setTimeout(t, 1000));
-
-    const chkId = /^[0-9]{6}$/;
-    if (!chkId.test(id)) {
-      alert("옳바른 형식의 아이디를 입력해 주세요.");
-      idInput.current.focus();
-      setDisabled(false);
-      return;
-    }
-    requestLogin();
-    setDisabled(false);
-  };
-
   return (
     <div>
       <div className="login-container">
@@ -115,7 +123,7 @@ export default function Login() {
           </button>
         </form>
         <p className="finding-pw">
-          비밀번호를 잊으셨나요? <Link to="">비밀번호 찾기</Link>
+          <Find />
         </p>
         <p className="finding-pw">
           계정이 없으신가요? <Link to="/signup">회원가입</Link>

@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate  } from "react-router-dom";
 import axios from "axios";
-import { idFormatCheck } from "../../utils/check";
+import {
+  checkIdFormat,
+  checkPhoneFormat,
+  chekcBothPwMatch
+} from "../../utils/check";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -17,51 +21,6 @@ export default function Signup() {
   
   const {name, id, phone, pw, confirm} = inputs;
 
-  const duplicateCheck = e => {
-    e.preventDefault();
-    if(!idFormatCheck(id)) {
-      return alert("학번을 입력해 주세요.");
-    }
-    const url = `/students/idcheck`;
-    const data = { id };
-    axios.post(url, data)
-    .then(response => response.status === 201 && setIsDuplicate(false))
-    .catch(err => err.response.status === 400 && setIsDuplicate(true)) 
-  }
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-    if(isDuplicate) {
-      alert("id중복 확인을 해주세요.");
-      return;
-    }
-    const idRegex = /^[0-9]{6}$/;
-    if (!idRegex.test(id)) {
-      alert("학번을 입력해 주세요.");
-      return;
-    }
-    const phoneRegex = /\d{3}-\d{4}-\d{4}/;
-    if(!phoneRegex.test(phone)) {
-      alert("옳바른 형식의 전화번호를 입력해 주세요.");
-      return;
-    }
-    if(pw !== confirm) {
-      alert("확인 비밀번호가 일치하지 않습니다.");
-      return;
-    }
-    try {
-      const url = "/students/signup";
-      const data = { name, phone, pw, id };
-      const response = await axios.post(url, data);
-      if(response.status === 201) {
-        alert("회원가입이 완료되었습니다.");
-        navigate("/login", {replace : true});
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   const handleInputChange = e => {
     const {name, value} = e.target;
     setInputs({
@@ -70,6 +29,48 @@ export default function Signup() {
     })
   }
 
+  const duplicateCheck = async e => {
+    e.preventDefault();
+    if(!checkIdFormat(id)) {
+      return alert("학번을 입력해 주세요.");
+    }
+    try {
+      const url = `/students/idcheck`;
+      const data = { id }; 
+      const response = await axios.post(url, data);
+      return response.status === 201 && setIsDuplicate(false)
+    } catch(err) {
+      return err.response.status === 400 && setIsDuplicate(true)
+    }
+  }
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    if(isDuplicate) {
+      return alert("id중복 확인을 해주세요.");
+    }
+    if(!checkIdFormat(id)) {
+      return alert("학번을 입력해 주세요.");
+    }
+    if(!checkPhoneFormat(phone)) {
+      return alert("옳바른 형식의 전화번호를 입력해 주세요.");
+    }
+    if(!chekcBothPwMatch(pw, confirm)) {
+      return alert("확인 비밀번호가 일치하지 않습니다.");
+    }
+    try {
+      const url = "/students/signup";
+      const data = { name, phone, pw, id };
+      const response = await axios.post(url, data);
+      if(response.status === 201) {
+        alert("회원가입이 완료되었습니다.");
+        return navigate("/login", {replace : true});
+      }
+    } catch (err) {
+      console.log("회원가입시 오류" + err);
+    }
+  }
+ 
   let msg;
   if(isDuplicate) {
     msg = "이미 존재하는 아이디 입니다.";

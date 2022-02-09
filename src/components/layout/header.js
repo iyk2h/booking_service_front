@@ -6,25 +6,26 @@ import "./header.css";
 
 export default function Header() {
   const navigate = useNavigate();
-  const isLogin = useLoginStatus();
+  const isLogin = useLoginStatus(); // 확인 필요
   const [toggle, setToggle] = useState(false);
 
   const handleToggle = () => setToggle(!toggle);
 
-  const handleLog = () => {
-    if(!isLogin) {
-      navigate("/login", {replace : true});
+  const handleLog = async () => {
+    if (!isLogin) {
+      navigate("/login", { replace: true });
       return;
     }
-    axios
-    .get("/students/logout")
-    .then(response => {
-      if(response.status === 204) {
+    try {
+      const url = "/students/logout";
+      const response = await axios.get(url);
+      if (response.status === 204) {
         alert("로그아웃 되었습니다.");
-        navigate("/", {replace : true});
+        navigate("/", { replace: true });
       }
-    })
-    .catch((err) => console.log("Logout Err" + err));
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -33,7 +34,7 @@ export default function Header() {
         <Link to="/">
           <img
             src="/asset/images/MNU_LOGO.jpeg"
-            style={{color : "mediumseagreen"}}
+            style={{ color: "mediumseagreen" }}
             alt="MNU"
             className="icon"
           />

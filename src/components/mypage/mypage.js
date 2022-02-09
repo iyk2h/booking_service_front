@@ -42,8 +42,7 @@ export default function Mypage() {
         </NavLink>
       </nav>
       <div className="outlet">
-        {loading && <Loading />}
-        <Outlet/>  
+        {loading ? <Loading /> : <Outlet/>}
       </div>
     </div>
   );

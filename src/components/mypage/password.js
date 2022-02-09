@@ -3,8 +3,9 @@ import axios from 'axios';
 import Confirm from "./confirm";
 import Find from "./find";
 import useLoginStatus from '../hook/auth';
-import "./password.css";
 import { useNavigate } from 'react-router-dom';
+import {chekcBothPwMatch} from "../../utils/check";
+import "./password.css";
 
 export default function Password() {
   const navigate = useNavigate();
@@ -22,6 +23,14 @@ export default function Password() {
   
   const {old, _new, confirm} = inputs;
 
+  const onReset = () => {
+    setInputs({
+      old : '',
+      _new : '',
+      confirm : ''
+    })
+  }
+
   const handleChange = (e) => {
     const {name, value} = e.target;
     setInputs({
@@ -30,47 +39,32 @@ export default function Password() {
     })
   }
 
-  const onReset = () => {
-    setInputs({
-      old : "",
-      _new : "",
-      confirm : ""
-    })
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    checkPwValidation() && changePw();
   }
 
-  const checkPasswordValidation = () => {
-    // const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-    // if(!regex.test(_new)) {
-    //   console.log("최소 8 자, 하나 이상의 문자와 하나의 숫자를 입력해 주세요.");
-    //   return;
-    // } 
-    if(_new !== confirm) {
-      alert("새비밀번호와 확인비밀번호가 일치하지 않습니다.");
-      return;
+  const checkPwValidation = () => {
+    if(!chekcBothPwMatch(_new, confirm)) {
+      return alert("새비밀번호와 확인비밀번호가 일치하지 않습니다.");
     } 
     if(old === _new) {
-      alert("기존과 다른 비밀번호를 입력해 주세요.");
-      return;
+      return alert("기존과 다른 비밀번호를 입력해 주세요.");
     }
     return true;
   }
 
-  const changePassword = () => {
-    const url = "/students/password";
-    const data = {
-      "newPw": _new,
-      "oldPw": old
-    }
-    axios.put(url, data)
-    .then(response => response.status === 201 && alert("변경되었습니다."))
-    .then(result => onReset())
-    .catch(err => err.response.status === 404 && alert("비밀번호가 틀렸습니다."))
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if(checkPasswordValidation()) {
-      changePassword();
+  const changePw = async () => {
+    try {
+      const url = "/students/password";
+      const data = { "newPw": _new, "oldPw": old }
+      const response = axios.put(url ,data);
+      if(response.status === 201) {
+        alert("변경되었습니다.");
+        onReset();
+      }
+    } catch (err) {
+      return err.response.status === 404 && alert("비밀번호가 틀렸습니다.");
     }
   }
 

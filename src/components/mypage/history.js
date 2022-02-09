@@ -6,21 +6,28 @@ import NoBookingCard from './noBookingCard';
 import "./history.css"
 
 export default function History(props) {
-  const [loading, setLoading] = useState(true)
-  const [list,setList] = useState([])
+  const [state, setState] = useState({
+    loading : true,
+    list : []
+  })
+
+  const {loading, list} = state;
 
   useEffect(() => {
     axios
     .get("/students/booking")
-    .then(response => {
-      if(response.status === 200) {
-        setLoading(false);
-        setList(response.data);
-      }
-    })
+    .then(response => response.status === 200 && setState({loading : false, list : response.data}))
     .catch(err => console.log("자신의 예약리스트 받아올때 에러"))
   }, []);
   
+  // 확인 안된 코드
+  const setList = (data) => {
+    setState({
+      ...state,
+      list : data
+    })
+  }
+
   return (
     <div className='history_list'>
       {loading && <Loading />}
@@ -29,7 +36,7 @@ export default function History(props) {
           list.length === 0
           ? <NoBookingCard />
           : list.map(item => 
-            <BookingCard 
+            <BookingCard  
               key={item.bno} 
               item={item} 
               list={list} 
@@ -41,6 +48,10 @@ export default function History(props) {
     </div>
   );
 }
+
+// BookingCard 컴포넌트에서는 list props만 사용하지만,
+// Cancel 컴포넌트에서 사용할 props들 까지 전달해주고 있음. 
+          
 
 // 첫 로드시 서버로부터 유저의 예약 목록을 받아옴.
 // 받아오기 전까지 "로딩중 문구 표시"

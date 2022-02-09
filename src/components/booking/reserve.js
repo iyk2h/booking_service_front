@@ -8,23 +8,28 @@ export default function Reserve(props) {
 
   const [modal, setModal] = useState(null);
 
-  const handleBooking = () => {
-    const url = `/booking/${props.userSelect.fno}`;
-    const data = {
-      date: props.userSelect.date,
-      maxHour : props.time.length,
-      selectedTime : props.time[0]
-    };
-
-    //TEST
-    axios
-    .post(url, data)
-    .then(response => {
+  const handleBooking = async () => {
+    try {
+      const url = `/booking/${props.userSelect.fno}`;
+      const data = {
+        date: props.userSelect.date,
+        maxHour : props.time.length,
+        selectedTime : props.time[0]
+      };
+      const response = await axios.post(url ,data);
       if(response.status === 201) {
-        setModal(<Complete data={response.data} fno={props.userSelect.fno}/>)
+        setModal(
+          <Complete
+            data={response.data} 
+            fno={props.userSelect.fno}
+          />
+        )
       }
-    })
-    .catch(error => error.response.status === 401 && navigate("/login", { state: props }));
+    } catch (err) {
+      if(err.response.status === 401) {
+        return  navigate("/login", { state: props });
+      }
+    }
   };
   return (
     <>
