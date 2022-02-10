@@ -28,7 +28,7 @@ function TimeTable(props) {
       } 
     }
     reservation_status.push(
-      <div className={[className, clicked, ableClick].join(" ")} key={i}>
+      <div className={["time", className, clicked, ableClick].join(" ")} key={i}>
         {booking_time}
       </div>
     );

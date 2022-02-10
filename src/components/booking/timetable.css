@@ -5,7 +5,7 @@
   margin: 20px 10px;
 }
 
-.test > div {
+.test > .time {
   width: calc(100% / 5);
   text-align: center;
   border-radius: 5px;
