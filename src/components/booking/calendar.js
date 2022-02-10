@@ -7,8 +7,9 @@ import axios from "axios";
 import "./calendar.css";
 
 export default function Calendar() {
-  const current_url = useParams();
+  const urlParams = useParams();
   const location = useLocation();
+
   const [state, setState] = useState({
     viewYear: new Date().getFullYear(),
     viewMonth: new Date().getMonth(),
@@ -19,11 +20,8 @@ export default function Calendar() {
   const { viewYear, viewMonth, clicked, reservedTime } = state;
 
   useEffect(() => {
-    console.log("useEffect");
     if (location.state) {
-      const prev_select = location.state.userSelect.date
-        .split("-")
-        .map((x) => Number(x));
+      const prev_select = location.state.userSelect.date.split("-").map((x) => Number(x));
       return setState({
         ...state,
         viewYear: prev_select[0],
@@ -33,8 +31,7 @@ export default function Calendar() {
     }
     const f_month = viewMonth + 1 < 10 ? `0${viewMonth + 1}` : viewMonth + 1;
     const f_day = todayNum < 10 ? `0${todayNum}` : todayNum;
-
-    const url = `/booking/${current_url.fno}/date`;
+    const url = `/booking/${urlParams.fno}/date`;
     const data = { date: `${viewYear}-${f_month}-${f_day}` };
     requestTime(url, data, todayNum);
   }, []);
@@ -59,9 +56,7 @@ export default function Calendar() {
     }
     const filteredTime = [];
     json.forEach((x) => {
-      const clicked_date_2d =
-        clicked_date < 10 ? `0${clicked_date}` : clicked_date;
-      if (x.startTime.split(" ")[0].split("-")[2] === String(clicked_date_2d)) {
+      if (x.startTime.split(" ")[1].split("-")[2] === clicked_date) {
         filteredTime.push(x.startTime.split(" ")[1], x.endTime.split(" ")[1]);
       }
     });
@@ -93,8 +88,8 @@ export default function Calendar() {
   const handlePicker = (e) => {
     const dateClass = e.target.className;
     if (dateClass.includes("_able")) {
-      const clicked_date = e.target.textContent;
-      const url = `/booking/${current_url.fno}/date`;
+      const clicked_date = Number(e.target.textContent);
+      const url = `/booking/${urlParams.fno}/date`;
       const f_month = viewMonth + 1 < 10 ? `0${viewMonth + 1}` : viewMonth + 1;
       const f_day = clicked_date < 10 ? `0${clicked_date}` : clicked_date;
       const data = {
@@ -155,7 +150,7 @@ export default function Calendar() {
         ? null
         : "disable";
     const isClicked =
-      selectable === "_able" && date == clicked ? "isClick" : null;
+      selectable === "_able" && date === clicked ? "isClick" : null;
     const todayClass =
       today.getFullYear() === viewYear &&
       today.getMonth() === viewMonth &&
@@ -191,7 +186,7 @@ export default function Calendar() {
       <TimeTable
         reservedTime={reservedTime}
         userSelect={{
-          fno: current_url.fno,
+          fno: urlParams.fno,
           date: `${viewYear}-${f_viewMonth}-${f_clicked}`,
         }}
       />
