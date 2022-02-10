@@ -1,8 +1,8 @@
 .userId,
 .userPw {
-  -webkit-appearance: none; 
   display: flex;
   flex-direction: column;
+  -webkit-appearance: none;   
   width: 70vw;
   height: 2rem;
   border: 1px solid silver;

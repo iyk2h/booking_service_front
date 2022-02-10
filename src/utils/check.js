@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const REGEX = {
   ID : /^[0-9]{6}$/,
   PW : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
@@ -19,6 +21,14 @@ function checkNameFormat(name) {
 
 function chekcBothPwMatch(pw, confirm) {
   return pw === confirm;
+}
+
+async function checkDuplicate(id) {
+  try{
+    await axios.post(`/students/idcheck`, { id });
+  } catch (err) {
+    return err.response.status === 400 && alert("이미 존재하는 아이디 입니다.");
+  }
 }
 
 function setTime(time) {
@@ -46,5 +56,6 @@ export {
   checkPhoneFormat,
   chekcBothPwMatch,
   checkNameFormat,
+  checkDuplicate,
   setPlace
 };

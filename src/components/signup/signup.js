@@ -5,12 +5,13 @@ import {
   checkIdFormat,
   checkPhoneFormat,
   chekcBothPwMatch,
+  checkDuplicate
 } from "../../utils/check";
+import style from "./signup.module.css";
 
 export default function Signup() {
   const navigate = useNavigate();
 
-  const [isDuplicate, setIsDuplicate] = useState(null);
   const [inputs, setInputs] = useState({
     name: "",
     id: "",
@@ -29,26 +30,9 @@ export default function Signup() {
     });
   };
 
-  const duplicateCheck = async (e) => {
-    e.preventDefault();
-    if (!checkIdFormat(id)) {
-      return alert("학번을 입력해 주세요.");
-    }
-    try {
-      const url = `/students/idcheck`;
-      const data = { id };
-      const response = await axios.post(url, data);
-      return response.status === 201 && setIsDuplicate(false);
-    } catch (err) {
-      return err.response.status === 400 && setIsDuplicate(true);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isDuplicate) {
-      return alert("id중복 확인을 해주세요.");
-    }
+    checkDuplicate(id);
     if (!checkIdFormat(id)) {
       return alert("학번을 입력해 주세요.");
     }
@@ -60,32 +44,24 @@ export default function Signup() {
     }
     try {
       const url = "/students/signup";
-      const data = { name, phone, pw, id };
+      const data = { name, phone, pw, sid : id };
       const response = await axios.post(url, data);
       if (response.status === 201) {
         alert("회원가입이 완료되었습니다.");
-        return navigate("/login", { replace: true });
+        return navigate("/login", { replace: true })
       }
     } catch (err) {
-      console.log("회원가입시 오류" + err);
+      return err.response.stauts === 404 && alert("잘못된 입력입니다.");
     }
   };
 
-  let msg;
-  if (isDuplicate) {
-    msg = "이미 존재하는 아이디 입니다.";
-  } else if (isDuplicate === null) {
-    msg = "중복을 확인해 주세요.";
-  } else {
-    msg = "사용 가능한 아이디 입니다.";
-  }
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <ul>
+    <div className={style.container}>
+      <form onSubmit={handleSubmit} className={style.form}>
+        <ul className={style.ul}>
           <li>
-            <label id="name_feild"></label>
             <input
+              className={style.input}
               type="text"
               name="name"
               id="name_feild"
@@ -96,8 +72,8 @@ export default function Signup() {
             />
           </li>
           <li>
-            <label id="id_feild"></label>
             <input
+              className={style.input}
               type="text"
               name="id"
               id="id_feild"
@@ -106,12 +82,10 @@ export default function Signup() {
               placeholder=" ID"
               required
             />
-            <button onClick={duplicateCheck}>중복 체크</button>
-            <span>{msg}</span>
           </li>
           <li>
-            <label id="phone_feild"></label>
             <input
+              className={style.input}
               type="phone"
               name="phone"
               id="phone_feild"
@@ -122,8 +96,8 @@ export default function Signup() {
             />
           </li>
           <li>
-            <label id="password_feild"></label>
             <input
+              className={style.input}
               type="password"
               name="pw"
               id="password_feild"
@@ -134,8 +108,8 @@ export default function Signup() {
             />
           </li>
           <li>
-            <label id="confirm_feild"></label>
             <input
+              className={style.input}
               type="password"
               name="confirm"
               id="confirm_feild"
@@ -145,13 +119,15 @@ export default function Signup() {
               required
             />
           </li>
+          <li>
+            <button type="submit" className={style.join}>회원가입</button>
+          </li>
+          <li>
+            <p className={style.login_link}>
+              이미 계정이 있으신가요? <Link to="/login">로그인</Link>
+            </p>
+          </li>
         </ul>
-        <li>
-          <button type="submit">회원가입</button>
-        </li>
-        <li>
-          이미 계정이 있으신가요? <Link to="/login">로그인</Link>
-        </li>
       </form>
     </div>
   );

@@ -16,7 +16,8 @@ export default function Login() {
   
   useEffect(() => {
     idRef.current.focus();
-  }, []);
+    return (idRef) => {idRef.current.focus()}
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();

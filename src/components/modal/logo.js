@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./logo.css";
 
 export default function Logo() {
   const [visible, setVisible] = useState(true);
 
-  setTimeout(() => {
-    setVisible(false);
-  }, 1000);
+  useEffect(() => {
+    setTimeout(() => {
+      setVisible(false);
+    }, 1000);
+  }, [])
   
   return (
     <div>
