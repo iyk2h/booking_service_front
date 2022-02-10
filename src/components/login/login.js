@@ -16,8 +16,8 @@ export default function Login() {
   
   useEffect(() => {
     idRef.current.focus();
-    return (idRef) => {idRef.current.focus()}
-  });
+    return () => {setDisabled(false)} // 때우기식 코드. 나중에 고치기
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
