@@ -8,6 +8,9 @@ import "./mypage.css"
 export default function Mypage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  // 내 예약목록은 굳이 들어갈때마다 요청할 필요가 없음.
+  // 여기서 예약 목록을 state로 관리해서 자식 컴포넌트한테 props로 주면
+  // 들어갈때마다 요청하지 않아도 될듯
   useEffect(() => {
     axios
     .get("/check")
