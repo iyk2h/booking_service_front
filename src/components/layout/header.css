@@ -9,7 +9,7 @@ menu {
   top: 0;
   left: 0;
   width: 100vw;
-  min-height :40px ;max-height: 50px;
+  min-height :2.5em ;max-height: 2.5em;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,7 +43,6 @@ menu {
   font-size: 25px;
   margin: 0 1.6rem;
   color: mediumseagreen;
-  /* background-color: mediumseagreen; */
   height: 2em;
 }
 

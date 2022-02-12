@@ -14,7 +14,9 @@ import Profile from "./components/mypage/profile";
 import Password from "./components/mypage/password";
 // Admin
 import AdminLogin from "./components/Admin/login/AdminLogin";
-import AdminDashBoard from "./components/Admin/dashBoard/AdminDashBoard";
+import AdminMain from "./components/Admin/layout/AdminMain";
+import AdminSignUp from "./components/Admin/signup/AdminSignUp";
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -35,8 +37,9 @@ ReactDOM.render(
         <Route path="*" element={<div><p>404 Not Found</p></div>}/>
 
         {/* Admin */}
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashBoard />}/>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/main" element={<AdminMain />}/>
+        <Route path="/admin/signup" element={<AdminSignUp />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

@@ -1,21 +1,5 @@
-.mypage_container {
-  width : 99vw; max-width: 600px;
-  height: calc(100vh - 50px);
-  margin-top: 40px;
-  display: flex;
-}
-
 .outlet {
   flex: 3;
-}
-
-nav {
-  flex: 1.5;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  border-right: 1px solid whitesmoke;
-  max-width: 130px; min-width: 130px;
 }
 
 .no_booking {
