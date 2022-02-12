@@ -16,6 +16,7 @@ import Password from "./components/mypage/password";
 import AdminLogin from "./components/Admin/login/AdminLogin";
 import AdminMain from "./components/Admin/layout/AdminMain";
 import AdminSignUp from "./components/Admin/signup/AdminSignUp";
+import AdminBooking from "./components/Admin/booking/AdminBooking";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -34,12 +35,21 @@ ReactDOM.render(
           <Route path="profile" element={<Profile />} />
           <Route path="password" element={<Password />} />
         </Route>
-        <Route path="*" element={<div><p>404 Not Found</p></div>}/>
 
         {/* Admin */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/main" element={<AdminMain />}/>
-        <Route path="/admin/signup" element={<AdminSignUp />} />
+        <Route path="/admin/*">
+          <Route path="signup" element={<AdminSignUp />} />
+          <Route path="login" element={<AdminLogin />}/>
+          <Route path="main" element={<AdminMain />}/>
+          <Route path="booking" element={<AdminBooking />}/>
+          {/* <Route path="facility" element={<AdminFacility />}/>
+          <Route path="user" element={<AdminUser />}/>
+          <Route path="mypage" element={<AdminMypage />}/> */}
+
+        </Route>
+
+        {/* 404 */}
+        <Route path="*" element={<div><p>404 Not Found</p></div>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../layout/header";
 import Loading from "../modal/loading";
+import NavBar from "../layout/navbar";
 import "./mypage.css";
 import styled from "styled-components";
 
@@ -37,20 +38,7 @@ export default function Mypage() {
   return (
     <Wrapper>
       <Header />
-      <Nav>
-        {navItems.map((x) => {
-          return (
-            <NavLink
-              key={x.title}
-              to={x.url}
-              style={{ display: "block", margin: "1rem 0" }}
-              className={({ isActive }) => (isActive ? "isActive" : null)}
-            >
-              {x.title}
-            </NavLink>
-          );
-        })}
-      </Nav>
+      <NavBar itemList={navItems} />
       <div className="outlet">{loading ? <Loading /> : <Outlet />}</div>
     </Wrapper>
   );
@@ -62,14 +50,4 @@ const Wrapper = styled.div`
   height: calc(100vh - 50px);
   margin-top: 40px;
   display: flex;
-`;
-
-const Nav = styled.nav`
-  flex: 1.5;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  border-right: 1px solid whitesmoke;
-  max-width: 130px;
-  min-width: 130px;
 `;
