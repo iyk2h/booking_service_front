@@ -1,9 +1,9 @@
-import LoginTemplate from "../../login/loginTemplate";
+import Login from "../../login/login";
 
 export default function AdminLogin() {
   return (
     <>
-      <LoginTemplate url="/admin/login" nextUrl="/admin/dashboard" />
+      <Login url="/admin/login" nextUrl="/admin/dashboard" />
     </>
   );
 }

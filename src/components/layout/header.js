@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import HomeButton from "../button/homeButton";
 import useLoginStatus from "../hook/auth";
 import axios from "axios";
-import HomeButton from "../button/homeButton";
 import "./header.css";
 
 export default function Header() {
@@ -14,8 +14,7 @@ export default function Header() {
 
   const handleLog = async () => {
     if (!isLogin) {
-      navigate("/login", { replace: true });
-      return;
+      return navigate("/login", { replace: true });
     }
     try {
       const url = "/students/logout";
@@ -37,8 +36,10 @@ export default function Header() {
       </menu>
       <div className="header_menu">
         {toggle && 
-          (<span onClick={handleLog}>{isLogin ? "로그아웃" : "로그인"}</span>)
-          (<Link to="/mypage/history">마이페이지</Link>)
+          <>
+            <span onClick={handleLog}>{isLogin ? "로그아웃" : "로그인"}</span>
+            <Link to="/mypage/history">마이페이지</Link>
+          </>
         }
       </div>
     </>

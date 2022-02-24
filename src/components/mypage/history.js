@@ -12,7 +12,7 @@ export default function History(props) {
   });
 
   const { loading, list } = state;
-
+  
   useEffect(() => {
     axios
       .get("/students/booking")
