@@ -37,7 +37,7 @@ ReactDOM.render(
         </Route>
 
         {/* Admin */}
-        <Route path="/admin/*">
+        <Route path="/admin">
           <Route path="signup" element={<AdminSignUp />} />
           <Route path="login" element={<AdminLogin />}/>
           <Route path="main" element={<AdminMain />}/>

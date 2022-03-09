@@ -5,7 +5,7 @@ import Find from "../mypage/find";
 import axios from "axios";
 import "./login.css";
 
-export default function Login({ url, nextUrl }) {
+export default function Login({ url, nextUrl, signupUrl }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -109,7 +109,7 @@ export default function Login({ url, nextUrl }) {
           <Find />
         </p>
         <p className="finding-pw">
-          계정이 없으신가요? <Link to="/signup">회원가입</Link>
+          계정이 없으신가요? <Link to={signupUrl}>회원가입</Link>
         </p>
       </div>
     </div>
@@ -119,4 +119,5 @@ export default function Login({ url, nextUrl }) {
 Login.defaultProps = {
   url: "/login",
   nextUrl: "/",
+  signupUrl: "/signup"
 };
