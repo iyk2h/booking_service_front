@@ -17,6 +17,7 @@ import AdminLogin from "./components/Admin/login/AdminLogin";
 import AdminMain from "./components/Admin/layout/AdminMain";
 import AdminSignUp from "./components/Admin/signup/AdminSignUp";
 import AdminBooking from "./components/Admin/booking/AdminBooking";
+import AdminFacility from "./components/Admin/facility/AdminFacility";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -42,8 +43,8 @@ ReactDOM.render(
           <Route path="login" element={<AdminLogin />}/>
           <Route path="main" element={<AdminMain />}/>
           <Route path="booking" element={<AdminBooking />}/>
-          {/* <Route path="facility" element={<AdminFacility />}/>
-          <Route path="user" element={<AdminUser />}/>
+          <Route path="facility" element={<AdminFacility />}/>
+          {/* <Route path="user" element={<AdminUser />}/>
           <Route path="mypage" element={<AdminMypage />}/> */}
 
         </Route>
