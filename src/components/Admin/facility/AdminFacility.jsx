@@ -6,19 +6,17 @@ import styled from "styled-components";
 export default function AdminFacility() {
   const [facilityList, setFacilityList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const formRef = useRef({
-    maxHour: null,
-    name: null,
-    place: null,
-    placeUrl: null,
-  });
-  
-  const [formData, setFormData] = useState({
-    maxHour: null,
-    name: null,
-    place: null,
-    placeUrl: null,
-  });
+
+  const maxHourRef = useRef("");
+  const nameRef = useRef("");
+  const placeRef = useRef("");
+  const placeUrlRef = useRef("");
+  const formRef = {
+    maxHourRef,
+    nameRef,
+    placeRef,
+    placeUrlRef,
+  };
 
   useEffect(() => {
     async function getFacilityList() {
@@ -36,15 +34,6 @@ export default function AdminFacility() {
     getFacilityList();
   }, []);
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  }
-
   function handleClick(e) {
     const cName = e.target.className;
     const list_id = e.target.parentNode.id;
@@ -58,9 +47,49 @@ export default function AdminFacility() {
     }
   }
 
-  function handleAppend(e) {
+  function handleReset() {
+    maxHourRef.current.value = "";
+    nameRef.current.value = "";
+    placeRef.current.value = "";
+    placeUrlRef.current.value = "";
+  }
+
+  async function handleAppend(e) {
     e.preventDefault();
-    appendRequest();
+    try {
+      const data = {
+        fno:
+          facilityList.length === 0
+            ? 1
+            : facilityList[facilityList.length - 1].fno + 1,
+        maxHour: maxHourRef.current.value,
+        name: nameRef.current.value,
+        place: placeRef.current.value,
+        placeUrl: placeUrlRef.current.value,
+      };
+
+      for (let i = 0; i < facilityList.length; i++) {
+        if (facilityList[i].name === data.name) {
+          alert("이미 존재하는 시설입니다.");
+          handleReset();
+          return;
+        }
+      }
+      const response = axios.post('/manage/facility/join', data);
+      if (response.status === 201) {
+        alert("추가 되었습니다.");
+        setFacilityList(facilityList.concat([data]));
+        handleReset();
+      }
+    } catch (error) {
+      console.log({error})
+      if(error.response.status === 404) {
+        return alert('입력을 확인해 주세요.');
+      }
+      return alert(
+        "알수없는 오류가 발생했습니다. 새로고침후 다시 시도해주세요."
+      );
+    }
   }
 
   function deleteFacility(list_id) {
@@ -84,29 +113,6 @@ export default function AdminFacility() {
     }
   }
 
-  async function appendRequest() {
-    try {
-      const data = {
-        "fno" : facilityList.length === 0 ? 1 : facilityList[facilityList.length - 1].fno + 1,
-        ...formData
-      }
-
-      for(let i=0; i<facilityList.length; i++) {
-        if(facilityList[i].name === data.name) { return; }
-      }
-
-      const response = axios.post(`/manage/facility/join`, data);
-      if(response.status === 201) {
-        alert("추가 되었습니다.");
-        setFacilityList(facilityList.concat([data]));
-      }
-    } catch (error) {
-      return alert(
-        "알수없는 오류가 발생했습니다. 새로고침후 다시 시도해주세요."
-      );
-    }
-  }
-
   return (
     <>
       {isLoading ? (
@@ -118,10 +124,52 @@ export default function AdminFacility() {
               <ListItem key={facility.fno} facility={facility} />
             ))}
           </ul>
-          <AppendForm handleAppend={handleAppend} handleChange={handleChange} />
+          <AppendForm
+            handleAppend={handleAppend}
+            formRef={formRef}
+            // maxHourRef={maxHourRef}
+            // nameRef={nameRef}
+            // placeRef={placeRef}
+            // placeUrlRef={placeUrlRef}
+          />
         </>
       )}
     </>
+  );
+}
+
+function AppendForm({ handleAppend, formRef }) {
+  return (
+    <form onSubmit={handleAppend}>
+      <input
+        type="text"
+        name="name"
+        placeholder="시설 이름"
+        required
+        ref={formRef.nameRef}
+      />
+      <input
+        type="number"
+        name="maxHour"
+        placeholder="최대 이용 시간"
+        ref={formRef.maxHourRef}
+      />
+      <input
+        type="text"
+        name="place"
+        placeholder="위치"
+        required
+        ref={formRef.placeRef}
+      />
+      <input
+        type="text"
+        name="placeUrl"
+        placeholder="지도url"
+        required
+        ref={formRef.placeUrlRef}
+      />
+      <button>시설 추가</button>
+    </form>
   );
 }
 
@@ -136,41 +184,5 @@ function ListItem({ facility }) {
       <button className="admin_facility_edit_btn">수정</button>
       <button className="admin_facility_delete_btn">삭제</button>
     </li>
-  );
-}
-
-function AppendForm({ handleAppend, handleChange }) {
-  return (
-    <form onSubmit={handleAppend}>
-      <input
-        type="text"
-        name="name"
-        placeholder="시설 이름"
-        required
-        onChange={handleChange}
-      />
-      <input
-        type="number"
-        name="maxHour"
-        placeholder="최대 이용 시간"
-        required
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="place"
-        placeholder="위치"
-        required
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="placeUrl"
-        placeholder="지도url"
-        required
-        onChange={handleChange}
-      />
-      <button>시설 추가</button>
-    </form>
   );
 }
