@@ -45,16 +45,20 @@ export default function AdminManage() {
 
   function searchBySid(e) {
     e.preventDefault();
-    console.log({search})
+    if(search === '') {
+      return;
+    }
+    let noResult = true;
+
     studentsList.forEach((student) => {
       if (Number(student.sid) === Number(search)) {
+        noResult = false;
         return setResult((prev) => (
           <ListItem info={student} deleteUser={deleteUser} />
         ));
       }
     });
-    console.log({result});
-    if (!result) {
+    if(noResult) {
       setResult((prev) => "결과가 존재하지 않습니다.");
     }
   }
@@ -108,7 +112,7 @@ function SearchForm({ search, handleChange, searchBySid }) {
   return (
     <form onSubmit={searchBySid}>
       <label>학번 검색</label>
-      <input value={search} onChange={handleChange} />
+      <input value={search} onChange={handleChange}/>
       <button>검색</button>
     </form>
   );
