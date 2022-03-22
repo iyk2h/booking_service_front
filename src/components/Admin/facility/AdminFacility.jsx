@@ -3,15 +3,12 @@ import axios from "axios";
 import Loading from "../../modal/loading";
 import styled from "styled-components";
 
-const menu = [
-  { row : 'no' },
-  { row : '이름' },
-  { row : '위치' },
-  { row : 'url' },
-];
+const rows = [{ row: "no" }, { row: "이름" }, { row: "위치" }, { row: "url" }];
 
 export default function AdminFacility() {
   const [facilityList, setFacilityList] = useState([]);
+  const [changeForm, setChangeForm] = useState(null);
+  const [changeFormToggle, setChangeFormToggle] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const maxHourRef = useRef("");
@@ -46,7 +43,18 @@ export default function AdminFacility() {
     const list_id = e.target.parentNode.id;
     switch (cName) {
       case "admin_facility_change_btn":
-        return;
+        setChangeForm(
+          // 애매
+          <ChangeForm
+            list_id={list_id}
+            changeFacility={changeFacility}
+            setChangeFormToggle={() => setChangeFormToggle((prev) => !prev)}
+            facility={facilityList.filter(
+              (facility) => facility.fno === Number(list_id)
+            )}
+          />
+        );
+        return setChangeFormToggle((prev) => !prev);
       case "admin_facility_delete_btn":
         return deleteFacility(list_id);
       default:
@@ -97,7 +105,9 @@ export default function AdminFacility() {
       const response = await axios.delete(`/manage/facility/${list_id}`);
       if (response.status === 204) {
         alert("삭제되었습니다.");
-        setFacilityList(prev => prev.filter(facility => facility.fno !== Number(list_id)))
+        setFacilityList((prev) =>
+          prev.filter((facility) => facility.fno !== Number(list_id))
+        );
       }
     } catch (error) {
       return alert(
@@ -106,18 +116,34 @@ export default function AdminFacility() {
     }
   }
 
-  async function changeFacility(list_id) {
+  async function changeFacility(list_id, data) {
     try {
-      const response = await axios.put(`/manage/facility/${list_id}`);
-      // if (response.status === 204) {
-      //   alert("삭제되었습니다.");
-      //   setFacilityList(prev => prev.filter(facility => facility.fno !== Number(list_id)))
-      // }
+      const response = await axios.put(`/manage/facility/${list_id}`, data);
+      console.log(response);
+      if (response.status === 204) alert("수정되었습니다.");
+      const replaced = replaceDataInArray(list_id, data);
+      setFacilityList((prev) => replaced);
     } catch (error) {
       return alert(
         "알수없는 오류가 발생했습니다. 새로고침후 다시 시도해주세요."
       );
     }
+  }
+
+  function replaceDataInArray(list_id, data) {
+    const copy = [];
+    for (let i = 0; i < facilityList.length; i++) {
+      if (facilityList[i].fno === Number(list_id)) {
+        const test = {
+          fno: facilityList[i].fno,
+          ...data,
+        };
+        copy.push(test);
+      } else {
+        copy.push(facilityList[i]);
+      }
+    }
+    return copy;
   }
 
   return (
@@ -127,12 +153,15 @@ export default function AdminFacility() {
       ) : (
         <>
           <UL onClick={handleClick}>
-            {menu.map(item => <li key={item.row}>{item.row}</li>)}
+            {rows.map((item) => (
+              <ROW key={item.row}>{item.row}</ROW>
+            ))}
             {facilityList.map((facility) => (
               <ListItem key={facility.fno} facility={facility} />
             ))}
           </UL>
           <AppendForm appendFacility={appendFacility} formRef={formRef} />
+          {changeFormToggle && changeForm}
         </>
       )}
     </>
@@ -176,7 +205,7 @@ function AppendForm({ appendFacility, formRef }) {
 
 function ListItem({ facility }) {
   return (
-    <li id={facility.fno}>
+    <Facility id={facility.fno}>
       <span>{facility.fno}</span>
       <span>{facility.maxHour}</span>
       <span>{facility.name}</span>
@@ -184,10 +213,101 @@ function ListItem({ facility }) {
       <a href={facility.placeUrl}>{facility.placeUrl}</a>
       <button className="admin_facility_change_btn">수정</button>
       <button className="admin_facility_delete_btn">삭제</button>
-    </li>
+    </Facility>
+  );
+}
+
+function ChangeForm({
+  list_id,
+  facility,
+  changeFacility,
+  setChangeFormToggle,
+}) {
+  facility = facility[0];
+  const [inputs, setInputs] = useState({
+    maxHour: facility.maxHour,
+    name: facility.name,
+    place: facility.place,
+    placeUrl: facility.placeUrl,
+  });
+
+  const { maxHour, name, place, placeUrl } = inputs;
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+  }
+
+  function handleReset() {
+    setInputs({
+      maxHour: "",
+      name: "",
+      place: "",
+      placeUrl: "",
+    });
+  }
+
+  function handleClick() {
+    changeFacility(list_id, inputs);
+    handleReset();
+    setChangeFormToggle();
+  }
+
+  return (
+    <div>
+      <div>
+        <input
+          name="name"
+          placeholder="시설 이름"
+          value={name}
+          onChange={handleChange}
+        />
+        <input
+          name="maxHour"
+          type="number"
+          placeholder="최대 이용 시간"
+          value={maxHour}
+          onChange={handleChange}
+        />
+        <input
+          name="place"
+          placeholder="위치"
+          value={place}
+          onChange={handleChange}
+        />
+        <input
+          name="placeUrl"
+          placeholder="지도 url"
+          value={placeUrl}
+          onChange={handleChange}
+        />
+        <button onClick={setChangeFormToggle}>취소</button>
+        <button onClick={handleClick}>변경</button>
+      </div>
+    </div>
   );
 }
 
 const UL = styled.ul`
-  display: flex;
+`;
+
+const ROW = styled.li`
+  display: inline-block;
+  margin: 1rem 3rem;
+  font-weight: bold;
+  border-bottom : 1px solid;
+`;
+
+const Facility = styled.li`
+  display: inline-block;
+  margin: 0.4rem 3rem;
+`;
+
+const Wrap = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
 `;
