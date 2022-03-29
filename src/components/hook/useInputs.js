@@ -17,7 +17,7 @@ function inputReducer(state, action) {
   }
 }
 
-function useInputChange(initialForm) {
+export default function useInputChange(initialForm) {
   const [form, dispatch] = useReducer(inputReducer, initialForm);
 
   function onReset() {
@@ -29,5 +29,5 @@ function useInputChange(initialForm) {
     dispatch({ type: "ON_CHANGE", payload: { name, value } });
   }
 
-  return [onReset, onChange];
+  return [form, onReset, onChange];
 }
