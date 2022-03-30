@@ -1,17 +1,17 @@
-import { useReducer } from 'react';
-import React from 'react';
+import { useReducer } from "react";
+import React from "react";
 
 const initialFetchState = {
   loading: false,
   data: null,
-  error: null
-}
-
-const loadingState = {
-  loading: true,
-  data: null,
   error: null,
 };
+
+const loadingState = state => ({
+  ...state,
+  loading: true,
+  error: null,
+});
 
 const success = (data) => ({
   loading: false,
@@ -28,7 +28,9 @@ const error = (error) => ({
 function fetchReducer(state, action) {
   switch (action.type) {
     case "LOADING":
-      return loadingState;
+      return loadingState(state);
+    case "SUCCESS":
+      return success(action.payload);
     case "ERROR":
       return error(action.payload);
     case "CREATE":
@@ -38,13 +40,15 @@ function fetchReducer(state, action) {
     case "DELETE":
       return success(action.payload);
     case "UPDATE":
-      return success(state.data.map((d) => {
-        if (d.fno === action.paylod.id) {
-          return action.payload.facility;
-        } else {
-          return d;
-        }
-      }));
+      return success(
+        state.data.map((d) => {
+          if (d.fno === action.paylod.id) {
+            return action.payload.facility;
+          } else {
+            return d;
+          }
+        })
+      );
     default:
       throw new Error(`Unable Action Type : ${action.type}`);
   }
@@ -55,6 +59,7 @@ export const fetchDispatchContext = React.createContext(null);
 
 export function FetchContextProvider({ children }) {
   const [state, dispatch] = useReducer(fetchReducer, initialFetchState);
+
   return (
     <fetchStateContext.Provider value={state}>
       <fetchDispatchContext.Provider value={dispatch}>

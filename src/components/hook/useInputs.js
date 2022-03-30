@@ -12,6 +12,8 @@ function inputReducer(state, action) {
         ...state,
         [action.payload.name]: action.payload.value,
       };
+    case "SET_FORM": 
+      return action.payload;
     default:
       return state;
   }
@@ -29,5 +31,10 @@ export default function useInputChange(initialForm) {
     dispatch({ type: "ON_CHANGE", payload: { name, value } });
   }
 
-  return [form, onReset, onChange];
+  function setForm(values) { // test
+    console.log({values})
+    dispatch({ type: "SET_FORM", payload: values });
+  }
+
+  return [form, onReset, onChange, setForm];
 }

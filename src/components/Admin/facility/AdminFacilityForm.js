@@ -1,17 +1,12 @@
-import useInputChange from "../../hook/useInputs";
+export default function AdminFacilityForm({ fid, editFacility, form, onChange, reset }) {
+  const { name, maxHour, place, placeUrl } = form;
 
-export default function AdminFacilityForm() {
-  const [state, reset, onChange] = useInputChange({
-    name: "",
-    maxHour: "",
-    place: "",
-    placeUrl: "",
-  });
-
-  const { name, maxHour, place, placeUrl } = state;
+  async function handleSubmit(e) {
+    e.preventDefault();
+  }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <input
         name="name"
         onChange={onChange}
@@ -41,6 +36,7 @@ export default function AdminFacilityForm() {
         required
       />
       <button>제출</button>
+      <button onClick={reset}>초기화</button>
     </form>
   );
 }

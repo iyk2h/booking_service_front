@@ -4,23 +4,13 @@ import {
   fetchDispatchContext,
 } from "../../../context/fetchContext";
 import styled from "styled-components";
+import AdminFacilityItem from "./AdminFacilityItem";
 import Loading from "../../modal/loading";
 import axios from "axios";
 
-const rows = [{ row: "no" }, { row: "이름" }, { row: "위치" }, { row: "url" }];
+const rows = [{ title: "no" }, { title: "이름" }, { title: "최대 시간" }, { title: "위치" }, { title: "url" }];
 
-async function deleteFacility(fno, dispatch) {
-  dispatch({ type: "LOADING" });
-  try {
-    axios.delete(`​/manage​/facility​/${fno}`);
-    dispatch({ type: "DELETE", payload: fno });
-    alert('시설이 삭제 되었습니다.');
-  } catch (error) {
-    dispatch({ type: "ERROR", payload: error });
-  }
-}
-
-export default function AdminFacilityList({ setFid }) {
+export default function AdminFacilityList({ setFid, deleteFacility }) {
   const state = useContext(fetchStateContext);
   const dispatch = useContext(fetchDispatchContext);
 
@@ -45,35 +35,24 @@ export default function AdminFacilityList({ setFid }) {
 
   return (
     <ul>
+      <Title>{rows.map(row => <Row key={row.title}>{row.title}</Row>)}</Title>
       {facilities.map((f) => (
-        <AdminFacilityItem key={f.fno} facility={f} setFid={setFid} dispatch={dispatch} />
+        <AdminFacilityItem
+          key={f.fno}
+          facility={f}
+          setFid={setFid}
+          deleteFacility={deleteFacility}
+        />
       ))}
     </ul>
   );
 }
 
-function AdminFacilityItem({ facility, setFid, dispatch }) {
-  return (
-    <ListItem onClick={() => setFid(facility.fno)}>
-      <ListData>{facility.fno}</ListData>
-      <ListData>{facility.name}</ListData>
-      <ListData>{facility.maxHour}</ListData>
-      <ListData>{facility.place}</ListData>
-      <ListData>{facility.placeUrl}</ListData>
-      <button onClick={null}>수정</button>
-      <button
-        onClick={() => deleteFacility(facility.fno, dispatch)}
-      >
-        삭제
-      </button>
-    </ListItem>
-  );
-}
-
-const ListItem = styled.li`
+const Title = styled.li`
   display: flex;
 `;
 
-const ListData = styled.div`
+const Row = styled.div`
   margin: 0 0.7rem;
+  font-weight: bold;
 `;
