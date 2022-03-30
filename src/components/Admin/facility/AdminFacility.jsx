@@ -119,7 +119,6 @@ export default function AdminFacility() {
   async function changeFacility(list_id, data) {
     try {
       const response = await axios.put(`/manage/facility/${list_id}`, data);
-      console.log(response);
       if (response.status === 204) alert("수정되었습니다.");
       const replaced = replaceDataInArray(list_id, data);
       setFacilityList((prev) => replaced);

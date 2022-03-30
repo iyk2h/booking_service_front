@@ -21,7 +21,7 @@ export default function AdminFacilityList({ setFid, deleteFacility }) {
       dispatch({ type: "LOADING" });
       try {
         const response = await axios.get("/manage/facility");
-        dispatch({ type: "READ", payload: response.data });
+        dispatch({ type: "SUCCESS", payload: response.data });
       } catch (error) {
         dispatch({ type: "ERROR", payload: error });
       }

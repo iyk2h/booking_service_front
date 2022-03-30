@@ -1,9 +1,5 @@
-export default function AdminFacilityForm({ fid, editFacility, form, onChange, reset }) {
+export default function AdminFacilityForm({ handleSubmit, form, onChange, reset }) {
   const { name, maxHour, place, placeUrl } = form;
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-  }
 
   return (
     <form onSubmit={handleSubmit}>

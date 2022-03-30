@@ -31,8 +31,7 @@ export default function useInputChange(initialForm) {
     dispatch({ type: "ON_CHANGE", payload: { name, value } });
   }
 
-  function setForm(values) { // test
-    console.log({values})
+  function setForm(values) { 
     dispatch({ type: "SET_FORM", payload: values });
   }
 

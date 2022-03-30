@@ -33,22 +33,6 @@ function fetchReducer(state, action) {
       return success(action.payload);
     case "ERROR":
       return error(action.payload);
-    case "CREATE":
-      return success(state.data.concat(action.payload));
-    case "READ":
-      return success(action.payload);
-    case "DELETE":
-      return success(action.payload);
-    case "UPDATE":
-      return success(
-        state.data.map((d) => {
-          if (d.fno === action.paylod.id) {
-            return action.payload.facility;
-          } else {
-            return d;
-          }
-        })
-      );
     default:
       throw new Error(`Unable Action Type : ${action.type}`);
   }

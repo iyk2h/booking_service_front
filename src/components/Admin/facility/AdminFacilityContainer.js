@@ -20,19 +20,39 @@ function AdminFacilityContainer() {
     placeUrl: "",
   });
 
-  useEffect(() => {  // 안될거같음.
-    if (fid === null) return;
+  useEffect(() => {
+    if (!fid) return;
     let target_data;
     state.data.forEach((d) => {
       if (d.fno === Number(fid)) {
-        target_data = Object.keys(d).filter((d, idx) => idx !== 0).reduce((acc, curr) => {
-          acc[curr] = d[curr];
-          return acc;
-        }, {});
+        target_data = Object.keys(d)
+          .filter((d, idx) => idx !== 0)
+          .reduce((acc, curr) => {
+            acc[curr] = d[curr];
+            return acc;
+          }, {});
         setForm(target_data);
       }
     });
   }, [fid]);
+
+  async function createFacility() {
+    if (fid) return;
+    dispatch({ type: "LOADING" });
+    try {
+      await axios.post("/manage/facility/join", form);
+      dispatch({
+        type: "SUCCESS",
+        payload: state.data.concat({
+          fno: state.data[state.data.length - 1].fno + 1,
+          ...form,
+        }),
+      });
+      reset();
+    } catch (error) {
+      dispatch({ type: "ERROR", payload: error });
+    }
+  }
 
   async function deleteFacility(fno) {
     alert("정말 삭제하시겠습니까?");
@@ -40,25 +60,29 @@ function AdminFacilityContainer() {
     try {
       await axios.delete(`/manage/facility/${fno}`);
       const deleted = state.data.filter((f) => f.fno !== fno);
-      dispatch({ type: "DELETE", payload: deleted });
+      dispatch({ type: "SUCCESS", payload: deleted });
       alert("삭제가 완료되었습니다.");
+      reset();
     } catch (error) {
       dispatch({ type: "ERROR", payload: error });
     }
   }
 
   async function editFacility(fno) {
-    if (fid === null) return;
+    if (!fno) return;
+    setFid(null);
     dispatch({ type: "LOADING" });
     try {
-      await axios.delete(`/manage/facility/${fno}`);
-      const updated = state.data.map((f) => {
-        if (f.fno === fno) {
-          return form;
+      ///////////////////
+      await axios.put(`/manage/facility/${fno}`, form);
+      /////////////////// 여기까지 못옴.
+      const updated = state.data.map((facility) => {
+        if (facility.fno === fno) {
+          return { fno, ...form };
         }
-        return f;
+        return facility;
       });
-      dispatch({ type: "UPDATE", payload: updated });
+      dispatch({ type: "SUCCESS", payload: updated });
       alert("변경이 완료되었습니다..");
       reset(); // reset inputs
       setFid(null); // init Fid & exit Edit Form
@@ -67,23 +91,24 @@ function AdminFacilityContainer() {
     }
   }
 
-  async function createFacility() {
-    dispatch({ type: "LOADING" });
-    try {
-      await axios.post("/manage/facility/join", form);
-      dispatch({ type: "CREATE", payload: state.data.concat(form) });
-      reset();
-    } catch (error) {
-      dispatch({ type: "ERROR", payload: error });
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if(fid) {
+      console.log("호출 전에 fid : ", fid, typeof fid);
+      await editFacility(fid);
+    } else {
+      await createFacility();
     }
   }
 
   return (
     <ListContainer>
-      <AdminFacilityList setFid={setFid} deleteFacility={deleteFacility} />
+      <AdminFacilityList 
+        setFid={setFid} 
+        deleteFacility={deleteFacility} 
+      />
       <AdminFacilityForm
-        fid={fid}
-        editFacility={editFacility}
+        handleSubmit={handleSubmit}
         form={form}
         onChange={onChange}
         reset={reset}
