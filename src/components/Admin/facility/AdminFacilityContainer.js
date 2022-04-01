@@ -20,6 +20,7 @@ function AdminFacilityContainer() {
     placeUrl: "",
   });
 
+  // 수정 버튼 클릭시, 입력창에 해당 데이터 
   useEffect(() => {
     if (!fid) return;
     let target_data;
@@ -37,7 +38,6 @@ function AdminFacilityContainer() {
   }, [fid]);
 
   async function createFacility() {
-    if (fid) return;
     dispatch({ type: "LOADING" });
     try {
       await axios.post("/manage/facility/join", form);
@@ -73,9 +73,7 @@ function AdminFacilityContainer() {
     setFid(null);
     dispatch({ type: "LOADING" });
     try {
-      ///////////////////
       await axios.put(`/manage/facility/${fno}`, form);
-      /////////////////// 여기까지 못옴.
       const updated = state.data.map((facility) => {
         if (facility.fno === fno) {
           return { fno, ...form };
@@ -85,7 +83,7 @@ function AdminFacilityContainer() {
       dispatch({ type: "SUCCESS", payload: updated });
       alert("변경이 완료되었습니다..");
       reset(); // reset inputs
-      setFid(null); // init Fid & exit Edit Form
+      setFid(null); // init Fid
     } catch (error) {
       dispatch({ type: "ERROR", payload: error });
     }
@@ -93,8 +91,7 @@ function AdminFacilityContainer() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if(fid) {
-      console.log("호출 전에 fid : ", fid, typeof fid);
+    if (fid) {
       await editFacility(fid);
     } else {
       await createFacility();
@@ -103,10 +100,7 @@ function AdminFacilityContainer() {
 
   return (
     <ListContainer>
-      <AdminFacilityList 
-        setFid={setFid} 
-        deleteFacility={deleteFacility} 
-      />
+      <AdminFacilityList setFid={setFid} deleteFacility={deleteFacility} />
       <AdminFacilityForm
         handleSubmit={handleSubmit}
         form={form}

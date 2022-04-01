@@ -17,17 +17,16 @@ import Password from "./components/mypage/password";
 import AdminLogin from "./components/Admin/login/AdminLogin";
 import AdminMain from "./components/Admin/layout/AdminMain";
 import AdminSignUp from "./components/Admin/signup/AdminSignUp";
-import AdminBooking from "./components/Admin/booking/AdminBooking";
-// import AdminFacility from "./components/Admin/facility/AdminFacility";
+import AdminBookingContainer from "./components/Admin/booking/AdminBookingContainer";
 import AdminFacilityContainer from "./components/Admin/facility/AdminFacilityContainer";
 import AdminManage from "./components/Admin/manage/AdminManage";
 
 // context test 중
-import {FetchContextProvider} from "./context/fetchContext";
+import { FetchContextProvider } from "./context/fetchContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <FetchContextProvider> 
+    <FetchContextProvider>
       <BrowserRouter>
         <Routes>
           {/* User */}
@@ -49,8 +48,8 @@ ReactDOM.render(
             <Route path="signup" element={<AdminSignUp />} />
             <Route path="login" element={<AdminLogin />} />
             <Route path="main" element={<AdminMain />} />
-            <Route path="booking" element={<AdminBooking />} />
-            {/* <Route path="facility" element={<AdminFacility />} /> */}
+            {/* <Route path="booking" element={<AdminBooking />} /> */}
+            <Route path="booking" element={<AdminBookingContainer />} />
             <Route path="facility" element={<AdminFacilityContainer />} />
             <Route path="manage" element={<AdminManage />} />
           </Route>
