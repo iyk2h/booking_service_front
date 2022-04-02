@@ -8,7 +8,7 @@ function AdminBookingList({ state, deleteBooking }) {
   if (loading) return <Loading />;
   if (error) return <h1>에러 발생!</h1>;
   if (!bookingList) return null;
-  
+
   return (
     <ul>
       {bookingList.map((booking) => (
@@ -18,4 +18,4 @@ function AdminBookingList({ state, deleteBooking }) {
   );
 }
 
-export default AdminBookingList;
+export default React.memo(AdminBookingList);

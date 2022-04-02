@@ -55,7 +55,7 @@ function AdminFacilityContainer() {
   }
 
   async function deleteFacility(fno) {
-    alert("정말 삭제하시겠습니까?");
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
     dispatch({ type: "LOADING" });
     try {
       await axios.delete(`/manage/facility/${fno}`);

@@ -1,4 +1,4 @@
-export default function AdminFacilityForm({ handleSubmit, form, onChange, reset }) {
+function AdminFacilityForm({ handleSubmit, form, onChange, reset }) {
   const { name, maxHour, place, placeUrl } = form;
 
   return (
@@ -36,3 +36,5 @@ export default function AdminFacilityForm({ handleSubmit, form, onChange, reset 
     </form>
   );
 }
+
+export default AdminFacilityForm

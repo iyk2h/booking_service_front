@@ -23,4 +23,4 @@ const Item = styled.div`
   margin: 0 10px;
 `;
 
-export default AdminBookingItem;
+export default React.memo(AdminBookingItem);

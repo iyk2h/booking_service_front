@@ -11,7 +11,7 @@ function AdminBookingContainer() {
   const state = useContext(fetchStateContext);
   const dispatch = useContext(fetchDispatchContext);
 
-  useEffect(() => {
+  useEffect(() => { // 이게 list가 아니라 container에 있는게 맞는지 모르겟음
     async function fetchBookingList() {
       dispatch({ type: "LOADING" });
       try {
@@ -36,12 +36,10 @@ function AdminBookingContainer() {
       dispatch({ type: "ERROR", payload: error });
     }
   }
+
   return (
     <ListContainer>
-      <AdminBookingList
-        state={state}
-        deleteBooking={deleteBooking}
-      />
+      <AdminBookingList state={state} deleteBooking={deleteBooking} />
     </ListContainer>
   );
 }

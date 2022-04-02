@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function AdminFacilityItem({ facility, setFid, deleteFacility }) {
+function AdminFacilityItem({ facility, setFid, deleteFacility }) {
   return (
     <ListItem onClick={() => setFid(facility.fno)}>
       <ListData>{facility.fno}</ListData>
@@ -24,3 +24,5 @@ const ListItem = styled.li`
 const ListData = styled.div`
   margin: 0 0.7rem;
 `;
+
+export default React.memo(AdminFacilityItem);

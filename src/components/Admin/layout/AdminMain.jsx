@@ -16,7 +16,7 @@ export default function AdminMain() {
     },
     {
       title: "사용자 관리",
-      url: "/admin/user",
+      url: "/admin/manage",
     },
     {
       title: "내 계정",
