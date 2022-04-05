@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function AdminFooter() {
+function AdminFooter() {
   return (
     <Wrapper>
       footer입니다.
@@ -9,7 +9,9 @@ export default function AdminFooter() {
   );
 }
 
-const Wrapper = styled.div`
+export default AdminFooter;
+
+const Wrapper = styled.footer`
   position: fixed;
   bottom: 0;
   left : 0;

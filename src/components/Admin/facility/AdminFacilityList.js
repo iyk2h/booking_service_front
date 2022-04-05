@@ -34,7 +34,7 @@ export default function AdminFacilityList({ setFid, deleteFacility }) {
   if (!facilities) return null;
 
   return (
-    <ul>
+    <UL>
       <Title>{rows.map(row => <Row key={row.title}>{row.title}</Row>)}</Title>
       {facilities.map((f) => (
         <AdminFacilityItem
@@ -44,9 +44,13 @@ export default function AdminFacilityList({ setFid, deleteFacility }) {
           deleteFacility={deleteFacility}
         />
       ))}
-    </ul>
+    </UL>
   );
 }
+
+const UL = styled.ul`
+  overflow: auto;
+`;
 
 const Title = styled.li`
   display: flex;

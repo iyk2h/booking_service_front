@@ -103,17 +103,19 @@ function AdminFacilityContainer() {
       <AdminFacilityList setFid={setFid} deleteFacility={deleteFacility} />
       <AdminFacilityForm
         handleSubmit={handleSubmit}
-        form={form}
         onChange={onChange}
+        form={form}
         reset={reset}
+        fid={fid}
       />
     </ListContainer>
   );
 }
 
 const ListContainer = styled.div`
+  margin: 0 auto;
   width: 90vw;
-  height: 90vh;
+  height: 65vh;
   padding: 1rem;
   border: 1px solid;
   border-radius: 3px;

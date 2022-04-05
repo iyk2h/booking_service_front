@@ -20,6 +20,7 @@ import AdminSignUp from "./components/Admin/signup/AdminSignUp";
 import AdminBookingContainer from "./components/Admin/booking/AdminBookingContainer";
 import AdminFacilityContainer from "./components/Admin/facility/AdminFacilityContainer";
 import AdminManageContainer from "./components/Admin/manage/AdminManageContainer";
+import AdminMenu from "./components/Admin//layout/AdminMenu";
 
 // context test 중
 import { FetchContextProvider } from "./context/fetchContext";
@@ -44,16 +45,14 @@ ReactDOM.render(
           </Route>
 
           {/* Admin */}
-          <Route path="/admin">
+          <Route path="/admin" element={<AdminMain />}>
             <Route path="signup" element={<AdminSignUp />} />
             <Route path="login" element={<AdminLogin />} />
-            <Route path="main" element={<AdminMain />} />
-            {/* <Route path="booking" element={<AdminBooking />} /> */}
+            <Route path="main" element={<AdminMenu />} />
             <Route path="booking" element={<AdminBookingContainer />} />
             <Route path="facility" element={<AdminFacilityContainer />} />
             <Route path="manage" element={<AdminManageContainer />} />
           </Route>
-
           {/* 404 */}
           <Route
             path="*"

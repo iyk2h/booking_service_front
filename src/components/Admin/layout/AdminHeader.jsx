@@ -5,7 +5,8 @@ import styled from 'styled-components';
 export default function AdminHeader() {
   return (
     <Header>
-      <HomeButton url="/admin/"/>
+      <HomeButton url="/admin/main"/>
+      <Test>test</Test>
     </Header>
   );
 }
@@ -17,5 +18,12 @@ const Header = styled.header`
   min-width : 100vw;
   min-height : 2.5em;
   max-height : 2.5em;
-  border-bottom : 1px solid
+  border-bottom : 1px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Test = styled.button`
+  margin-right: 1em;
 `;

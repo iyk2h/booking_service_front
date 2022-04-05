@@ -22,7 +22,8 @@ function inputReducer(state, action) {
 export default function useInputChange(initialForm) {
   const [form, dispatch] = useReducer(inputReducer, initialForm);
 
-  function onReset() {
+  function onReset(e) {
+    e.preventDefault();
     dispatch({ type: "RESET" });
   }
 
