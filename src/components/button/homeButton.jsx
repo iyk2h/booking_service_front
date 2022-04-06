@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function HomeButton({ url }) {
   return (
     <Link to={url}>
-      <HomeImage src="/asset/images/MNU_LOGO.jpeg" alt="MNU"/>
+      <HomeImage src="/asset/images/MNU_LOGO.jpeg" alt="MNU" />
     </Link>
   );
 }

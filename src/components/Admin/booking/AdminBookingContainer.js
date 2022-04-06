@@ -11,18 +11,19 @@ function AdminBookingContainer() {
   const state = useContext(fetchStateContext);
   const dispatch = useContext(fetchDispatchContext);
 
-  useEffect(() => { // 이게 list가 아니라 container에 있는게 맞는지 모르겟음
-    async function fetchBookingList() {
-      dispatch({ type: "LOADING" });
-      try {
-        const response = await axios.get("/manage/booking");
-        dispatch({ type: "SUCCESS", payload: response.data });
-      } catch (error) {
-        dispatch({ type: "ERROR", payload: error });
-      }
-    }
+  useEffect(() => {
     fetchBookingList();
   }, [dispatch]);
+
+  async function fetchBookingList() {
+    dispatch({ type: "LOADING" });
+    try {
+      const response = await axios.get("/manage/booking");
+      dispatch({ type: "SUCCESS", payload: response.data });
+    } catch (error) {
+      dispatch({ type: "ERROR", payload: error });
+    }
+  }
 
   async function deleteBooking(bno) {
     dispatch({ type: "LOADING" });
@@ -36,6 +37,19 @@ function AdminBookingContainer() {
       dispatch({ type: "ERROR", payload: error });
     }
   }
+
+  // function createDispatch(dispatch, promiseFn) {
+  //   async function actionHandler(callback, ...rest) {
+  //     dispatch({ type: "LOADING " });
+  //     try {
+  //       const data = await promiseFn(...rest);
+  //       callback(data);// 애매
+  //       dispatch({ type: "SUCCESS", payload: data && null });
+  //     } catch (error) {
+  //       dispatch({ type: "ERROR", payload: error });
+  //     }
+  //   }
+  // }
 
   return (
     <ListContainer>

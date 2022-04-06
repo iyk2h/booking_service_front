@@ -12,7 +12,7 @@ function inputReducer(state, action) {
         ...state,
         [action.payload.name]: action.payload.value,
       };
-    case "SET_FORM": 
+    case "SET_FORM":
       return action.payload;
     default:
       return state;
@@ -32,7 +32,7 @@ export default function useInputChange(initialForm) {
     dispatch({ type: "ON_CHANGE", payload: { name, value } });
   }
 
-  function setForm(values) { 
+  function setForm(values) {
     dispatch({ type: "SET_FORM", payload: values });
   }
 

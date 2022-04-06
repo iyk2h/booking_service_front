@@ -18,17 +18,18 @@ function AdminManageContainer() {
   const [form, reset, onChange, setForm] = useInputChange({ sid: "" });
 
   useEffect(() => {
-    async function getUsers() {
-      dispatch({ type: "LOADING" });
-      try {
-        const response = await axios.get(`/manage/students`);
-        dispatch({ type: "SUCCESS", payload: response.data });
-      } catch (error) {
-        dispatch({ type: "ERROR", paylod: error });
-      }
-    }
     getUsers();
   }, [form, dispatch]);
+
+  async function getUsers() {
+    dispatch({ type: "LOADING" });
+    try {
+      const response = await axios.get(`/manage/students`);
+      dispatch({ type: "SUCCESS", payload: response.data });
+    } catch (error) {
+      dispatch({ type: "ERROR", paylod: error });
+    }
+  }
 
   async function deleteUser(sid) {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
@@ -56,8 +57,8 @@ function AdminManageContainer() {
       <AdminManageUserList state={state} deleteUser={deleteUser} />
       <AdminManageInput
         handleSubmit={handleSubmit}
-        form={form}
         onChange={onChange}
+        form={form}
       />
       <AdminManageSearchResult searchId={searchId} deleteUser={deleteUser} />
     </div>

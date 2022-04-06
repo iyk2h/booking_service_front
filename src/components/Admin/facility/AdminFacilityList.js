@@ -8,7 +8,13 @@ import AdminFacilityItem from "./AdminFacilityItem";
 import Loading from "../../modal/loading";
 import axios from "axios";
 
-const rows = [{ title: "no" }, { title: "이름" }, { title: "최대 시간" }, { title: "위치" }, { title: "url" }];
+const rows = [
+  { title: "no" },
+  { title: "이름" },
+  { title: "최대 시간" },
+  { title: "위치" },
+  { title: "url" },
+];
 
 export default function AdminFacilityList({ setFid, deleteFacility }) {
   const state = useContext(fetchStateContext);
@@ -17,17 +23,18 @@ export default function AdminFacilityList({ setFid, deleteFacility }) {
   const { loading, data: facilities, error } = state;
 
   useEffect(() => {
-    async function getFacilities() {
-      dispatch({ type: "LOADING" });
-      try {
-        const response = await axios.get("/manage/facility");
-        dispatch({ type: "SUCCESS", payload: response.data });
-      } catch (error) {
-        dispatch({ type: "ERROR", payload: error });
-      }
-    }
     getFacilities();
   }, [dispatch]);
+
+  async function getFacilities() {
+    dispatch({ type: "LOADING" });
+    try {
+      const response = await axios.get("/manage/facility");
+      dispatch({ type: "SUCCESS", payload: response.data });
+    } catch (error) {
+      dispatch({ type: "ERROR", payload: error });
+    }
+  }
 
   if (loading) return <Loading />;
   if (error) return <h1>에러 발생!</h1>;
@@ -35,7 +42,11 @@ export default function AdminFacilityList({ setFid, deleteFacility }) {
 
   return (
     <UL>
-      <Title>{rows.map(row => <Row key={row.title}>{row.title}</Row>)}</Title>
+      <Title>
+        {rows.map((row) => (
+          <Row key={row.title}>{row.title}</Row>
+        ))}
+      </Title>
       {facilities.map((f) => (
         <AdminFacilityItem
           key={f.fno}

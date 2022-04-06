@@ -20,11 +20,11 @@ function AdminFacilityContainer() {
     placeUrl: "",
   });
 
-  // 수정 버튼 클릭시, 입력창에 해당 데이터 
+  // 수정 버튼 클릭시, 입력창에 해당 데이터 입력
   useEffect(() => {
     if (!fid) return;
     let target_data;
-    state.data.forEach((d) => {
+    state.data.forEach((d) => { // 여기를 함수로 
       if (d.fno === Number(fid)) {
         target_data = Object.keys(d)
           .filter((d, idx) => idx !== 0)
@@ -36,6 +36,16 @@ function AdminFacilityContainer() {
       }
     });
   }, [fid]);
+ 
+  // 함수 인자로 axios, 데이터를 변경하는 함수, reset함수를 받으면, loading, success, error는 공통적으로 사용 가능.
+  // function updateFacilityList(list, fid) {
+    // let clicked_facility;
+    // list.forEach(item => {
+    //   if(item.fno === Number(fid)) {
+
+    //   }
+    // })
+  // }
 
   async function createFacility() {
     dispatch({ type: "LOADING" });
