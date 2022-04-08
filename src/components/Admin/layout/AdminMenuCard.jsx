@@ -13,7 +13,12 @@ export default function AdminMenuCard({ title, url }) {
 }
 
 const Wrapper = styled.div`
-  border: 1px solid;
+  &:hover {
+    transform: scale(1.05);
+    transition: 0.3s;
+  }
+  transition: 0.3s;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 5px;
   padding: 2em;
   text-align: center;

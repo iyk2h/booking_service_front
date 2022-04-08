@@ -144,7 +144,7 @@ const ListContainer = styled.div`
   width: 90vw;
   height: 65vh;
   padding: 1rem;
-  border: 1px solid;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 3px;
 `;
 

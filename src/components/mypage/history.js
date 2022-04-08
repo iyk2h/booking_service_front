@@ -12,7 +12,7 @@ export default function History(props) {
   });
 
   const { loading, list } = state;
-  
+
   useEffect(() => {
     axios
       .get("/students/booking")
@@ -32,11 +32,11 @@ export default function History(props) {
     });
   };
 
+  if (loading) return <Loading />;
+
   return (
     <div className="history_list">
-      {loading ? (
-        <Loading />
-      ) : (
+      {
         <ul className="history_list">
           {list.length === 0 ? (
             <NoBookingCard />
@@ -51,7 +51,7 @@ export default function History(props) {
             ))
           )}
         </ul>
-      )}
+      }
     </div>
   );
 }

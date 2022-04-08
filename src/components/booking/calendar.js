@@ -133,9 +133,10 @@ export default function Calendar() {
   const lastDateIndex = dates.lastIndexOf(TLDate);
 
   let selectableIndex = 0;
+  console.log({ viewMonth })
   if (today.getFullYear() === viewYear && today.getMonth() === viewMonth) {
     selectableIndex = thisDates.indexOf(todayNum) + prevDates.length; // 애매
-  } else if (viewYear < today.getFullYear()) {
+  } else if (viewYear !== today.getFullYear() && viewMonth !== today.getMonth()) {
     // ???
     selectableIndex = 100;
   }

@@ -26,6 +26,7 @@ const MainContent = styled.div`
   display: flex;
   align-items: center;
   min-height: 100vh;
+  
 `
 
 export default AdminMain;

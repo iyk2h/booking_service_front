@@ -60,7 +60,7 @@ export default function AdminFacilityList({ setFid, deleteFacility }) {
 }
 
 const UL = styled.ul`
-  overflow: auto;
+  
 `;
 
 const Title = styled.li`
