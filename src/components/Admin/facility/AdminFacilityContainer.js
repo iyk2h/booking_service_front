@@ -23,29 +23,9 @@ function AdminFacilityContainer() {
   // 수정 버튼 클릭시, 입력창에 해당 데이터 입력
   useEffect(() => {
     if (!fid) return;
-    let target_data;
-    state.data.forEach((d) => { // 여기를 함수로 
-      if (d.fno === Number(fid)) {
-        target_data = Object.keys(d)
-          .filter((d, idx) => idx !== 0)
-          .reduce((acc, curr) => {
-            acc[curr] = d[curr];
-            return acc;
-          }, {});
-        setForm(target_data);
-      }
-    });
+    const target_data = setEditFormData(state.data, fid);
+    setForm(target_data);
   }, [fid]);
- 
-  // 함수 인자로 axios, 데이터를 변경하는 함수, reset함수를 받으면, loading, success, error는 공통적으로 사용 가능.
-  // function updateFacilityList(list, fid) {
-    // let clicked_facility;
-    // list.forEach(item => {
-    //   if(item.fno === Number(fid)) {
-
-    //   }
-    // })
-  // }
 
   async function createFacility() {
     dispatch({ type: "LOADING" });
@@ -53,10 +33,7 @@ function AdminFacilityContainer() {
       await axios.post("/manage/facility/join", form);
       dispatch({
         type: "SUCCESS",
-        payload: state.data.concat({
-          fno: state.data[state.data.length - 1].fno + 1,
-          ...form,
-        }),
+        payload: addNewFacilityAtList(state.data, form),
       });
       reset();
     } catch (error) {
@@ -69,8 +46,10 @@ function AdminFacilityContainer() {
     dispatch({ type: "LOADING" });
     try {
       await axios.delete(`/manage/facility/${fno}`);
-      const deleted = state.data.filter((f) => f.fno !== fno);
-      dispatch({ type: "SUCCESS", payload: deleted });
+      dispatch({
+        type: "SUCCESS",
+        payload: deleteFacilityAtList(state.data, fno),
+      });
       alert("삭제가 완료되었습니다.");
       reset();
     } catch (error) {
@@ -84,13 +63,10 @@ function AdminFacilityContainer() {
     dispatch({ type: "LOADING" });
     try {
       await axios.put(`/manage/facility/${fno}`, form);
-      const updated = state.data.map((facility) => {
-        if (facility.fno === fno) {
-          return { fno, ...form };
-        }
-        return facility;
+      dispatch({
+        type: "SUCCESS",
+        payload: editFacilityAtList(state.data, fno, form),
       });
-      dispatch({ type: "SUCCESS", payload: updated });
       alert("변경이 완료되었습니다..");
       reset(); // reset inputs
       setFid(null); // init Fid
@@ -120,6 +96,42 @@ function AdminFacilityContainer() {
       />
     </ListContainer>
   );
+}
+
+function addNewFacilityAtList(arr, form) {
+  const newValue = {
+    fno: arr[arr.length - 1].fno + 1,
+    ...form,
+  };
+  return arr.concat(newValue);
+}
+
+function deleteFacilityAtList(arr, index) {
+  return arr.filter((f) => f.fno !== index);
+}
+
+function editFacilityAtList(arr, index, form) {
+  return arr.map((facility) => {
+    if (facility.fno === index) {
+      return { fno: index, ...form };
+    }
+    return facility;
+  });
+}
+
+function setEditFormData(arr, fid) {
+  let target_data;
+  arr.forEach((d) => {
+    if (d.fno === Number(fid)) {
+      target_data = Object.keys(d)
+        .filter((d, idx) => idx !== 0)
+        .reduce((acc, curr) => {
+          acc[curr] = d[curr];
+          return acc;
+        }, {});
+    }
+  });
+  return target_data;
 }
 
 const ListContainer = styled.div`
