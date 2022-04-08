@@ -6,7 +6,7 @@ import {
 import styled from "styled-components";
 import AdminFacilityItem from "./AdminFacilityItem";
 import Loading from "../../modal/loading";
-import axios from "axios";
+import { getFacility } from '../adminApi';
 
 const rows = [
   { title: "no" },
@@ -29,8 +29,8 @@ export default function AdminFacilityList({ setFid, deleteFacility }) {
   async function getFacilities() {
     dispatch({ type: "LOADING" });
     try {
-      const response = await axios.get("/manage/facility");
-      dispatch({ type: "SUCCESS", payload: response.data });
+      const data = await getFacility();
+      dispatch({ type: "SUCCESS", payload: data });
     } catch (error) {
       dispatch({ type: "ERROR", payload: error });
     }

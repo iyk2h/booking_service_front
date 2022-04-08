@@ -15,15 +15,15 @@ export async function postFacility(form) {
   await axios.post("/manage/facility/join", form);
 }
 
-export async function deleteFacility(fno) {
+export async function removeFacility(fno) {
   await axios.delete(`/manage/facility/${fno}`);
 }
 
-export async function editFacility(fno, form) {
+export async function putFacility(fno, form) {
   await axios.put(`/manage/facility/${fno}`, form);
 }
 
-export async function getFacility(fno, form) {
+export async function getFacility() {
   const response = await axios.get("/manage/facility");
   return response.data;
 }

@@ -7,7 +7,7 @@ import {
   fetchDispatchContext,
 } from "../../../context/fetchContext";
 import styled from "styled-components";
-import axios from "axios";
+import { postFacility, removeFacility, putFacility } from '../adminApi';
 
 function AdminFacilityContainer() {
   const state = useContext(fetchStateContext);
@@ -20,7 +20,6 @@ function AdminFacilityContainer() {
     placeUrl: "",
   });
 
-  // 수정 버튼 클릭시, 입력창에 해당 데이터 입력
   useEffect(() => {
     if (!fid) return;
     const target_data = setEditFormData(state.data, fid);
@@ -28,13 +27,15 @@ function AdminFacilityContainer() {
   }, [fid]);
 
   async function createFacility() {
+    alertForConfirm("등록하시겠습니까?")
     dispatch({ type: "LOADING" });
     try {
-      await axios.post("/manage/facility/join", form);
+      await postFacility(form);
       dispatch({
         type: "SUCCESS",
         payload: addNewFacilityAtList(state.data, form),
       });
+      alert('등록이 완료되었습니다.')
       reset();
     } catch (error) {
       dispatch({ type: "ERROR", payload: error });
@@ -42,10 +43,10 @@ function AdminFacilityContainer() {
   }
 
   async function deleteFacility(fno) {
-    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+    alertForConfirm("정말 삭제하시겠습니까?")
     dispatch({ type: "LOADING" });
     try {
-      await axios.delete(`/manage/facility/${fno}`);
+      await removeFacility(fno);
       dispatch({
         type: "SUCCESS",
         payload: deleteFacilityAtList(state.data, fno),
@@ -59,17 +60,17 @@ function AdminFacilityContainer() {
 
   async function editFacility(fno) {
     if (!fno) return;
-    setFid(null);
+    alertForConfirm("변경 하시겠습니까?")
     dispatch({ type: "LOADING" });
     try {
-      await axios.put(`/manage/facility/${fno}`, form);
+      await putFacility(fno, form);
       dispatch({
         type: "SUCCESS",
         payload: editFacilityAtList(state.data, fno, form),
       });
       alert("변경이 완료되었습니다..");
-      reset(); // reset inputs
-      setFid(null); // init Fid
+      reset(); 
+      setFid(null); 
     } catch (error) {
       dispatch({ type: "ERROR", payload: error });
     }
@@ -132,6 +133,10 @@ function setEditFormData(arr, fid) {
     }
   });
   return target_data;
+}
+
+function alertForConfirm(msg) {
+  if (!window.confirm(msg)) return;
 }
 
 const ListContainer = styled.div`
