@@ -117,7 +117,7 @@ export default function Login({ url, nextUrl, signupUrl }) {
 }
 
 Login.defaultProps = {
-  url: "/login",
+  url: "/students/login",
   nextUrl: "/",
   signupUrl: "/signup"
 };
