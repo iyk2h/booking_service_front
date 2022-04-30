@@ -2,8 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 function AdminFacilityItem({ facility, setFid, deleteFacility }) {
+  if (!facility) return null;
   return (
-    <ListItem onClick={() => setFid(facility.fno)}>
+    <ListItem key={facility.fno} onClick={() => setFid(facility.fno)}>
       <ListData>{facility.fno}</ListData>
       <ListData>{facility.name}</ListData>
       <ListData>{facility.maxHour}</ListData>

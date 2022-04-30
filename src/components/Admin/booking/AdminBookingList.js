@@ -12,7 +12,7 @@ function AdminBookingList({ state, deleteBooking }) {
   return (
     <ul>
       {bookingList.map((booking) => (
-        <AdminBookingItem booking={booking} deleteBooking={deleteBooking} />
+        <AdminBookingItem key={booking.bno} booking={booking} deleteBooking={deleteBooking} />
       ))}
     </ul>
   );

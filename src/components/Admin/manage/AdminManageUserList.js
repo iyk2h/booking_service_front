@@ -17,7 +17,7 @@ function AdminManageUserList({ state, deleteUser }) {
         <li key={row.row}>{row.row}</li>
       ))}
       {users.map((user) => (
-        <AdminManageUser user={user} deleteUser={deleteUser} />
+        <AdminManageUser key={user.sid} user={user} deleteUser={deleteUser} />
       ))}
     </ul>
   );

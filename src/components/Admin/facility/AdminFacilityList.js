@@ -40,6 +40,7 @@ export default function AdminFacilityList({ setFid, deleteFacility }) {
   if (error) return <h1>에러 발생!</h1>;
   if (!facilities) return null;
 
+  console.log({facilities});
   return (
     <UL>
       <Title>
