@@ -1,7 +1,20 @@
-import React from "react";
 import styled from "styled-components";
+import { useDateState, useDateDispatch } from "./dateContext";
 
-function DateFilter({ handleFilter, dateState }) {
+function DateFilter() {
+  const dateState = useDateState();
+  const dateDispatch = useDateDispatch();
+
+  function handleFilter(e) {
+    const className = e.target.className;
+    if (!className.includes("-btn")) return;
+    if (className.includes("prev-btn")) {
+      dateDispatch({ type: "PREV" });
+    } else if (className.includes("next-btn")) {
+      dateDispatch({ type: "NEXT" });
+    }
+  }
+
   return (
     <StyFilterContainer onClick={handleFilter}>
       <StyBtn className="prev-btn">&lt;</StyBtn>
@@ -23,7 +36,6 @@ const StyFilterContainer = styled.div`
 const StyDiv = styled.div`
   width: 100px;
   text-align: center;
-  
 `;
 
 const StyBtn = styled.div`

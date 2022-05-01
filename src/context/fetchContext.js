@@ -1,5 +1,4 @@
-import { useReducer } from "react";
-import React from "react";
+import React, { useReducer } from "react";
 
 const initialFetchState = {
   loading: false,
