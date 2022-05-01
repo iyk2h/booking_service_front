@@ -5,6 +5,7 @@ import DateFilter from "./datefilter";
 import DatePicker from "./datepicker";
 import axios from "axios";
 import "./calendar.css";
+import CalendarContainer from "../calendar/CalendarContainer";
 
 export default function Calendar() {
   const urlParams = useParams();
@@ -46,7 +47,7 @@ export default function Calendar() {
         reservedTime: filteredTime,
       });
     } catch (err) {
-      console.log(err);
+      console.log(err + '특정 날짜의 예약된 목록 데이터 받아올때 에러');
     }
   };
 
@@ -175,11 +176,12 @@ export default function Calendar() {
   const f_clicked = clicked < 10 ? `0${clicked}` : clicked;
   return (
     <div className="calendar">
-      <DateFilter
+      <CalendarContainer />
+      {/* <DateFilter
         viewYear={viewYear}
         viewMonth={viewMonth}
         onClick={handleFilter}
-      />
+      /> */}
       <DatePicker 
         dates={dates} 
         onClick={handlePicker} 
