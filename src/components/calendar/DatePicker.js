@@ -5,10 +5,14 @@ import { range } from "../../utils/format";
 const day_of_week = ["일", "월", "화", "수", "목", "금", "토"];
 
 function DatePicker() {
+  function handleClick(e) {
+    if (e.target.className.includes('__disable')) return;
+    console.log(1);
+  }
   return (
     <StUL>
       <YoilList />
-      <Calendar />
+      <Calendar onClick={handleClick}/>
     </StUL>
   );
 }
@@ -34,7 +38,7 @@ function Calendar() {
   const TLDay = thisLast.getDay(); // 이번달 마지막 요일
 
   const prevDates =
-    PLDay !== 6 ? setDisable(range(PLDate - PLDay, PLDate)) : [];
+    PLDay === 6 ? [] : setDisable(range(PLDate - PLDay, PLDate));
   const thisDates = setDisable(range(1, TLDate), dateState);
   const nextDates = setDisable(range(1, 6 - TLDay));
 
@@ -48,14 +52,20 @@ function Calendar() {
   );
 }
 
+//
+
 function setDisable(arr, state = null) {
   const TODAY = new Date();
   return arr.map((date) => {
     if (state) {
-      if (isToday(TODAY, state, date)) return date;
+      if (isToday(TODAY, state, date)) return <StHighLightToday>{date}</StHighLightToday>
       if (isPast(TODAY, state, date)) return date;
     }
-    return <StDisable className="disable" key={date}>{date}</StDisable>;
+    return (
+      <StDisable className="__disable" key={date}>
+        {date}
+      </StDisable>
+    );
   });
 }
 
@@ -72,11 +82,13 @@ function isToday(TODAY, state, date) {
 }
 
 const StUL = styled.ul`
-  margin: 0;
-  padding: 10px;
   display: flex;
   flex-flow: row wrap;
   text-align: center;
+  
+  margin: 0;
+  padding: 10px;
+
   & li:nth-child(7n) {
     color: #396ee2;
   }
@@ -90,10 +102,26 @@ const StLI = styled.li`
   text-align: center;
   padding: 0.5rem 0;
   border-radius: 5px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 // 고쳐야됨. span으로 때우는거보다 props로 className 전달해주는게 더 좋을듯
 const StDisable = styled.span`
   opacity: 0.2;
+`;
+
+const StHighLightToday = styled.span`
+  display: inline-block;
+
+  width: 25px;
+  height: 25px;
+
+  line-height:27px;
+  border-radius: 50%;
+
+  color: white;
+  background-color: mediumseagreen;
 `;
 export default DatePicker;

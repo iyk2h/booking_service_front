@@ -22,6 +22,11 @@ function dateReducer(state, action) {
         viewMonth: state.viewMonth === 12 ? 1 : state.viewMonth + 1,
         viewDate: null,
       };
+    case "PICK":
+      return {
+        ...state,
+        viewDate: action.payload
+      }
     default:
       return state;
   }
