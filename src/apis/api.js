@@ -1,5 +1,5 @@
 import axios from 'axios';
 
-export async function getReservedTime(fno, date) {
-  return await axios.post(`/booking/${fno}/date`, date);
+export function getReservedTime(fno, date) {
+  return axios.post(`/booking/${fno}/date`, date);
 }

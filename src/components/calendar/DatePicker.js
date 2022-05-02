@@ -1,18 +1,40 @@
-import { useDateState } from "../../context/dateContext";
+import { useEffect } from "react";
+import { useDateState, useDateDispatch } from "../../context/dateContext";
+import { getReservedTime } from "../../apis/api";
+import { useParams } from "react-router-dom";
+import { range, fullDateFormatter } from "../../utils/format";
 import styled from "styled-components";
-import { range } from "../../utils/format";
 
 const day_of_week = ["일", "월", "화", "수", "목", "금", "토"];
 
-function DatePicker() {
-  function handleClick(e) {
-    if (e.target.className.includes('__disable')) return;
-    console.log(1);
+async function getReservedTimeByDate(fno, date) {
+  try {
+    const res = await getReservedTime(fno, date);
+    console.log(res.data);
+  } catch (err) {
+    console.log(`${err} \n --- 클릭한 날짜의 이미 예약된 시간 받아올때 에러 ---`);
   }
+}
+
+function DatePicker() {
+  const urlParams = useParams();
+  const dateState = useDateState();
+  const dateDispatch = useDateDispatch();
+
+  useEffect(() => {
+    const date = fullDateFormatter(dateState.viewYear, dateState.viewMonth, dateState.viewDate);
+    getReservedTimeByDate(urlParams.fno, date);
+  }, [dateState.viewDate, urlParams.fno]);
+
+  function handleClick(e) {
+    if (e.target.className.includes("__disable")) return;
+    dateDispatch({ type: "PICK", payload: Number(e.target.textContent) });
+  }
+
   return (
-    <StUL>
+    <StUL onClick={handleClick}>
       <YoilList />
-      <Calendar onClick={handleClick}/>
+      <Calendar dateState={dateState} />
     </StUL>
   );
 }
@@ -21,14 +43,17 @@ function YoilList() {
   return (
     <>
       {day_of_week.map((yoil) => {
-        return <StLI key={yoil}>{yoil}</StLI>;
+        return (
+          <StLI className="__disable" key={yoil}>
+            {yoil}
+          </StLI>
+        );
       })}
     </>
   );
 }
 
-function Calendar() {
-  const dateState = useDateState();
+function Calendar({ dateState }) {
   const prevLast = new Date(dateState.viewYear, dateState.viewMonth - 1, 0);
   const thisLast = new Date(dateState.viewYear, dateState.viewMonth, 0);
 
@@ -38,9 +63,9 @@ function Calendar() {
   const TLDay = thisLast.getDay(); // 이번달 마지막 요일
 
   const prevDates =
-    PLDay === 6 ? [] : setDisable(range(PLDate - PLDay, PLDate));
-  const thisDates = setDisable(range(1, TLDate), dateState);
-  const nextDates = setDisable(range(1, 6 - TLDay));
+    PLDay === 6 ? [] : setDateType(range(PLDate - PLDay, PLDate));
+  const thisDates = setDateType(range(1, TLDate), dateState);
+  const nextDates = setDateType(range(1, 6 - TLDay));
 
   const dates = prevDates.concat(thisDates, nextDates);
   return (
@@ -52,13 +77,13 @@ function Calendar() {
   );
 }
 
-//
-
-function setDisable(arr, state = null) {
+// 여기를 좀 깔끔하게 만들고 싶음.
+function setDateType(arr, state = null) {
   const TODAY = new Date();
   return arr.map((date) => {
     if (state) {
-      if (isToday(TODAY, state, date)) return <StHighLightToday>{date}</StHighLightToday>
+      if (isPicked(state, date)) return <StHighLight>{date}</StHighLight>;
+      if (isToday(TODAY, state, date)) return date;
       if (isPast(TODAY, state, date)) return date;
     }
     return (
@@ -67,6 +92,10 @@ function setDisable(arr, state = null) {
       </StDisable>
     );
   });
+}
+
+function isPicked(state, date) {
+  return Number(date) === Number(state.viewDate);
 }
 
 function isPast(TODAY, state, date) {
@@ -85,7 +114,7 @@ const StUL = styled.ul`
   display: flex;
   flex-flow: row wrap;
   text-align: center;
-  
+
   margin: 0;
   padding: 10px;
 
@@ -112,13 +141,14 @@ const StDisable = styled.span`
   opacity: 0.2;
 `;
 
-const StHighLightToday = styled.span`
+const StHighLight = styled.span`
+  transform: translateY(-15%);
   display: inline-block;
 
   width: 25px;
   height: 25px;
+  line-height: 28px;
 
-  line-height:27px;
   border-radius: 50%;
 
   color: white;
