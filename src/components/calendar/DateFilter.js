@@ -1,25 +1,15 @@
 import styled from "styled-components";
-import { useDateState, useDateDispatch } from "./dateContext";
+import { useDateState, useDateDispatch } from "../../context/dateContext";
 
 function DateFilter() {
   const dateState = useDateState();
   const dateDispatch = useDateDispatch();
 
-  function handleFilter(e) {
-    const className = e.target.className;
-    if (!className.includes("-btn")) return;
-    if (className.includes("prev-btn")) {
-      dateDispatch({ type: "PREV" });
-    } else if (className.includes("next-btn")) {
-      dateDispatch({ type: "NEXT" });
-    }
-  }
-
   return (
-    <StyFilterContainer onClick={handleFilter}>
-      <StyBtn className="prev-btn">&lt;</StyBtn>
+    <StyFilterContainer>
+      <StyBtn onClick={() => dateDispatch({ type: "PREV" })}>&lt;</StyBtn>
       <StyDiv>{`${dateState.viewYear}년 ${dateState.viewMonth}월`}</StyDiv>
-      <StyBtn className="next-btn">&gt;</StyBtn>
+      <StyBtn onClick={() => dateDispatch({ type: "NEXT" })}>&gt;</StyBtn>
     </StyFilterContainer>
   );
 }

@@ -104,6 +104,7 @@ export default function Calendar() {
     }
   };
 
+  // 달력
   const prevLast = new Date(viewYear, viewMonth, 0);
   const thisLast = new Date(viewYear, viewMonth + 1, 0);
 
@@ -116,7 +117,6 @@ export default function Calendar() {
   const thisDates = [...Array(TLDate + 1).keys()].slice(1);
   const nextDates = [];
 
-  // ??? 요일
   if (PLDay !== 6) {
     for (let i = 0; i < PLDay + 1; i++) {
       prevDates.unshift(PLDate - i);
@@ -126,6 +126,7 @@ export default function Calendar() {
     nextDates.push(i);
   }
 
+  //
   const today = new Date();
   const todayNum = today.getDate();
 
@@ -134,7 +135,6 @@ export default function Calendar() {
   const lastDateIndex = dates.lastIndexOf(TLDate);
 
   let selectableIndex = 0;
-  // console.log({ viewMonth })
   if (today.getFullYear() === viewYear && today.getMonth() === viewMonth) {
     selectableIndex = thisDates.indexOf(todayNum) + prevDates.length; // 애매
   } else if (viewYear !== today.getFullYear() && viewMonth !== today.getMonth()) {

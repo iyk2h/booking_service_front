@@ -1,6 +1,5 @@
-import React from "react";
+import { DateContextProvider } from "../../context/dateContext";
 import DateFilter from "./DateFilter";
-import { DateContextProvider } from "./dateContext";
 import DatePicker from "./DatePicker";
 
 function CalendarContainer() {

@@ -7,3 +7,7 @@ export function fullDateFormatter(year, month, date) {
     date: `${year}-${dateFormatter(month)}-${dateFormatter(date)}`,
   };
 }
+
+export function range(start, end) {
+  return Array(end - start + 1).fill().map((_, idx) => start + idx)
+}
