@@ -37,4 +37,5 @@ const StyBtn = styled.div`
   margin: 0 5px;
   padding: 0 5px;
 `;
+
 export default DateFilter;

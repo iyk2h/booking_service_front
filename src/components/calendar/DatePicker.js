@@ -1,20 +1,9 @@
 import { useEffect } from "react";
 import { useDateState, useDateDispatch } from "../../context/dateContext";
-import { getReservedTime } from "../../apis/api";
+import { getReservedTimeByDate } from "../../apis/api";
 import { useParams } from "react-router-dom";
-import { range, fullDateFormatter } from "../../utils/format";
+import { range } from "../../utils/format";
 import styled from "styled-components";
-
-const day_of_week = ["일", "월", "화", "수", "목", "금", "토"];
-
-async function getReservedTimeByDate(fno, date) {
-  try {
-    const res = await getReservedTime(fno, date);
-    console.log(res.data);
-  } catch (err) {
-    console.log(`${err} \n --- 클릭한 날짜의 이미 예약된 시간 받아올때 에러 ---`);
-  }
-}
 
 function DatePicker() {
   const urlParams = useParams();
@@ -22,8 +11,8 @@ function DatePicker() {
   const dateDispatch = useDateDispatch();
 
   useEffect(() => {
-    const date = fullDateFormatter(dateState.viewYear, dateState.viewMonth, dateState.viewDate);
-    getReservedTimeByDate(urlParams.fno, date);
+    getReservedTimeByDate(urlParams.fno, dateState);
+    // async함수 return 값으로 timePicker를 바꿔주면 됨.
   }, [dateState.viewDate, urlParams.fno]);
 
   function handleClick(e) {
@@ -39,6 +28,7 @@ function DatePicker() {
   );
 }
 
+const day_of_week = ["일", "월", "화", "수", "목", "금", "토"];
 function YoilList() {
   return (
     <>
@@ -84,7 +74,7 @@ function setDateType(arr, state = null) {
     if (state) {
       if (isPicked(state, date)) return <StHighLight>{date}</StHighLight>;
       if (isToday(TODAY, state, date)) return date;
-      if (isPast(TODAY, state, date)) return date;
+      if (isValid(TODAY, state, date)) return date;
     }
     return (
       <StDisable className="__disable" key={date}>
@@ -98,7 +88,7 @@ function isPicked(state, date) {
   return Number(date) === Number(state.viewDate);
 }
 
-function isPast(TODAY, state, date) {
+function isValid(TODAY, state, date) {
   return new Date(`${state.viewYear}-${state.viewMonth}-${date}`) > TODAY;
 }
 
@@ -127,9 +117,13 @@ const StUL = styled.ul`
 `;
 
 const StLI = styled.li`
+  box-sizing: border-box;
   width: calc(100% / 7);
-  text-align: center;
-  padding: 0.5rem 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.3rem;
   border-radius: 5px;
   &:hover {
     cursor: pointer;
@@ -142,7 +136,6 @@ const StDisable = styled.span`
 `;
 
 const StHighLight = styled.span`
-  transform: translateY(-15%);
   display: inline-block;
 
   width: 25px;
@@ -153,5 +146,7 @@ const StHighLight = styled.span`
 
   color: white;
   background-color: mediumseagreen;
+
+  transform: translateY(-5%);
 `;
 export default DatePicker;
