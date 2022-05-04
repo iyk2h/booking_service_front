@@ -6,10 +6,11 @@ export function getReservedTime(fno, date) {
 }
 
 export async function getReservedTimeByDate(fno, dateState) {
+  if(!dateState.viewDate) return;
   try {
-    const date = fullDateFormatter(dateState.viewYear, dateState.viewMonth, dateState.viewDate)
+    const date = fullDateFormatter(dateState.viewYear, dateState.viewMonth, dateState.viewDate);
     const res = await axios.post(`/booking/${fno}/date`, date);
-    console.log(res.data);
+    return res.data;
   } catch (err) {
     console.log(`${err} \n --- 클릭한 날짜의 이미 예약된 시간 받아올때 에러 ---`);
   }

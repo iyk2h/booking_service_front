@@ -1,19 +1,10 @@
-import { useEffect } from "react";
 import { useDateState, useDateDispatch } from "../../context/dateContext";
-import { getReservedTimeByDate } from "../../apis/api";
-import { useParams } from "react-router-dom";
 import { range } from "../../utils/format";
 import styled from "styled-components";
 
 function DatePicker() {
-  const urlParams = useParams();
   const dateState = useDateState();
   const dateDispatch = useDateDispatch();
-
-  useEffect(() => {
-    getReservedTimeByDate(urlParams.fno, dateState);
-    // async함수 return 값으로 timePicker를 바꿔주면 됨.
-  }, [dateState.viewDate, urlParams.fno]);
 
   function handleClick(e) {
     if (e.target.className.includes("__disable")) return;
@@ -25,6 +16,30 @@ function DatePicker() {
       <YoilList />
       <Calendar dateState={dateState} />
     </StUL>
+  );
+}
+
+function Calendar({ dateState }) {
+  const prevLast = new Date(dateState.viewYear, dateState.viewMonth - 1, 0);
+  const thisLast = new Date(dateState.viewYear, dateState.viewMonth, 0);
+
+  const PLDate = prevLast.getDate();
+  const PLDay = prevLast.getDay(); // 이전달 마지막 요일
+  const TLDate = thisLast.getDate();
+  const TLDay = thisLast.getDay(); // 이번달 마지막 요일
+
+  const prevDates =
+    PLDay === 6 ? [] : setDisable(range(PLDate - PLDay, PLDate));
+  const thisDates = setDateType(range(1, TLDate), dateState);
+  const nextDates = setDisable(range(1, 6 - TLDay));
+
+  const dates = prevDates.concat(thisDates, nextDates);
+  return (
+    <>
+      {dates.map((date, idx) => {
+        return <StLI key={idx}>{date}</StLI>;
+      })}
+    </>
   );
 }
 
@@ -43,45 +58,27 @@ function YoilList() {
   );
 }
 
-function Calendar({ dateState }) {
-  const prevLast = new Date(dateState.viewYear, dateState.viewMonth - 1, 0);
-  const thisLast = new Date(dateState.viewYear, dateState.viewMonth, 0);
-
-  const PLDate = prevLast.getDate();
-  const PLDay = prevLast.getDay(); // 이전달 마지막 요일
-  const TLDate = thisLast.getDate();
-  const TLDay = thisLast.getDay(); // 이번달 마지막 요일
-
-  const prevDates =
-    PLDay === 6 ? [] : setDateType(range(PLDate - PLDay, PLDate));
-  const thisDates = setDateType(range(1, TLDate), dateState);
-  const nextDates = setDateType(range(1, 6 - TLDay));
-
-  const dates = prevDates.concat(thisDates, nextDates);
-  return (
-    <>
-      {dates.map((date, idx) => {
-        return <StLI key={idx}>{date}</StLI>;
-      })}
-    </>
-  );
-}
-
-// 여기를 좀 깔끔하게 만들고 싶음.
-function setDateType(arr, state = null) {
+///////// 함수들
+function setDateType(arr, state) {
   const TODAY = new Date();
   return arr.map((date) => {
-    if (state) {
-      if (isPicked(state, date)) return <StHighLight>{date}</StHighLight>;
-      if (isToday(TODAY, state, date)) return date;
-      if (isValid(TODAY, state, date)) return date;
-    }
+    if (isPicked(state, date)) return <StHighLight>{date}</StHighLight>;
+    if (isToday(TODAY, state, date)) return date;
+    if (isValid(TODAY, state, date)) return date;
     return (
       <StDisable className="__disable" key={date}>
         {date}
       </StDisable>
     );
   });
+}
+
+function setDisable(arr) {
+  return arr.map((date) => (
+    <StDisable className="__disable" key={date}>
+      {date}
+    </StDisable>
+  ));
 }
 
 function isPicked(state, date) {
