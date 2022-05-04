@@ -34,6 +34,8 @@ const Wrap = styled.div`
 const StLink = styled.a`
   font-size: 8px;
   font-weight: normal;
+  text-decoration: underline;
+  text-underline-position: under;
   &hover {
     font-weight: bold;
   }
