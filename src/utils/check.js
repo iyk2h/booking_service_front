@@ -7,23 +7,24 @@ const REGEX = {
   PHONE : /^010-?([0-9]{4})-?([0-9]{4})$/,
 }
 
-function checkIdFormat(id) {
+// Login
+export function checkIdFormat(id) {
   return REGEX.ID.test(id);
 }
 
-function checkPhoneFormat(phone) {
+export function checkPhoneFormat(phone) {
   return REGEX.PHONE.test(phone);
 }
 
-function checkNameFormat(name) {
+export function checkNameFormat(name) {
   return REGEX.NAME.test(name);
 }
 
-function chekcBothPwMatch(pw, confirm) {
+export function chekcBothPwMatch(pw, confirm) {
   return pw === confirm;
 }
 
-async function checkDuplicate(id) {
+export async function checkDuplicate(id) {
   try{
     await axios.post(`/students/idcheck`, { id });
   } catch (err) {
@@ -31,7 +32,8 @@ async function checkDuplicate(id) {
   }
 }
 
-function setPlace(item) {
+// Facility
+export function setPlace(item) {
   switch (item) {
     case 1:
       return "족구장";
@@ -46,11 +48,20 @@ function setPlace(item) {
   }
 };
 
-export {
-  checkIdFormat,
-  checkPhoneFormat,
-  chekcBothPwMatch,
-  checkNameFormat,
-  checkDuplicate,
-  setPlace
-};
+// Calendar
+export function isPicked(state, date) {
+  return Number(date) === Number(state.viewDate);
+}
+
+export function isValid(TODAY, state, date) {
+  date = date ? date : 1;
+  return new Date(`${state.viewYear}-${state.viewMonth}-${date}`) > TODAY;
+}
+
+export function isToday(TODAY, state, date) {
+  return (
+    TODAY.getDate() === date &&
+    TODAY.getMonth() + 1 === state.viewMonth &&
+    TODAY.getFullYear() === state.viewYear
+  );
+}

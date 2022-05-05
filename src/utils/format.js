@@ -4,9 +4,9 @@ function dateFormatter(date) {
 }
 
 // ex) 2022,5,1 -> 2022-05-01
-export function fullDateFormatter(year, month, date) {
+export function fullDateFormatter(dateState) {
   return {
-    date: `${year}-${dateFormatter(month)}-${dateFormatter(date)}`,
+    date: `${dateState.viewYear}-${dateFormatter(dateState.viewMonth)}-${dateFormatter(dateState.viewDate)}`,
   };
 }
 
@@ -15,6 +15,7 @@ export function timeFormatter(time) {
   return Number(time) < 10 ? `0${time}:00` : `${time}:00`;
 }
 
+// ex range(8, 10) -> [8, 9, 10]
 export function range(start, end) {
   return Array(end - start + 1).fill().map((_, idx) => start + idx)
 }

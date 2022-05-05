@@ -1,4 +1,5 @@
 import { useDateState, useDateDispatch } from "../../context/dateContext";
+import { isPicked, isValid, isToday } from "../../utils/check";
 import { range } from "../../utils/format";
 import styled from "styled-components";
 
@@ -7,7 +8,8 @@ function DatePicker() {
   const dateDispatch = useDateDispatch();
 
   function handleClick(e) {
-    if (e.target.className.includes("__disable")) return;
+    const className = e.target.className;
+    if (className.includes("__disable") || className.includes("yoil")) return;
     dateDispatch({ type: "PICK", payload: Number(e.target.textContent) });
   }
 
@@ -16,6 +18,21 @@ function DatePicker() {
       <YoilList />
       <Calendar dateState={dateState} />
     </StUL>
+  );
+}
+
+const day_of_week = ["일", "월", "화", "수", "목", "금", "토"];
+function YoilList() {
+  return (
+    <>
+      {day_of_week.map((yoil) => {
+        return (
+          <StLI className="yoil" key={yoil}>
+            {yoil}
+          </StLI>
+        );
+      })}
+    </>
   );
 }
 
@@ -34,69 +51,41 @@ function Calendar({ dateState }) {
   const nextDates = setDisable(range(1, 6 - TLDay));
 
   const dates = prevDates.concat(thisDates, nextDates);
-  return (
-    <>
-      {dates.map((date, idx) => {
-        return <StLI key={idx}>{date}</StLI>;
-      })}
-    </>
-  );
+
+  return <>{dates}</>;
 }
 
-const day_of_week = ["일", "월", "화", "수", "목", "금", "토"];
-function YoilList() {
-  return (
-    <>
-      {day_of_week.map((yoil) => {
-        return (
-          <StLI className="__disable" key={yoil}>
-            {yoil}
-          </StLI>
-        );
-      })}
-    </>
-  );
-}
-
-///////// 함수들
+// ----- Functions ----- //
 function setDateType(arr, state) {
   const TODAY = new Date();
   return arr.map((date) => {
-    if (isPicked(state, date)) return <StHighLight>{date}</StHighLight>;
-    if (isToday(TODAY, state, date)) return date;
-    if (isValid(TODAY, state, date)) return date;
+    if (isPicked(state, date)) {
+      return (
+        <StLI key={`h_${date}`}>
+          <StHighLight>{date}</StHighLight>
+        </StLI>
+      );
+    }
+    let isDisable = "__disable";
+    if (isToday(TODAY, state, date)) isDisable = null;
+    if (isValid(TODAY, state, date)) isDisable = null;
     return (
-      <StDisable className="__disable" key={date}>
+      <StLI className={isDisable} key={date}>
         {date}
-      </StDisable>
+      </StLI>
     );
   });
 }
 
 function setDisable(arr) {
   return arr.map((date) => (
-    <StDisable className="__disable" key={date}>
+    <StLI className="__disable" key={`n-d-${date}`}>
       {date}
-    </StDisable>
+    </StLI>
   ));
 }
 
-function isPicked(state, date) {
-  return Number(date) === Number(state.viewDate);
-}
-
-function isValid(TODAY, state, date) {
-  return new Date(`${state.viewYear}-${state.viewMonth}-${date}`) > TODAY;
-}
-
-function isToday(TODAY, state, date) {
-  return (
-    TODAY.getDate() === date &&
-    TODAY.getMonth() + 1 === state.viewMonth &&
-    TODAY.getFullYear() === state.viewYear
-  );
-}
-
+// ----- Style ----- //
 const StUL = styled.ul`
   display: flex;
   flex-flow: row wrap;
@@ -122,14 +111,12 @@ const StLI = styled.li`
   justify-content: center;
   height: 2.3rem;
   border-radius: 5px;
-  &:hover {
-    cursor: pointer;
-  }
-`;
 
-// 고쳐야됨. span으로 때우는거보다 props로 className 전달해주는게 더 좋을듯
-const StDisable = styled.span`
-  opacity: 0.2;
+  opacity: ${(props) => (props.className === "__disable" ? "0.2" : "1")};
+  &:hover {
+    cursor: ${(props) =>
+      props.className === "__disable" ? "not-allowed" : "pointer"};
+  }
 `;
 
 const StHighLight = styled.span`
