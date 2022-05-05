@@ -6,28 +6,30 @@ import { isValid } from "../../utils/check";
 import styled from "styled-components";
 import React, { useEffect } from "react";
 
-const operatingTime = {
-  openingTime: 8,
-  closingTime: 19,
-};
+const openingTime = 8;
+const closingTime = 19;
+const operatingTime = range(openingTime, closingTime);
 
 function TimePicker() {
   const fno = useParams().fno;
   const dateState = useDateState();
   const dateDispatch = useDateDispatch();
   const { viewDate, reservedTime } = dateState;
-  const { openingTime, closingTime } = operatingTime;
 
   useEffect(() => {
     getReservedTimeByDate(fno, dateState, dateDispatch);
   }, [viewDate, fno]);
 
-  const BtnList = setTimeType(
-    range(openingTime, closingTime),
-    reservedTime,
-    dateState
+  const BtnList = setTimeType(operatingTime, reservedTime, dateState);
+  return (
+    <StTimeContainer className="__disable" onClick={highLightUserPick}>
+      {BtnList.map((options, idx) => (
+        <StTimeBtn className={`${options.isDisable}`} key={idx}>
+          {timeFormatter(options.hour)}
+        </StTimeBtn>
+      ))}
+    </StTimeContainer>
   );
-  return <StTimeContainer>{BtnList}</StTimeContainer>;
 }
 
 // ----- Functions -----
@@ -42,18 +44,12 @@ async function getReservedTimeByDate(fno, dateState, dispatch) {
 }
 
 function setTimeType(arr, reservedList, state) {
-  const isPast = !isValid(new Date(), state, state.viewDate);
+  const isInValid = !isValid(new Date(), state, state.viewDate);
   return arr.map((hour, idx) => {
     let isDisable = null;
-    if (isPast) {
-      if (isPastTime(hour)) isDisable = "__disable";
-      if (isReservedTime(reservedList, hour)) isDisable = "__disable";
-    }
-    return (
-      <StTimeBtn className={isDisable} key={idx}>
-        {timeFormatter(hour)}
-      </StTimeBtn>
-    );
+    if (isInValid && isPastTime(hour)) isDisable = "__disable";
+    if (isReservedTime(reservedList, hour)) isDisable = "__disable";
+    return { isDisable, hour };
   });
 }
 
@@ -67,6 +63,12 @@ function isReservedTime(reservedList, viewHour) {
   return reservedList && reservedList.indexOf(formattedTime) !== -1;
 }
 
+function highLightUserPick(e) {
+  const cssClass = e.target.className;
+  if(cssClass.includes("__disable")) return;
+  console.log(e.target);
+}
+
 // ----- Style -----
 const StTimeContainer = styled.div`
   display: flex;
@@ -77,19 +79,25 @@ const StTimeContainer = styled.div`
 
 const StTimeBtn = styled.div`
   width: calc(100% / 5);
-  text-align: center;
-  border-radius: 5px;
+
   border: 1px solid grey;
   border-radius: 5px;
-  padding: 0.3em 0;
+
   margin: 0.5em;
+  padding: 0.3em 0;
+
+  text-align: center;
+
+  color: ${(props) => (props.className === "pick" ? "white" : "black")};
+
+  background-color: ${(props) =>
+    props.className === "pick" ? "mediumseagreen" : "white"};
 
   opacity: ${(props) => (props.className === "__disable" ? "0.2" : "1")};
 
   &:hover {
     cursor: ${(props) =>
       props.className === "__disable" ? "not-allowed" : "pointer"};
-    cursor: pointer;
   }
 `;
 
