@@ -1,5 +1,9 @@
 import axios from 'axios';
 
-export function getReservedTime(fno, date) {
-  return axios.post(`/booking/${fno}/date`, date);
+export function getReservedTime(fno, data) {
+  return axios.post(`/booking/${fno}/date`, data);
+}
+
+export function postReserve(fno, data) {
+  return axios.post(`/booking/${fno}`, data)
 }
