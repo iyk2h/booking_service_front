@@ -1,33 +1,72 @@
+import React, { useState, useEffect } from "react";
 import { fullDateFormatter, timeFormatter, range } from "../../utils/format";
 import { useDateState, useDateDispatch } from "../../context/dateContext";
 import { getReservedTime } from "../../apis/api";
 import { useParams } from "react-router-dom";
 import { isValid } from "../../utils/check";
 import styled from "styled-components";
-import React, { useEffect } from "react";
+import ReserveBtn from "./ReserveBtn";
 
 const openingTime = 8;
 const closingTime = 19;
 const operatingTime = range(openingTime, closingTime);
+const maxHour = 3;
 
 function TimePicker() {
   const fno = useParams().fno;
   const dateState = useDateState();
   const dateDispatch = useDateDispatch();
   const { viewDate, reservedTime } = dateState;
+  const [userPick, setUserPick] = useState([]);
 
   useEffect(() => {
     getReservedTimeByDate(fno, dateState, dateDispatch);
+    setUserPick([]);
   }, [viewDate, fno]);
 
-  const BtnList = setTimeType(operatingTime, reservedTime, dateState);
+  function handleUserPick(e) {
+    const cssClass = e.target.className;
+    const text = Number(e.target.textContent.split(":")[0]);
+
+    if (cssClass.includes("__disable")) return; // o 선택 불가능한 버튼
+    if (userPick.indexOf(text) !== -1)
+      return setUserPick(userPick.filter((time) => time < text)); // o 다시 누르면 취소
+    if (userPick.length === maxHour)
+      return alert(`최대 이용시간은 ${maxHour}시간 입니다.`);
+    if (userPick.length !== 0 && text < Math.min(...userPick)) return; // o 이전 시간 선택 불가
+    if (text - userPick[userPick.length - 1] > 1) return; // 연속된 시간만 선택 가능.
+
+    setUserPick([...userPick, text]);
+  }
+
+  const BtnList = setTimeBtnList(operatingTime, reservedTime, dateState);
   return (
-    <StTimeContainer className="__disable" onClick={highLightUserPick}>
-      {BtnList.map((options, idx) => (
-        <StTimeBtn className={`${options.isDisable}`} key={idx}>
-          {timeFormatter(options.hour)}
-        </StTimeBtn>
-      ))}
+    <StTimeContainer className="__disable" onClick={handleUserPick}>
+      {BtnList.map((options, idx) => {
+        if (userPick.indexOf(options.hour) !== -1) {
+          return (
+            <StTimeBtn className={"pick"} key={idx}>
+              {timeFormatter(options.hour)}
+            </StTimeBtn>
+          );
+        }
+        if (
+          options.hour - Math.min(...userPick) > 0 &&
+          options.hour - Math.min(...userPick) < maxHour
+        ) {
+          return (
+            <StTimeBtn className={"adjacentTime"} key={idx}>
+              {timeFormatter(options.hour)}
+            </StTimeBtn>
+          );
+        }
+        return (
+          <StTimeBtn className={options.isDisable} key={idx}>
+            {timeFormatter(options.hour)}
+          </StTimeBtn>
+        );
+      })}
+      <ReserveBtn fno={fno} userPick={userPick} dateState={dateState} />
     </StTimeContainer>
   );
 }
@@ -43,10 +82,10 @@ async function getReservedTimeByDate(fno, dateState, dispatch) {
   }
 }
 
-function setTimeType(arr, reservedList, state) {
+function setTimeBtnList(arr, reservedList, state) {
   const isInValid = !isValid(new Date(), state, state.viewDate);
   return arr.map((hour, idx) => {
-    let isDisable = null;
+    let isDisable = "";
     if (isInValid && isPastTime(hour)) isDisable = "__disable";
     if (isReservedTime(reservedList, hour)) isDisable = "__disable";
     return { isDisable, hour };
@@ -61,12 +100,6 @@ function isPastTime(hour) {
 function isReservedTime(reservedList, viewHour) {
   const formattedTime = timeFormatter(viewHour);
   return reservedList && reservedList.indexOf(formattedTime) !== -1;
-}
-
-function highLightUserPick(e) {
-  const cssClass = e.target.className;
-  if(cssClass.includes("__disable")) return;
-  console.log(e.target);
 }
 
 // ----- Style -----
@@ -88,7 +121,12 @@ const StTimeBtn = styled.div`
 
   text-align: center;
 
-  color: ${(props) => (props.className === "pick" ? "white" : "black")};
+  color: ${(props) =>
+    props.className === "pick"
+      ? "white"
+      : props.className === "adjacentTime"
+      ? "mediumseagreen"
+      : "black"};
 
   background-color: ${(props) =>
     props.className === "pick" ? "mediumseagreen" : "white"};
