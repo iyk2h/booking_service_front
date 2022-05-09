@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { fullDateFormatter, timeFormatter, range } from "../../utils/format";
+import { fullDateFormatter, timeFormatter, range, setTimeListFromReservedTime } from "../../utils/format";
 import { useDateState, useDateDispatch } from "../../context/dateContext";
 import { getReservedTime } from "../../apis/api";
 import { useParams } from "react-router-dom";
-import { isValid } from "../../utils/check";
+import { isValid, isPastTime } from "../../utils/check";
 import styled from "styled-components";
 import ReserveBtn from "./ReserveBtn";
+import Loading from "../modal/loading.js"
 
 const openingTime = 8;
 const closingTime = 19;
 const operatingTime = range(openingTime, closingTime);
-const maxHour = 3;
+const maxHour = 2; // 임시
 
 function TimePicker() {
   const fno = useParams().fno;
@@ -24,44 +25,37 @@ function TimePicker() {
     setUserPick([]);
   }, [viewDate, fno]);
 
+
   function handleUserPick(e) {
     const cssClass = e.target.className;
     const text = Number(e.target.textContent.split(":")[0]);
-
+    if (isNaN(text)) return;
     if (cssClass.includes("__disable")) return; // o 선택 불가능한 버튼
     if (userPick.indexOf(text) !== -1)
       return setUserPick(userPick.filter((time) => time < text)); // o 다시 누르면 취소
     if (userPick.length === maxHour)
-      return alert(`최대 이용시간은 ${maxHour}시간 입니다.`);
+      return alert(`최대 이용시간은 ${maxHour}시간 입니다.`); // o 최대 이용시간 이상 선택 불가
     if (userPick.length !== 0 && text < Math.min(...userPick)) return; // o 이전 시간 선택 불가
-    if (text - userPick[userPick.length - 1] > 1) return; // 연속된 시간만 선택 가능.
-
+    if (text - userPick[userPick.length - 1] > 1) return; // o 연속된 시간만 선택 가능.
     setUserPick([...userPick, text]);
   }
 
-  const BtnList = setTimeBtnList(operatingTime, reservedTime, dateState);
+  const BtnList = setDisableTimeBtnList(operatingTime, reservedTime, dateState);
+  // if (!reservedTime) return <Loading />
   return (
     <StTimeContainer className="__disable" onClick={handleUserPick}>
       {BtnList.map((options, idx) => {
+        let cssClass = options.isDisable;
         if (userPick.indexOf(options.hour) !== -1) {
-          return (
-            <StTimeBtn className={"pick"} key={idx}>
-              {timeFormatter(options.hour)}
-            </StTimeBtn>
-          );
-        }
-        if (
+          cssClass = "pick";
+        } else if (
           options.hour - Math.min(...userPick) > 0 &&
           options.hour - Math.min(...userPick) < maxHour
         ) {
-          return (
-            <StTimeBtn className={"adjacentTime"} key={idx}>
-              {timeFormatter(options.hour)}
-            </StTimeBtn>
-          );
+          cssClass = "adjacentTime";
         }
         return (
-          <StTimeBtn className={options.isDisable} key={idx}>
+          <StTimeBtn className={cssClass} key={idx}>
             {timeFormatter(options.hour)}
           </StTimeBtn>
         );
@@ -75,31 +69,29 @@ function TimePicker() {
 async function getReservedTimeByDate(fno, dateState, dispatch) {
   if (!dateState.viewDate) return;
   try {
-    const res = await getReservedTime(fno, fullDateFormatter(dateState));
-    dispatch({ type: "SET_TIME", payload: res.data });
+    const res = await getReservedTime(fno, {
+      date: fullDateFormatter(dateState),
+    });
+    
+    dispatch({ type: "SET_TIME", payload: setTimeListFromReservedTime(res.data) });
   } catch (err) {
     console.log(`${err}\n- 클릭한 날짜의 이미 예약된 시간 받아올때 에러 -`);
   }
 }
 
-function setTimeBtnList(arr, reservedList, state) {
+function setDisableTimeBtnList(arr, reservedList, state) {
   const isInValid = !isValid(new Date(), state, state.viewDate);
-  return arr.map((hour, idx) => {
+  const result =  arr.map((hour) => {
     let isDisable = "";
     if (isInValid && isPastTime(hour)) isDisable = "__disable";
     if (isReservedTime(reservedList, hour)) isDisable = "__disable";
     return { isDisable, hour };
   });
-}
-
-function isPastTime(hour) {
-  const [currHour] = new Date().toTimeString().split(":");
-  return Number(hour) < Number(currHour);
+  return result;
 }
 
 function isReservedTime(reservedList, viewHour) {
-  const formattedTime = timeFormatter(viewHour);
-  return reservedList && reservedList.indexOf(formattedTime) !== -1;
+  return reservedList.indexOf(viewHour) !== -1;
 }
 
 // ----- Style -----

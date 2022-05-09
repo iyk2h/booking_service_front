@@ -187,13 +187,13 @@ export default function Calendar() {
         dates={dates} 
         onClick={handlePicker} 
       /> */}
-      <TimeTable
+      {/* <TimeTable
         reservedTime={reservedTime}
         userSelect={{
           fno: urlParams.fno,
           date: `${viewYear}-${f_viewMonth}-${f_clicked}`,
         }}
-      />
+      /> */}
     </div>
   );
 }

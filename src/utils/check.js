@@ -65,3 +65,9 @@ export function isToday(TODAY, state, date) {
     TODAY.getFullYear() === state.viewYear
   );
 }
+
+// Time
+export function isPastTime(hour) {
+  const [currHour] = new Date().toTimeString().split(":");
+  return Number(hour) < Number(currHour);
+}
