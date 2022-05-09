@@ -35,6 +35,11 @@ function dateReducer(state, action) {
         ...state,
         reservedTime: action.payload,
       };
+    case "LOADING":
+      return {
+        ...state,
+        reservedTime: null,
+      }
     default:
       return state;
   }

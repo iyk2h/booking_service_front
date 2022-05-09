@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { fullDateFormatter, timeFormatter, range, setTimeListFromReservedTime } from "../../utils/format";
+import {
+  fullDateFormatter,
+  timeFormatter,
+  range,
+  setTimeListFromReservedTime,
+} from "../../utils/format";
 import { useDateState, useDateDispatch } from "../../context/dateContext";
 import { getReservedTime } from "../../apis/api";
 import { useParams } from "react-router-dom";
 import { isValid, isPastTime } from "../../utils/check";
 import styled from "styled-components";
 import ReserveBtn from "./ReserveBtn";
-import Loading from "../modal/loading.js"
+import {TimePickerLoader} from "../modal/loading";
 
 const openingTime = 8;
 const closingTime = 19;
@@ -25,7 +30,6 @@ function TimePicker() {
     setUserPick([]);
   }, [viewDate, fno]);
 
-
   function handleUserPick(e) {
     const cssClass = e.target.className;
     const text = Number(e.target.textContent.split(":")[0]);
@@ -39,9 +43,21 @@ function TimePicker() {
     if (text - userPick[userPick.length - 1] > 1) return; // o 연속된 시간만 선택 가능.
     setUserPick([...userPick, text]);
   }
+  if (!reservedTime) {
+    return (
+      <StTimeContainer className="__disable">
+        {range(openingTime, closingTime).map((time, idx) => (
+          <StTimeBtn className="__disable" key={idx}>
+            {timeFormatter(time)}
+          </StTimeBtn>
+        ))}
+        <ReserveBtn fno={fno} userPick={userPick} dateState={dateState} />
+        <TimePickerLoader />
+      </StTimeContainer>
+    );
+  }
 
   const BtnList = setDisableTimeBtnList(operatingTime, reservedTime, dateState);
-  // if (!reservedTime) return <Loading />
   return (
     <StTimeContainer className="__disable" onClick={handleUserPick}>
       {BtnList.map((options, idx) => {
@@ -68,12 +84,16 @@ function TimePicker() {
 // ----- Functions -----
 async function getReservedTimeByDate(fno, dateState, dispatch) {
   if (!dateState.viewDate) return;
+  dispatch({ type: "LOADING" });
   try {
     const res = await getReservedTime(fno, {
       date: fullDateFormatter(dateState),
     });
-    
-    dispatch({ type: "SET_TIME", payload: setTimeListFromReservedTime(res.data) });
+
+    dispatch({
+      type: "SET_TIME",
+      payload: setTimeListFromReservedTime(res.data),
+    });
   } catch (err) {
     console.log(`${err}\n- 클릭한 날짜의 이미 예약된 시간 받아올때 에러 -`);
   }
@@ -81,7 +101,7 @@ async function getReservedTimeByDate(fno, dateState, dispatch) {
 
 function setDisableTimeBtnList(arr, reservedList, state) {
   const isInValid = !isValid(new Date(), state, state.viewDate);
-  const result =  arr.map((hour) => {
+  const result = arr.map((hour) => {
     let isDisable = "";
     if (isInValid && isPastTime(hour)) isDisable = "__disable";
     if (isReservedTime(reservedList, hour)) isDisable = "__disable";
