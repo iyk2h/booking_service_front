@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 import { isValid, isPastTime } from "../../utils/check";
 import styled from "styled-components";
 import ReserveBtn from "./ReserveBtn";
-import {TimePickerLoader} from "../modal/loading";
+import { TimePickerLoader } from "../modal/loading";
 
 const openingTime = 8;
 const closingTime = 19;
@@ -30,7 +30,7 @@ function TimePicker() {
     setUserPick([]);
   }, [viewDate, fno]);
 
-  function handleUserPick(e) {
+  function restrictUserPick(e) {
     const cssClass = e.target.className;
     const text = Number(e.target.textContent.split(":")[0]);
     if (isNaN(text)) return;
@@ -44,25 +44,14 @@ function TimePicker() {
     setUserPick([...userPick, text]);
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+  let BtnList;
   if (!reservedTime) {
-    return (
-      <StTimeContainer className="__disable">
-        {range(openingTime, closingTime).map((time, idx) => (
-          <StTimeBtn className="__disable" key={idx}>
-            {timeFormatter(time)}
-          </StTimeBtn>
-        ))}
-        <ReserveBtn fno={fno} userPick={userPick} dateState={dateState} />
-        <TimePickerLoader />
-      </StTimeContainer>
-    );
+    BtnList = setDisableTimeBtnList(operatingTime, range(openingTime, closingTime), dateState);
+  } else {
+    BtnList = setDisableTimeBtnList(operatingTime, reservedTime, dateState);
   }
-  ////////////////////////////////////////////////////////////////////////////
-
-  const BtnList = setDisableTimeBtnList(operatingTime, reservedTime, dateState);
   return (
-    <StTimeContainer className="__disable" onClick={handleUserPick}>
+    <StTimeContainer className="__disable" onClick={restrictUserPick}>
       {BtnList.map((options, idx) => {
         let cssClass = options.isDisable;
         if (userPick.indexOf(options.hour) !== -1) {
@@ -80,6 +69,7 @@ function TimePicker() {
         );
       })}
       <ReserveBtn fno={fno} userPick={userPick} dateState={dateState} />
+      {!reservedTime && <TimePickerLoader />}
     </StTimeContainer>
   );
 }
