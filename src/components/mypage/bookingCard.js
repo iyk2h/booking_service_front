@@ -1,7 +1,6 @@
 import React from "react";
 import Cancel from "./cancel";
-import Edit from "./edit";
-import { setPlace } from "../../utils/check"
+import { setPlace } from "../../utils/format"
 import "./bookingCard.css";
 
 export default function BookingCard(props) {
@@ -35,11 +34,11 @@ export default function BookingCard(props) {
           setList={props.setList}
           bno={props.item.bno}
         />
-        <Edit 
+        {/* <Edit 
           list={props.list} 
           setList={props.setList} 
           bno={props.item.bno} 
-        />
+        /> */}
       </div>
     </li>
   );

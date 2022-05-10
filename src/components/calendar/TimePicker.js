@@ -43,6 +43,8 @@ function TimePicker() {
     if (text - userPick[userPick.length - 1] > 1) return; // o 연속된 시간만 선택 가능.
     setUserPick([...userPick, text]);
   }
+
+  /////////////////////////////////////////////////////////////////////////////
   if (!reservedTime) {
     return (
       <StTimeContainer className="__disable">
@@ -56,6 +58,7 @@ function TimePicker() {
       </StTimeContainer>
     );
   }
+  ////////////////////////////////////////////////////////////////////////////
 
   const BtnList = setDisableTimeBtnList(operatingTime, reservedTime, dateState);
   return (

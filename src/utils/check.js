@@ -32,21 +32,7 @@ export async function checkDuplicate(id) {
   }
 }
 
-// Facility
-export function setPlace(item) {
-  switch (item) {
-    case 1:
-      return "족구장";
-    case 2:
-      return "풋살장";
-    case 3:
-      return "테니스장";
-    case 4:
-      return "대운동장";
-    default:
-      break;
-  }
-};
+
 
 // Calendar
 export function isPicked(state, date) {

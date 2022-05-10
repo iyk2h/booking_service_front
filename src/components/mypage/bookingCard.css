@@ -37,10 +37,11 @@
 .booking_card_btn_section > button {
   background-color: white;
   border: 1px solid gray;
+  display: flex;
   border-radius: 5px;
   padding: 0.8em 4em;
   font-weight: bold;
-  font-size: 10px;
+  font-size: 5px;
 }
 
 .booking_card_btn_section > .edit_btn {

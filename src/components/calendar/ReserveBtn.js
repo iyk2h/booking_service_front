@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { postReserve } from "../../apis/api";
 import { isValid, isPastTime } from "../../utils/check";
@@ -12,13 +12,15 @@ function isValidUserInput(dateState, userPick) {
 }
 
 function Reserve({ fno, dateState, userPick }) {
+  const [completeMsg, setCompleteMsg] = useState(null);
+
   async function requestReserve() {
     if (userPick.length === 0) return;
     //if (!isValidUserInput(dateState, userPick)) return;
     try {
       const res = await postReserve(fno, dateState, userPick);
       if (res.status === 201) {
-        return <Complete data={res.data} fno={fno} />;
+        setCompleteMsg(<Complete data={res.data} fno={fno} />);
       }
     } catch (err) {
       console.log(`${err} : 예약 신청할때 발생한 에러`);
@@ -26,10 +28,13 @@ function Reserve({ fno, dateState, userPick }) {
   }
 
   return (
+    <>
+    {completeMsg}
     <StReserveBtn
       onClick={requestReserve}
       className={userPick.length === 0 ? "__disable" : ""}
     >예약하기</StReserveBtn>
+    </>
   );
 }
 

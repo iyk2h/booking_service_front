@@ -14,14 +14,15 @@ export default function History(props) {
   const { loading, list } = state;
 
   useEffect(() => {
-    axios
-      .get("/students/booking")
-      .then(
-        (response) =>
-          response.status === 200 &&
-          setState({ loading: false, list: response.data })
-      )
-      .catch((err) => console.log("자신의 예약리스트 받아올때 에러"));
+    async function getHistory() {
+      try {
+        const res = await axios.get("/students/booking");
+        setState({ loading: false, list: res.data });
+      } catch (err) {
+        console.log(`${err} - 자신의 예약리스트 받아올때 에러`);
+      }
+    }
+    getHistory();
   }, []);
 
   // 확인 안된 코드

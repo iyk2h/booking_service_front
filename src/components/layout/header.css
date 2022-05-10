@@ -21,7 +21,7 @@ menu {
 .header_menu {
   position: absolute;
   top: 3.2rem;
-  right: 3.2rem;
+  right: 1.2rem;
   min-width: 110px; max-width: 100px;
   display: flex;
   flex-direction: column;
