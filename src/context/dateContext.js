@@ -17,6 +17,7 @@ function dateReducer(state, action) {
         viewYear: state.viewMonth === 1 ? state.viewYear - 1 : state.viewYear,
         viewMonth: state.viewMonth === 1 ? 12 : state.viewMonth - 1,
         viewDate: null,
+        reservedTime: []
       };
     case "NEXT":
       return {
@@ -24,6 +25,7 @@ function dateReducer(state, action) {
         viewYear: state.viewMonth === 12 ? state.viewYear + 1 : state.viewYear,
         viewMonth: state.viewMonth === 12 ? 1 : state.viewMonth + 1,
         viewDate: null,
+        reservedTime: []
       };
     case "PICK":
       return {

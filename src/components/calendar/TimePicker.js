@@ -46,10 +46,11 @@ function TimePicker() {
 
   let BtnList;
   if (!reservedTime) {
-    BtnList = setDisableTimeBtnList(operatingTime, range(openingTime, closingTime), dateState);
+    BtnList = setDisableTimeList(operatingTime, range(openingTime, closingTime), dateState);
   } else {
-    BtnList = setDisableTimeBtnList(operatingTime, reservedTime, dateState);
+    BtnList = setDisableTimeList(operatingTime, reservedTime, dateState);
   }
+
   return (
     <StTimeContainer className="__disable" onClick={restrictUserPick}>
       {BtnList.map((options, idx) => {
@@ -92,7 +93,7 @@ async function getReservedTimeByDate(fno, dateState, dispatch) {
   }
 }
 
-function setDisableTimeBtnList(arr, reservedList, state) {
+function setDisableTimeList(arr, reservedList, state) {
   const isInValid = !isValid(new Date(), state, state.viewDate);
   const result = arr.map((hour) => {
     let isDisable = "";
