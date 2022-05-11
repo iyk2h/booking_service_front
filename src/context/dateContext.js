@@ -37,6 +37,13 @@ function dateReducer(state, action) {
         ...state,
         reservedTime: action.payload,
       };
+    case "SET_DATE":
+      return {
+        ...state,
+        viewYear: action.payload.viewYear,
+        viewMonth: action.payload.viewMonth,
+        viewDate: action.payload.viewDate,
+      }
     case "LOADING":
       return {
         ...state,

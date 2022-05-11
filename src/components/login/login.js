@@ -45,6 +45,8 @@ export default function Login({ url, nextUrl, signupUrl }) {
         pw: pwRef.current.value,
       };
       const response = await axios.post(url, data);
+
+
       if (response) {
         handleSuccess(response.status);
       }
@@ -55,9 +57,9 @@ export default function Login({ url, nextUrl, signupUrl }) {
 
   const handleSuccess = (status) => {
     if (status === 201) {
-      if (location.state) {
-        return navigate(`/booking/${location.state.userSelect.fno}`, {
-          state: location.state,
+      if (location.state.userPick) {
+        return navigate(location.state.prevPath, {
+          state: { dateState: location.state.dateState, userPick: location.state.userPick },
           replace: true,
         });
       }

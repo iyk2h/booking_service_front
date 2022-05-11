@@ -10,7 +10,7 @@ export default function NavBar({ itemList }) {
           <NavLink
             key={x.title}
             to={x.url}
-            style={{ display: "block", margin: "1rem 0" }}
+            style={{ display: "block", margin: "1rem 0", ":hover": "color: red" }}
             className={({ isActive }) => (isActive ? "isActive" : null)}
           >
             {x.title}
