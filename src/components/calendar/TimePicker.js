@@ -27,15 +27,15 @@ function TimePicker() {
   const [userPick, setUserPick] = useState([]);
 
   useEffect(() => {
-    if (location.state && location.state.dateState) {
-      dateDispatch({ type: "SET_DATE", payload: location.state.dateState });
-      setUserPick(location.state.userPick); // 동작하는데, 아래 어딘가에서 렌더링이 일어나기때문에 else문 setUserPick이 실행됨.
-      getReservedTimeByDate(fno, dateState, dateDispatch);
-      location.state = null;
-    } else {
-      getReservedTimeByDate(fno, dateState, dateDispatch);
-      setUserPick([]);
-    }
+    // if (location.state && location.state.dateState) {
+    //   dateDispatch({ type: "SET_DATE", payload: location.state.dateState });
+    //   setUserPick(location.state.userPick); // 동작하는데, 아래 어딘가에서 렌더링이 일어나기때문에 else문 setUserPick이 실행됨.
+    //   getReservedTimeByDate(fno, dateState, dateDispatch);
+    //   location.state = null;
+    // } else {
+    getReservedTimeByDate(fno, dateState, dateDispatch);
+    setUserPick([]);
+    // }
   }, [viewDate, fno]);
 
   function restrictUserPick(e) {
@@ -62,7 +62,7 @@ function TimePicker() {
   } else {
     BtnList = setDisableTimeList(operatingTime, reservedTime, dateState);
   }
-  console.log("--여기",{userPick})
+  // console.log("--여기",{userPick})
   return (
     <StTimeContainer className="__disable" onClick={restrictUserPick}>
       {BtnList.map((options, idx) => {
@@ -106,18 +106,25 @@ async function getReservedTimeByDate(fno, dateState, dispatch) {
 }
 
 function setDisableTimeList(arr, reservedList, state) {
-  const isInValid = !isValid(new Date(), state, state.viewDate);
+  const TODAY = new Date();
+  const isInvalid = !isValid(TODAY, state, state.viewDate);
+  const isPrevDate = (state.viewYear <= TODAY.getFullYear()) && (state.viewMonth < TODAY.getMonth()+1)
   const result = arr.map((hour) => {
     let isDisable = "";
-    if (isInValid && isPastTime(hour)) isDisable = "__disable";
-    if (isReservedTime(reservedList, hour)) isDisable = "__disable";
+    if (isPrevDate) {isDisable = "__disable"};
+    if (isInvalid && isPastTime(hour)) {isDisable = "__disable"}; // 시간과 동시에 만족해야하기때문에 오류임.
+    if (isReservedTime(reservedList, hour)) {isDisable = "__disable"};
     return { isDisable, hour };
   });
   return result;
 }
 
-function isReservedTime(reservedList, viewHour) {
-  return reservedList.indexOf(viewHour) !== -1;
+function test() {
+
+}
+
+function isReservedTime(reservedList, hour) {
+  return reservedList.indexOf(hour) !== -1;
 }
 
 // ----- Style -----

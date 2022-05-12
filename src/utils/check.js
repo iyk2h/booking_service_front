@@ -32,8 +32,6 @@ export async function checkDuplicate(id) {
   }
 }
 
-
-
 // Calendar
 export function isPicked(state, date) {
   return Number(date) === Number(state.viewDate);
@@ -41,7 +39,7 @@ export function isPicked(state, date) {
 
 export function isValid(TODAY, state, date) {
   date = date ? date : 1;
-  return new Date(`${state.viewYear}-${state.viewMonth}-${date}`) > TODAY;
+  return new Date(`${state.viewYear}-${state.viewMonth}-${date}`) > TODAY; // 일단 때웟음. 고쳐야함.
 }
 
 export function isToday(TODAY, state, date) {

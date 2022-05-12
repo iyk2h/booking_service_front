@@ -51,13 +51,14 @@ export default function Login({ url, nextUrl, signupUrl }) {
         handleSuccess(response.status);
       }
     } catch (err) {
+      console.log(err);
       handleError(err.response.status);
     }
   };
 
   const handleSuccess = (status) => {
     if (status === 201) {
-      if (location.state.userPick) {
+      if (location.state) {
         return navigate(location.state.prevPath, {
           state: { dateState: location.state.dateState, userPick: location.state.userPick },
           replace: true,

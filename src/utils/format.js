@@ -7,7 +7,7 @@ function dateFormatter(date) {
 export function fullDateFormatter(dateState) {
   return `${dateState.viewYear}-${dateFormatter(
     dateState.viewMonth
-  )}-${dateFormatter(dateState.viewDate)}`;
+  )}-${dateFormatter(dateState.viewDate || 1)}`;
 }
 
 // ex) 12 -> 12:00
