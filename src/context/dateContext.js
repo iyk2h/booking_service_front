@@ -59,7 +59,6 @@ export const dateDispatchContext = React.createContext(null);
 
 export function DateContextProvider({ children }) {
   const [state, dispatch] = useReducer(dateReducer, initialDateState);
-
   return (
     <dateStateContext.Provider value={state}>
       <dateDispatchContext.Provider value={dispatch}>
