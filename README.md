@@ -1,4 +1,4 @@
-학교 스포츠 시설 예약
+배포 레포지토리 - https://github.com/1wooseok/mnu-sports-booking
 
 <hr>
 
@@ -16,3 +16,4 @@ start
 ```
 npm run start
 ```
+
